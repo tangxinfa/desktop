@@ -1,0 +1,41 @@
+#!/bin/bash
+
+export DISPLAY=:0.0
+
+warning=10
+error=3
+hibernate=1
+
+i3status -c ~/.config/i3/i3status | awk '{
+if($1 == "DOWN") {
+    print "✕";
+} else if($1 == "CHR") {
+    gsub(/%/, "", $2);
+    level = $2 / 20;
+    level = substr("", 1*level, 1);
+    printf("⚡%s\n", level);
+} else if($1 == "BAT") {
+    gsub(/%/, "", $2);
+    level = $2 / 20;
+    level = substr("", 1*level, 1);
+    print level;
+
+    if($2 <= $hibernate) {
+       i3-msg -t command fullscreen disable
+       notify-send -i notification-battery-low -u "critical" "Battery" "$2 remaining, suspend system ..."
+       sleep 3
+       systemctl suspend
+    } else if(level <= $error) {
+       i3-msg -t command fullscreen disable
+       notify-send -i notification-battery-low -u "normal" "Battery" "$2 remaining"
+    } else if(level <= $warning) {
+       i3-msg -t command fullscreen disable
+       notify-send -i notification-battery-low -u "low" "Battery" "$2 remaining"
+    }
+} else if($1 == "FULL") {
+    print "";
+} else {
+    print $0;
+};
+fflush();
+}'

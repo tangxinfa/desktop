@@ -1,0 +1,3 @@
+#!/bin/bash
+
+i3-dmenu-desktop --dmenu="(cat ; (stest -flx $(echo $PATH | tr : ' ') | sort -u)) | dmenu -i -fn 'xft:Source Code Pro:pixelsize=22' -nb '#111'"

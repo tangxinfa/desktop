@@ -2,11 +2,7 @@
 
 export DISPLAY=:0.0
 
-warning=10
-error=3
-hibernate=1
-
-i3status -c ~/.config/i3/i3status | awk '{
+i3status -c ~/.config/i3/i3status | awk -v warning=10 -v error=3 -v hibernate=1 '{
 if($1 == "DOWN") {
     print "✕";
 } else if($1 == "CHR") {
@@ -20,17 +16,17 @@ if($1 == "DOWN") {
     level = substr("", 1*level, 1);
     print level;
 
-    if($2 <= $hibernate) {
-       i3-msg -t command fullscreen disable
-       notify-send -i notification-battery-low -u "critical" "Battery" "$2 remaining, suspend system ..."
-       sleep 3
-       systemctl suspend
-    } else if(level <= $error) {
-       i3-msg -t command fullscreen disable
-       notify-send -i notification-battery-low -u "normal" "Battery" "$2 remaining"
-    } else if(level <= $warning) {
-       i3-msg -t command fullscreen disable
-       notify-send -i notification-battery-low -u "low" "Battery" "$2 remaining"
+    if($2 <= hibernate) {
+       system("i3-msg -t command fullscreen disable >/dev/null 2>&1;\
+               notify-send -i notification-battery-low -u critical -t 3000 Battery \"%"$2" remaining, suspend system ...\" >/dev/null 2>&1;\
+               sleep 3;\
+               systemctl suspend >/dev/null 2>&1")
+    } else if($2 <= error) {
+       system("i3-msg -t command fullscreen disable >/dev/null 2>&1;\
+               notify-send -i notification-battery-low -u normal -t 3000 Battery \"%"$2" remaining\" >/dev/null 2>&1");
+    } else if($2 <= warning) {
+       system("i3-msg -t command fullscreen disable >/dev/null 2>&1;\
+               notify-send -i notification-battery-low -u low -t 3000 Battery \"%"$2" remaining\" >/dev/null 2>&1");
     }
 } else if($1 == "FULL") {
     print "";

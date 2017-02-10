@@ -229,8 +229,13 @@ smart_gaps on
 
 # autostart
 exec --no-startup-id compton -d :0.0 --config /dev/null --inactive-dim=0.07
+exec --no-startup-id /usr/lib64/gnome-settings-daemon/gnome-settings-daemon
+exec --no-startup-id /usr/lib/notify-osd/notify-osd
+exec --no-startup-id ~/.emacs.d/ssh_proxy.sh
 exec --no-startup-id fcitx
+exec --no-startup-id dropbox start
+exec --no-startup-id blueman-applet
+exec --no-startup-id volumeicon
 exec --no-startup-id nm-applet
 exec --no-startup-id feh --bg-fill ~/.config/i3/desktop.jpg
 exec --no-startup-id xautolock -time 10 -locker "i3lock -c '#000000' -u -i ~/.config/i3/lockscreen.png"
-exec --no-startup-id /usr/lib/notify-osd/notify-osd

@@ -3,7 +3,7 @@
 export DISPLAY=:0.0
 export LANG=zh_CN.UTF-8
 
-i3status -c ~/.config/i3/i3status | gawk -v warning=10 -v error=3 -v suspend=1 '{
+i3status -c ~/.config/i3/i3status | gawk -v warning=10 -v error=5 -v suspend=3 '{
 for(i=3; i<=NF; i++) {
     printf(" %s", $i);
 }
@@ -13,14 +13,14 @@ if($1 == "DOWN") {
 } else if($1 == "CHR" || $1 == "UNK") {
     gsub(/%/, "", $2);
     percent = strtonum($2);
-    level = percent / 20;
-    level = substr("", 1*level, 1);
+    level = percent / 10;
+    level = substr("", level, 1);
     printf("⚡%s\n", level);
 } else if($1 == "BAT") {
     gsub(/%/, "", $2);
     percent = strtonum($2);
-    level = percent / 20;
-    level = substr("", 1*level, 1);
+    level = percent / 10;
+    level = substr("", level, 1);
     print level;
 
     if(percent <= suspend) {

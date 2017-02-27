@@ -12,6 +12,9 @@
 #set $mod Mod1
 set $mod Mod4
 
+#set $i3lock i3lock -e -f -i ~/.config/i3/lockscreen.png
+set $i3lock i3lock-fancy -f Source-Code-Pro -t '' -gp
+
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
 #font pango:monospace 8
@@ -31,6 +34,8 @@ font pango:Source Code Pro 12,Awesome 12
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
 
+focus_follows_mouse no
+
 # start a terminal
 #bindsym $mod+Return exec i3-sensible-terminal
 #bindsym $mod+Return exec dbus-launch gnome-terminal --hide-menubar
@@ -39,8 +44,14 @@ bindsym $mod+Return exec gnome-terminal --hide-menubar
 # kill focused window
 bindsym $mod+Shift+q kill
 
+#Make the currently focused window a scratchpad
+bindsym $mod+Shift+minus move scratchpad
+#Show the first scratchpad window
+bindsym $mod+minus scratchpad show
+
 # lock screen
-bindsym Control+mod1+l exec i3lock -c '#000000' -u -i ~/.config/i3/lockscreen.png
+bindsym Control+mod1+l exec $i3lock
+bindsym Control+$mod+l exec $i3lock
 
 # start dmenu (a program launcher)
 #bindsym $mod+d exec dmenu_run
@@ -64,8 +75,8 @@ bindsym $mod+Right focus right
 # move focused window
 bindsym $mod+Shift+j move left
 bindsym $mod+Shift+k move down
-bindsym $mod+Shift+l move up
-bindsym $mod+Shift+semicolon move right
+bindsym $mod+Shift+i move up
+bindsym $mod+Shift+l move right
 
 # alternatively, you can use the cursor keys:
 bindsym $mod+Shift+Left move left
@@ -127,7 +138,7 @@ bindsym $mod+Shift+r restart
 #bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
 
 # resize window (you can also use the mouse for that)
-set $resize Resize: [w]-width       [W]+width       [h]-height        [H]+height
+set $resize Resize:       [w]idth       [W]idth       [h]eight        [H]eight
 mode "$resize" {
         bindsym w resize shrink width 10 px or 10 ppt
         bindsym Shift+w resize grow width 10 px or 10 ppt
@@ -143,7 +154,7 @@ mode "$resize" {
         bindsym Escape mode "default"
 }
 
-bindsym $mod+r mode "$resize"
+bindsym $mod+Shift+s mode "$resize"
 
 
 # Start i3bar to display a workspace bar (plus the system information i3status
@@ -172,9 +183,9 @@ hide_edge_borders both
 bindsym XF86MonBrightnessDown exec --no-startup-id ~/.config/i3/bin/i3brightness '-%5'
 bindsym XF86MonBrightnessUp exec --no-startup-id ~/.config/i3/bin/i3brightness '+%5'
 # Screen brightness mode
-set $brightness_management Brightness: [i]Increase       [d]Decrease
+set $brightness_management Brightness:       [U]p       [D]own
 mode "$brightness_management" {
-     bindsym i exec --no-startup-id ~/.config/i3/bin/i3brightness '+%5'
+     bindsym u exec --no-startup-id ~/.config/i3/bin/i3brightness '+%5'
      bindsym d exec --no-startup-id ~/.config/i3/bin/i3brightness '-%5'
 
      # back to normal: Enter or Escape
@@ -184,19 +195,32 @@ mode "$brightness_management" {
 bindsym $mod+Shift+b mode "$brightness_management"
 
 # Pulse Audio controls
-bindsym XF86AudioRaiseVolume exec amixer set Master playback 500+
-bindsym XF86AudioLowerVolume exec amixer set Master playback 500-
+bindsym XF86AudioRaiseVolume exec amixer set Master playback 1000+
+bindsym XF86AudioLowerVolume exec amixer set Master playback 1000-
 bindsym XF86AudioMute exec amixer set Master toggle
 
+set $volume Volume:       [U]p       [D]own       [M]ute
+mode "$volume" {
+        bindsym u exec amixer set Master playback 1000+
+        bindsym d exec amixer set Master playback 1000-
+        bindsym m exec amixer set Master toggle
+
+        # back to normal: Enter or Escape
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+}
+bindsym $mod+Shift+v mode "$volume"
+
+
 # power management mode
-set $power_management [P]owerOff       [R]eboot      [E]xit      [H]ibernate      [S]uspend       [L]ockscreen
+set $power_management Power Management:       [P]owerOff       [R]eboot      [E]xit      [H]ibernate      [S]uspend       [L]ockscreen
 mode "$power_management" {
      bindsym p exec --no-startup-id systemctl poweroff, mode "default"
      bindsym r exec --no-startup-id systemctl reboot, mode "default"
      bindsym h exec --no-startup-id systemctl hibernate, mode "default"
      bindsym e exec --no-startup-id i3-msg exit, mode "default"
      bindsym s exec --no-startup-id systemctl suspend, mode "default"
-     bindsym l exec --no-startup-id i3lock -c '#000000' -u -i ~/.config/i3/lockscreen.png, mode "default"
+     bindsym l exec --no-startup-id $i3lock, mode "default"
 
      # back to normal: Enter or Escape
      bindsym Return mode "default"
@@ -214,7 +238,8 @@ assign [class="Electron"] $workspace3
 assign [class="netease-cloud-music"] $workspace3
 assign [class="Wine"] $workspace3
 assign [class="VirtualBox"] $workspace4
-#for_window [class="Wine"] floating enable
+for_window [class="Wine"] floating disable
+for_window [class="Wine" title="^RTX$"] floating enable
 
 #i3-gaps
 set $default_gaps_inner 8
@@ -238,4 +263,4 @@ exec --no-startup-id blueman-applet
 exec --no-startup-id volumeicon
 exec --no-startup-id nm-applet
 exec --no-startup-id feh --bg-fill ~/.config/i3/desktop.jpg
-exec --no-startup-id xautolock -time 10 -locker "i3lock -c '#000000' -u -i ~/.config/i3/lockscreen.png"
+exec --no-startup-id xautolock -time 10 -locker "$i3lock"

@@ -12,8 +12,7 @@
 #set $mod Mod1
 set $mod Mod4
 
-#set $i3lock i3lock -e -f -i ~/.config/i3/lockscreen.png
-set $i3lock i3lock-fancy -f Source-Code-Pro -t '' -gp
+set $i3lock ~/.config/i3/i3lock
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
@@ -63,8 +62,8 @@ bindsym $mod+d exec --no-startup-id ~/.config/i3/bin/i3dmenu
 # change focus
 bindsym $mod+j focus left
 bindsym $mod+k focus down
-bindsym $mod+l focus up
-bindsym $mod+semicolon focus right
+bindsym $mod+i focus up
+bindsym $mod+l focus right
 
 # alternatively, you can use the cursor keys:
 bindsym $mod+Left focus left
@@ -112,20 +111,23 @@ bindsym $mod+a focus parent
 
 set $workspace1 "1: "
 set $workspace2 "2: "
-set $workspace3 "3: "
-set $workspace4 "4: "
+set $workspace3 "3: "
+set $workspace4 "4: "
+set $workspace5 "5: "
 
 # switch to workspace
 bindsym $mod+1 workspace $workspace1
 bindsym $mod+2 workspace $workspace2
 bindsym $mod+3 workspace $workspace3
 bindsym $mod+4 workspace $workspace4
+bindsym $mod+5 workspace $workspace5
 
 # move focused container to workspace
 bindsym $mod+Shift+1 move container to workspace $workspace1
 bindsym $mod+Shift+2 move container to workspace $workspace2
 bindsym $mod+Shift+3 move container to workspace $workspace3
 bindsym $mod+Shift+4 move container to workspace $workspace4
+bindsym $mod+Shift+5 move container to workspace $workspace5
 
 # cycle through active workspaces
 bindsym $mod+Tab workspace next
@@ -234,12 +236,18 @@ popup_during_fullscreen leave_fullscreen
 assign [class="Emacs"] $workspace2
 assign [class="Gnome-terminal"] $workspace1
 assign [class="Firefox"] $workspace1
-assign [class="Electron"] $workspace3
-assign [class="netease-cloud-music"] $workspace3
-assign [class="Wine"] $workspace3
-assign [class="VirtualBox"] $workspace4
-for_window [class="Wine"] floating disable
-for_window [class="Wine" title="^RTX$"] floating enable
+assign [class="Dia"] $workspace3
+assign [class="Pencil"] $workspace3
+assign [class="XMind"] $workspace3
+assign [class="libreoffice"] $workspace3
+assign [class="Java" title="XMind"] $workspace3
+for_window [class="Dia" window_role="toolbox_window"] floating enable
+assign [title="Electronic WeChat"] $workspace4
+assign [class="netease-cloud-music"] $workspace4
+assign [class="Wine"] $workspace4
+assign [class="VirtualBox"] $workspace5
+# for_window [class="Wine" title=".+"] floating disable
+# for_window [class="Wine" title="^RTX$"] floating enable
 
 #i3-gaps
 set $default_gaps_inner 8
@@ -256,11 +264,14 @@ smart_gaps on
 exec --no-startup-id compton -d :0.0 --config /dev/null --inactive-dim=0.07
 exec --no-startup-id /usr/lib64/gnome-settings-daemon/gnome-settings-daemon
 exec --no-startup-id /usr/lib/notify-osd/notify-osd
-exec --no-startup-id ~/.emacs.d/ssh_proxy.sh
 exec --no-startup-id fcitx
 exec --no-startup-id dropbox start
 exec --no-startup-id blueman-applet
+exec --no-startup-id seafile-applet
 exec --no-startup-id volumeicon
 exec --no-startup-id nm-applet
 exec --no-startup-id feh --bg-fill ~/.config/i3/desktop.jpg
 exec --no-startup-id xautolock -time 10 -locker "$i3lock"
+exec --no-startup-id ~/.emacs.d/ssh_proxy.sh
+exec --no-startup-id firefox
+exec --no-startup-id sleep 1 && emacs

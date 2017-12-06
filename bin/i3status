@@ -3,7 +3,7 @@
 export DISPLAY=:0.0
 export LANG=zh_CN.UTF-8
 
-i3status -c ~/.config/i3/i3status | gawk -v warning=10 -v error=5 -v suspend=3 '{
+i3status -c ~/.config/i3/i3status | gawk -v warning=15 -v error=10 -v suspend=5 '{
 for(i=3; i<=NF; i++) {
     printf(" %s", $i);
 }
@@ -26,7 +26,7 @@ if($1 == "DOWN") {
     if(percent <= suspend) {
        system("i3-msg -t command fullscreen disable >/dev/null 2>&1;\
                notify-send -i notification-battery-low -u critical -t 3000 Battery \"%"percent" remaining, suspend system ...\" >/dev/null 2>&1;\
-               sleep 3;\
+               sleep 5;\
                systemctl suspend >/dev/null 2>&1")
     } else if(percent <= error) {
        system("i3-msg -t command fullscreen disable >/dev/null 2>&1;\

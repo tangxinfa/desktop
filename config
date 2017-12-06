@@ -32,6 +32,8 @@ font pango:Source Code Pro 12,Awesome 12
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
+floating_minimum_size 200 x -1
+floating_maximum_size 800 x -1
 
 focus_follows_mouse no
 
@@ -114,6 +116,8 @@ set $workspace2 "2: "
 set $workspace3 "3: "
 set $workspace4 "4: "
 set $workspace5 "5: "
+set $workspace6 "6: "
+
 
 # switch to workspace
 bindsym $mod+1 workspace $workspace1
@@ -121,6 +125,7 @@ bindsym $mod+2 workspace $workspace2
 bindsym $mod+3 workspace $workspace3
 bindsym $mod+4 workspace $workspace4
 bindsym $mod+5 workspace $workspace5
+bindsym $mod+6 workspace $workspace6
 
 # move focused container to workspace
 bindsym $mod+Shift+1 move container to workspace $workspace1
@@ -128,6 +133,7 @@ bindsym $mod+Shift+2 move container to workspace $workspace2
 bindsym $mod+Shift+3 move container to workspace $workspace3
 bindsym $mod+Shift+4 move container to workspace $workspace4
 bindsym $mod+Shift+5 move container to workspace $workspace5
+bindsym $mod+Shift+6 move container to workspace $workspace6
 
 # cycle through active workspaces
 bindsym $mod+Tab workspace next
@@ -243,11 +249,16 @@ assign [class="libreoffice"] $workspace3
 assign [class="Java" title="XMind"] $workspace3
 for_window [class="Dia" window_role="toolbox_window"] floating enable
 assign [title="Electronic WeChat"] $workspace4
+assign [class="dingtalk"] $workspace4
 assign [class="netease-cloud-music"] $workspace4
 assign [class="Wine"] $workspace4
 assign [class="VirtualBox"] $workspace5
-# for_window [class="Wine" title=".+"] floating disable
-# for_window [class="Wine" title="^RTX$"] floating enable
+assign [class="Steam"] $workspace6
+assign [title="Steam"] $workspace6
+for_window [class="Keepassx"] floating enable, move scratchpad, move absolute position center
+for_window [class="Keepassx" window_type="normal"] resize set 800 600
+for_window [class="Conky"] floating enable, resize set 400 400, move absolute position center
+for_window [class="Wine" title="迅雷网络" window_type="dialog"] floating disable, move container to workspace $workspace4 # Main RTX window
 
 #i3-gaps
 set $default_gaps_inner 8
@@ -261,9 +272,10 @@ smart_gaps on
 
 
 # autostart
-exec --no-startup-id compton -d :0.0 --config /dev/null --inactive-dim=0.07
+exec --no-startup-id compton -d :0.0 --config /dev/null --inactive-dim=0.2 -c
 exec --no-startup-id /usr/lib64/gnome-settings-daemon/gnome-settings-daemon
-exec --no-startup-id /usr/lib/notify-osd/notify-osd
+#exec --no-startup-id /usr/lib/notify-osd/notify-osd
+exec --no-startup-id dunst
 exec --no-startup-id fcitx
 exec --no-startup-id dropbox start
 exec --no-startup-id blueman-applet
@@ -274,4 +286,5 @@ exec --no-startup-id feh --bg-fill ~/.config/i3/desktop.jpg
 exec --no-startup-id xautolock -time 10 -locker "$i3lock"
 exec --no-startup-id ~/.emacs.d/ssh_proxy.sh
 exec --no-startup-id firefox
+#exec --no-startup-id steam --tcp -perfectworld
 exec --no-startup-id sleep 1 && emacs

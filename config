@@ -223,10 +223,10 @@ bindsym $mod+Shift+v mode "$volume"
 # power management mode
 set $power_management Power Management:       [P]owerOff       [R]eboot      [E]xit      [H]ibernate      [S]uspend       [L]ockscreen
 mode "$power_management" {
-     bindsym p exec --no-startup-id systemctl poweroff, mode "default"
-     bindsym r exec --no-startup-id systemctl reboot, mode "default"
+     bindsym p exec --no-startup-id ~/.config/i3/i3close && systemctl poweroff, mode "default"
+     bindsym r exec --no-startup-id ~/.config/i3/i3close && systemctl reboot, mode "default"
      bindsym h exec --no-startup-id systemctl hibernate, mode "default"
-     bindsym e exec --no-startup-id i3-msg exit, mode "default"
+     bindsym e exec --no-startup-id ~/.config/i3/i3close && i3-msg exit, mode "default"
      bindsym s exec --no-startup-id systemctl suspend, mode "default"
      bindsym l exec --no-startup-id $i3lock, mode "default"
 

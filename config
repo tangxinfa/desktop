@@ -111,12 +111,12 @@ bindsym $mod+a focus parent
 # focus the child container
 #bindsym $mod+d focus child
 
-set $workspace1 "1: "
-set $workspace2 "2: "
-set $workspace3 "3: "
-set $workspace4 "4: "
-set $workspace5 "5: "
-set $workspace6 "6: "
+set $workspace1 "1:"
+set $workspace2 "2:"
+set $workspace3 "3:"
+set $workspace4 "4:"
+set $workspace5 "5:"
+set $workspace6 "6:"
 
 
 # switch to workspace
@@ -169,23 +169,23 @@ bindsym $mod+Shift+s mode "$resize"
 # finds out, if available)
 bar {
     strip_workspace_numbers yes
-
     status_command ~/.config/i3/bin/i3status
     position top
     mode hide
-#    hidden_state show
-
-    #i3-gaps
-    i3bar_command i3bar -t
+#   hidden_state show
+#   i3bar_command i3bar -t
     height 32
-
     colors {
-           background #00000000
-           binding_mode #2f343a #000000aa #ffffff
+           background #000000
+           statusline #ffffff
+           binding_mode #2f343a #000000 #ffffff
+
+           # focused_workspace #fdf6e3 #6c71c4 #fdf6e3
+           # active_workspace #fdf6e3 #6c71c4 #fdf6e3
+           # inactive_workspace #002b36 #586e75 #002b36
+           # urgent_workspace #d33682 #d33682 #fdf6e3
     }
 }
-
-hide_edge_borders both
 
 # Screen brightness controls
 bindsym XF86MonBrightnessDown exec --no-startup-id ~/.config/i3/bin/i3brightness '-%5'
@@ -221,10 +221,10 @@ bindsym $mod+Shift+v mode "$volume"
 
 
 # power management mode
-set $power_management Power Management:       [P]owerOff       [R]eboot      [E]xit      [H]ibernate      [S]uspend       [L]ockscreen
+set $power_management Power Management:       [P]owerOff       [R]eboot      [E]xit      [H]ibernate      [S]uspend       [L]ockscreen
 mode "$power_management" {
-     bindsym p exec --no-startup-id ~/.config/i3/i3close && systemctl poweroff, mode "default"
-     bindsym r exec --no-startup-id ~/.config/i3/i3close && systemctl reboot, mode "default"
+     bindsym p exec --no-startup-id ~/.config/i3/i3close && (i3-msg exit || systemctl poweroff), mode "default"
+     bindsym r exec --no-startup-id ~/.config/i3/i3close && (i3-msg exit || systemctl reboot), mode "default"
      bindsym h exec --no-startup-id systemctl hibernate, mode "default"
      bindsym e exec --no-startup-id ~/.config/i3/i3close && i3-msg exit, mode "default"
      bindsym s exec --no-startup-id systemctl suspend, mode "default"
@@ -261,30 +261,36 @@ for_window [class="Conky"] floating enable, resize set 400 400, move absolute po
 for_window [class="Wine" title="迅雷网络" window_type="dialog"] floating disable, move container to workspace $workspace4 # Main RTX window
 
 #i3-gaps
-set $default_gaps_inner 8
-set $default_gaps_outer 10
-gaps inner $default_gaps_inner
-gaps outer $default_gaps_outer
+gaps inner 5
+gaps outer 0
 # fix graphics glitch
-new_window none
-for_window [class="^.*"] border pixel 0
 smart_gaps on
-
+smart_borders on
+# border
+new_window none
+hide_edge_borders both
+for_window [class="^.*"] border pixel 0
+# for_window [class="^.*"] border pixel 2
+# ## class                border  backgr. text    indicator
+# client.focused          #d64937 #d64937 #2D2D2D #2e9ef4
+# client.focused_inactive #2d2d2d #2d2d2d #dcdcdc #484e50
+# client.unfocused        #2D2D2D #2d2d2d #dcdcdc #292d2e
+# client.urgent           #2D2D2D #2D2D2D #dcdcdc #900000
 
 # autostart
-exec --no-startup-id compton -d :0.0 --config /dev/null --inactive-dim=0.2 -c
+exec --no-startup-id compton -d :0.0 --config /dev/null --inactive-dim=0.3 --detect-transient
 exec --no-startup-id /usr/lib64/gnome-settings-daemon/gnome-settings-daemon
 #exec --no-startup-id /usr/lib/notify-osd/notify-osd
 exec --no-startup-id dunst
 exec --no-startup-id fcitx
-exec --no-startup-id dropbox start
 exec --no-startup-id blueman-applet
-exec --no-startup-id seafile-applet
 exec --no-startup-id volumeicon
 exec --no-startup-id nm-applet
+exec --no-startup-id ~/.emacs.d/ssh_proxy.sh
 exec --no-startup-id feh --bg-fill ~/.config/i3/desktop.jpg
 exec --no-startup-id xautolock -time 10 -locker "$i3lock"
-exec --no-startup-id ~/.emacs.d/ssh_proxy.sh
-exec --no-startup-id firefox
+exec --no-startup-id dropbox start
+exec --no-startup-id seafile-applet
+exec firefox
+exec emacs
 #exec --no-startup-id steam --tcp -perfectworld
-exec --no-startup-id sleep 1 && emacs

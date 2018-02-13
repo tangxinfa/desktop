@@ -9,7 +9,7 @@ for(i=3; i<=NF; i++) {
 }
 printf("　");
 if($1 == "DOWN") {
-    print "✕";
+    print "";
 } else if($1 == "CHR" || $1 == "UNK") {
     gsub(/%/, "", $2);
     percent = strtonum($2);

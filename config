@@ -9,12 +9,11 @@
 #
 # Please see http://i3wm.org/docs/userguide.html for a complete reference!
 
-#set $mod Mod1
 set $mod Mod4
 
 set $i3lock ~/.config/i3/i3lock
 
-#define colors
+# define colors
 set $bg-color 	         #2f343f
 set $inactive-bg-color   #2f343f
 set $text-color          #f3f4f5
@@ -55,8 +54,8 @@ bindsym $mod+Shift+minus move scratchpad
 bindsym $mod+minus scratchpad show
 
 # lock screen
-bindsym Control+mod1+l exec $i3lock
 bindsym Control+$mod+l exec $i3lock
+bindsym $mod+l exec $i3lock
 
 # start rofi(a program launcher), install: yaourt -S rofi
 bindsym $mod+p exec "rofi -combi-modi drun,run -show combi -modi combi -theme solarized -combi-hide-mode-prefix -terminal gnome-terminal"
@@ -64,8 +63,6 @@ bindsym $mod+p exec "rofi -combi-modi drun,run -show combi -modi combi -theme so
 # change focus
 bindsym $mod+j focus left
 bindsym $mod+k focus down
-bindsym $mod+i focus up
-bindsym $mod+l focus right
 
 # alternatively, you can use the cursor keys:
 bindsym $mod+Left focus left
@@ -167,24 +164,24 @@ bindsym $mod+Shift+s mode "$resize"
 
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
-bar {
-    strip_workspace_numbers yes
-    status_command ~/.config/i3/bin/i3status
-    position top
-    mode hide
-#   hidden_state show
-#   i3bar_command i3bar -t
-    height 32
+# bar {
+#     strip_workspace_numbers yes
+#     status_command ~/.config/i3/bin/i3status
+#     position top
+#     mode hide
+# #   hidden_state show
+# #   i3bar_command i3bar -t
+#     height 32
 
-    colors {
-		background $bg-color
-	   	separator  $separator-color
-		#                  border             background         text
-		focused_workspace  $bg-color          $bg-color          $text-color
-		inactive_workspace $inactive-bg-color $inactive-bg-color $inactive-text-color
-		urgent_workspace   $urgent-bg-color   $urgent-bg-color   $text-color
-	}
-}
+#     colors {
+# 		background $bg-color
+# 	   	separator  $separator-color
+# 		#                  border             background         text
+# 		focused_workspace  $bg-color          $bg-color          $text-color
+# 		inactive_workspace $inactive-bg-color $inactive-bg-color $inactive-text-color
+# 		urgent_workspace   $urgent-bg-color   $urgent-bg-color   $text-color
+# 	}
+# }
 
 # Screen brightness controls
 bindsym XF86MonBrightnessDown exec --no-startup-id ~/.config/i3/bin/i3brightness '-%5'
@@ -210,7 +207,7 @@ set $volume Volume:       [U]p       [D]own       [M]ute
 mode "$volume" {
         bindsym u exec amixer set Master playback 1000+
         bindsym d exec amixer set Master playback 1000-
-        bindsym m exec amixer set Master toggle
+        bindsym m exec amixer set Master toggle, mode "default"
 
         # back to normal: Enter or Escape
         bindsym Return mode "default"
@@ -279,6 +276,7 @@ client.urgent           $urgent-bg-color    $urgent-bg-color   $text-color      
 
 # autostart
 exec --no-startup-id compton -d :0.0 --config /dev/null --inactive-dim=0.3 --detect-transient
+exec_always --no-startup-id "killall polybar; polybar -c ~/.config/i3/polybar top"
 exec --no-startup-id /usr/lib64/gnome-settings-daemon/gnome-settings-daemon
 #exec --no-startup-id /usr/lib/notify-osd/notify-osd
 exec --no-startup-id dunst

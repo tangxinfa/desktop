@@ -5,9 +5,9 @@ revert() {
 trap revert HUP INT TERM
 
 # screen delay close
-xset +dpms dpms 5 5 5
+#xset +dpms dpms 5 5 5
 # if screen delay close not works, use the following instead
-#(sleep 1; xset dpms force off) &
+(sleep 1; xset dpms force off) &
 
 #i3lock -n -e -i ~/.config/i3/lockscreen.png
 i3lock-fancy -n -f Source-Code-Pro -t '' -gp

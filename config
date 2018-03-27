@@ -58,7 +58,7 @@ bindsym Control+$mod+l exec $i3lock
 bindsym $mod+l exec $i3lock
 
 # start rofi(a program launcher), install: yaourt -S rofi
-bindsym $mod+p exec "rofi -combi-modi drun,run -show combi -modi combi -theme solarized -combi-hide-mode-prefix -terminal gnome-terminal"
+bindsym $mod+p exec "rofi -combi-modi drun,run -show combi -modi combi -theme arthur -width 30 -combi-hide-mode-prefix -terminal gnome-terminal"
 
 # change focus
 bindsym $mod+j focus left

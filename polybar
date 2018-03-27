@@ -183,8 +183,11 @@ label-song-ellipsis = true
 [module/xbacklight]
 type = internal/xbacklight
 
+format-prefix = 
+format-prefix-foreground = ${colors.foreground-alt}
 format = <label> <bar>
-label = 
+label = %percentage:3%%
+label-foreground = ${colors.foreground}
 
 bar-width = 5
 bar-indicator = |
@@ -205,18 +208,18 @@ card = intel_backlight
 [module/cpu]
 type = internal/cpu
 interval = 2
-format-prefix = " "
+format-prefix = 
 format-prefix-foreground = ${colors.foreground-alt}
 format-underline = #f90000
-label = %percentage:2%%
+label = %percentage:3%%
 
 [module/memory]
 type = internal/memory
 interval = 2
-format-prefix = " "
+format-prefix = 
 format-prefix-foreground = ${colors.foreground-alt}
 format-underline = #4bffdc
-label = %percentage_used%%
+label = %percentage_used:3%%
 
 [module/wlan]
 type = internal/network
@@ -275,12 +278,16 @@ label = %date% %time%
 [module/pulseaudio]
 type = internal/pulseaudio
 
+format-volume-prefix = 
+format-volume-prefix-foreground = ${colors.foreground-alt}
 format-volume = <label-volume> <bar-volume>
-label-volume =  %percentage%%
+label-volume = %percentage:3%%
 label-volume-foreground = ${root.foreground}
 
-label-muted = 🔇 muted
-label-muted-foreground = #66
+format-muted-prefix = 
+format-muted-prefix-foreground = ${colors.foreground-alt}
+label-muted = ─────
+label-muted-foreground = ${colors.foreground-alt}
 
 bar-volume-width = 5
 bar-volume-foreground-0 = #55aa55
@@ -302,13 +309,15 @@ bar-volume-empty-foreground = ${colors.foreground-alt}
 [module/alsa]
 type = internal/alsa
 
+format-volume-prefix = 
+format-volume-prefix-foreground = ${colors.foreground-alt}
 format-volume = <label-volume> <bar-volume>
-label-volume = 
+label-volume = %percentage:3%%
 label-volume-foreground = ${root.foreground}
 
-format-muted-prefix = " "
+format-muted-prefix = 
+label-muted = ─────
 format-muted-foreground = ${colors.foreground-alt}
-label-muted = sound muted
 
 bar-volume-width = 5
 bar-volume-foreground-0 = #55aa55

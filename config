@@ -275,8 +275,8 @@ client.focused_inactive $inactive-bg-color  $inactive-bg-color $inactive-text-co
 client.urgent           $urgent-bg-color    $urgent-bg-color   $text-color          $indicator-color
 
 # autostart
-exec --no-startup-id compton -d :0.0 --config /dev/null --inactive-dim=0.3 --detect-transient
 exec_always --no-startup-id "killall polybar; polybar -c ~/.config/i3/polybar top"
+exec_always --no-startup-id "killall compton; compton -d :0.0 --config /dev/null --inactive-dim=0.3 --detect-transient"
 exec --no-startup-id /usr/lib64/gnome-settings-daemon/gnome-settings-daemon
 #exec --no-startup-id /usr/lib/notify-osd/notify-osd
 exec --no-startup-id dunst

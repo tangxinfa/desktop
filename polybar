@@ -42,18 +42,18 @@ padding-right = 2
 module-margin-left = 1
 module-margin-right = 2
 
-font-0 = "Microsoft Yahei:size=12;1"
+font-0 = "Microsoft YaHei:size=12:antialias=true:style=Normal;1"
 font-1 = "Unifont:fontformat=truetype:size:12:antialias=false;0"
 font-2 = "Wuncon Siji:pixelsize=12;1"
 font-3 = "Font Awesome 5 Free:style=Solid:size=12;1"
 
-modules-left = i3 xwindow
+modules-left = i3 xwindow xkeysnail
 modules-center =
 modules-right = filesystem xbacklight alsa pulseaudio memory cpu battery temperature date eth wlan
 
 tray-position = right
 tray-padding = 2
-tray-maxsize = 22
+tray-maxsize = 20
 ;tray-transparent = true
 ;tray-background = #0063ff
 
@@ -91,15 +91,22 @@ label-indicator-margin = 1
 label-indicator-background = ${colors.secondary}
 label-indicator-underline = ${colors.secondary}
 
+[module/xkeysnail]
+type = custom/script
+format-foreground = ${colors.foreground-alt}
+exec = ps waux | grep 'python* /usr/bin/xkeysnail' | grep -v grep >/dev/null && echo 
+
 [module/filesystem]
 type = internal/fs
 interval = 25
 
 mount-0 = /
-
-label-mounted = %{F#0a81f5}%mountpoint%%{F-}: %percentage_used%%
-label-unmounted = %mountpoint% not mounted
-label-unmounted-foreground = ${colors.foreground-alt}
+format-mounted-prefix = 
+format-mounted-prefix-foreground = ${colors.foreground-alt}
+format-mounted = <label-mounted>
+label-mounted = %percentage_used:3%%
+label-unmounted = 
+label-unmounted-foreground = ${colors.alert}
 
 [module/bspwm]
 type = internal/bspwm
@@ -189,9 +196,9 @@ format = <label> <bar>
 label = %percentage:3%%
 label-foreground = ${colors.foreground}
 
-bar-width = 5
-bar-indicator = |
-bar-indicator-foreground = #ff
+bar-width = 10
+bar-indicator = ─
+bar-indicator-foreground = ${colors.foreground-alt}
 bar-indicator-font = 2
 bar-fill = ─
 bar-fill-font = 2
@@ -289,7 +296,7 @@ format-muted-prefix-foreground = ${colors.foreground-alt}
 label-muted = ─────
 label-muted-foreground = ${colors.foreground-alt}
 
-bar-volume-width = 5
+bar-volume-width = 10
 bar-volume-foreground-0 = #55aa55
 bar-volume-foreground-1 = #55aa55
 bar-volume-foreground-2 = #55aa55
@@ -298,8 +305,9 @@ bar-volume-foreground-4 = #55aa55
 bar-volume-foreground-5 = #f5a70a
 bar-volume-foreground-6 = #ff5555
 bar-volume-gradient = false
-bar-volume-indicator = |
+bar-volume-indicator = ─
 bar-volume-indicator-font = 2
+bar-volume-indicator-foreground = ${colors.foreground-alt}
 bar-volume-fill = ─
 bar-volume-fill-font = 2
 bar-volume-empty = ─
@@ -319,7 +327,7 @@ format-muted-prefix = 
 label-muted = ─────
 format-muted-foreground = ${colors.foreground-alt}
 
-bar-volume-width = 5
+bar-volume-width = 10
 bar-volume-foreground-0 = #55aa55
 bar-volume-foreground-1 = #55aa55
 bar-volume-foreground-2 = #55aa55
@@ -328,8 +336,9 @@ bar-volume-foreground-4 = #55aa55
 bar-volume-foreground-5 = #f5a70a
 bar-volume-foreground-6 = #ff5555
 bar-volume-gradient = false
-bar-volume-indicator = |
+bar-volume-indicator = ─
 bar-volume-indicator-font = 2
+bar-volume-indicator-foreground = ${colors.foreground-alt}
 bar-volume-fill = ─
 bar-volume-fill-font = 2
 bar-volume-empty = ─

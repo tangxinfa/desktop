@@ -47,9 +47,9 @@ font-1 = "Unifont:fontformat=truetype:size:12:antialias=false;0"
 font-2 = "Wuncon Siji:pixelsize=12;1"
 font-3 = "Font Awesome 5 Free:style=Solid:size=12;1"
 
-modules-left = i3 xwindow xkeysnail
-modules-center =
-modules-right = filesystem xbacklight alsa pulseaudio memory cpu battery temperature date eth wlan
+modules-left = i3 xwindow
+modules-center = keymap1 keymap2
+modules-right = filesystem xbacklight alsa pulseaudio cpu memory battery temperature date eth wlan
 
 tray-position = right
 tray-padding = 2
@@ -91,10 +91,16 @@ label-indicator-margin = 1
 label-indicator-background = ${colors.secondary}
 label-indicator-underline = ${colors.secondary}
 
-[module/xkeysnail]
+[module/keymap1]
 type = custom/script
-format-foreground = ${colors.foreground-alt}
-exec = ps waux | grep 'python* /usr/bin/xkeysnail' | grep -v grep >/dev/null && echo 
+exec-if = let "n=0"; /home/tangxinfa/Dropbox/Linux/xkeysnail/status; let "n=n+$?"; /home/tangxinfa/Dropbox/Linux/xhhkb/status; let "n=n+$?"; test $n -eq 1
+exec = echo 
+
+[module/keymap2]
+type = custom/script
+label-foreground = ${colors.primary}
+exec-if = /home/tangxinfa/Dropbox/Linux/xkeysnail/status && /home/tangxinfa/Dropbox/Linux/xhhkb/status
+exec = echo ""
 
 [module/filesystem]
 type = internal/fs

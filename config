@@ -255,6 +255,7 @@ for_window [class="Keepassx"] floating enable, move scratchpad, move absolute po
 for_window [class="Keepassx" window_type="normal"] resize set 800 600
 for_window [class="Conky"] floating enable, resize set 400 400, move absolute position center
 for_window [class="Wine" title="迅雷网络" window_type="dialog"] floating disable, move container to workspace $workspace4 # Main RTX window
+assign [class="Seafile*"] $workspace1
 
 #i3-gaps
 gaps inner 5
@@ -275,8 +276,6 @@ client.focused_inactive $inactive-bg-color  $inactive-bg-color $inactive-text-co
 client.urgent           $urgent-bg-color    $urgent-bg-color   $text-color          $indicator-color
 
 # autostart
-exec_always --no-startup-id "killall polybar; polybar -c ~/.config/i3/polybar top"
-exec_always --no-startup-id "killall compton; compton -d :0.0 --config /dev/null --inactive-dim=0.3 --detect-transient"
 exec --no-startup-id /usr/lib64/gnome-settings-daemon/gnome-settings-daemon
 #exec --no-startup-id /usr/lib/notify-osd/notify-osd
 exec --no-startup-id dunst
@@ -294,3 +293,5 @@ exec firefox
 exec emacs
 #exec --no-startup-id steam --tcp -perfectworld
 exec --no-startup-id dex ~/.local/share/applications/xkeysnail.desktop
+exec_always --no-startup-id "killall polybar; polybar -c ~/.config/i3/polybar top"
+exec_always --no-startup-id "killall compton; compton -d :0.0 --config /dev/null --inactive-dim=0.3 --detect-transient"

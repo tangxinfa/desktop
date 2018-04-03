@@ -36,7 +36,7 @@ font pango:Source Code Pro 12,Awesome 12
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
 floating_minimum_size 200 x -1
-floating_maximum_size 800 x -1
+floating_maximum_size 960 x -1
 
 focus_follows_mouse no
 
@@ -143,20 +143,21 @@ bindsym $mod+Shift+r restart
 #bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
 
 # resize window (you can also use the mouse for that)
-set $resize Resize:       [w]idth       [W]idth       [h]eight        [H]eight
+set $resize Resize:       [d]+Width    [a]-Width    [s]+Height    [w]-Height
 mode "$resize" {
-        bindsym w resize shrink width 10 px or 10 ppt
-        bindsym Shift+w resize grow width 10 px or 10 ppt
-        bindsym h resize shrink height 10 px or 10 ppt
-        bindsym Shift+h resize grow height 10 px or 10 ppt
+        bindsym a resize shrink width 10 px or 10 ppt
+        bindsym d resize grow width 10 px or 10 ppt
+        bindsym w resize shrink height 10 px or 10 ppt
+        bindsym s resize grow height 10 px or 10 ppt
         bindsym Left resize shrink width 10 px or 10 ppt
-        bindsym Up resize grow height 10 px or 10 ppt
-        bindsym Down resize shrink height 10 px or 10 ppt
         bindsym Right resize grow width 10 px or 10 ppt
+        bindsym Down resize grow height 10 px or 10 ppt
+        bindsym Up resize shrink height 10 px or 10 ppt
 
-        # back to normal: Enter or Escape
+        # back to normal: Enter or Escape or q
         bindsym Return mode "default"
         bindsym Escape mode "default"
+        bindsym q mode "default"
 }
 
 bindsym $mod+Shift+s mode "$resize"
@@ -192,9 +193,10 @@ mode "$brightness_management" {
      bindsym u exec --no-startup-id ~/.config/i3/bin/i3brightness '+%5'
      bindsym d exec --no-startup-id ~/.config/i3/bin/i3brightness '-%5'
 
-     # back to normal: Enter or Escape
+     # back to normal: Enter or Escape or q
      bindsym Return mode "default"
      bindsym Escape mode "default"
+     bindsym q mode "default"
 }
 bindsym $mod+Shift+b mode "$brightness_management"
 
@@ -209,9 +211,10 @@ mode "$volume" {
         bindsym d exec amixer set Master playback 1000-
         bindsym m exec amixer set Master toggle, mode "default"
 
-        # back to normal: Enter or Escape
+        # back to normal: Enter or Escape or q
         bindsym Return mode "default"
         bindsym Escape mode "default"
+        bindsym q mode "default"
 }
 bindsym $mod+Shift+v mode "$volume"
 
@@ -226,9 +229,10 @@ mode "$power_management" {
      bindsym s exec --no-startup-id systemctl suspend, mode "default"
      bindsym l exec --no-startup-id $i3lock, mode "default"
 
-     # back to normal: Enter or Escape
+     # back to normal: Enter or Escape or q
      bindsym Return mode "default"
      bindsym Escape mode "default"
+     bindsym q mode "default"
 }
 bindsym $mod+Shift+p mode "$power_management"
 
@@ -242,6 +246,7 @@ assign [class="Dia"] $workspace3
 assign [class="Pencil"] $workspace3
 assign [class="XMind"] $workspace3
 assign [class="libreoffice"] $workspace3
+for_window [title="LibreOffice"] move container to workspace $workspace3
 assign [class="Java" title="XMind"] $workspace3
 for_window [class="Dia" window_role="toolbox_window"] floating enable
 assign [title="Electronic WeChat"] $workspace4

@@ -21,10 +21,10 @@ alert = #bd2c40
 [bar/top]
 ;monitor = ${env:MONITOR:HDMI-1}
 width = 100%
-height = 34
+height = 35
 ;offset-x = 1%
 ;offset-y = 1%
-radius = 6.0
+;radius = 6.0
 fixed-center = false
 
 background = ${colors.background}
@@ -33,7 +33,7 @@ foreground = ${colors.foreground}
 line-size = 3
 line-color = #f00
 
-border-size = 4
+;border-size = 4
 border-color = #00000000
 
 padding-left = 0
@@ -49,10 +49,10 @@ font-3 = "Font Awesome 5 Free:style=Solid:size=12;1"
 
 modules-left = i3 keymap1 keymap2 xwindow
 modules-center =
-modules-right = filesystem xbacklight alsa pulseaudio cpu memory battery temperature date eth wlan
+modules-right = filesystem xbacklight pulseaudio cpu memory battery temperature eth wlan date
 
 tray-position = right
-tray-padding = 2
+tray-padding = 0
 tray-maxsize = 20
 ;tray-transparent = true
 ;tray-background = #0063ff

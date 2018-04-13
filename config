@@ -286,7 +286,7 @@ exec --no-startup-id /usr/lib64/gnome-settings-daemon/gnome-settings-daemon
 exec --no-startup-id dunst
 exec --no-startup-id fcitx
 exec --no-startup-id blueman-applet
-exec --no-startup-id volumeicon
+exec --no-startup-id mate-volume-control-applet
 exec --no-startup-id nm-applet
 exec --no-startup-id udiskie &
 exec --no-startup-id ~/.emacs.d/ssh_proxy.sh
@@ -294,9 +294,10 @@ exec --no-startup-id feh --bg-fill ~/.config/i3/desktop.jpg
 exec --no-startup-id xautolock -time 10 -locker "$i3lock"
 exec --no-startup-id sleep 10 && dropbox start
 exec --no-startup-id seafile-applet
-exec firefox
-exec emacs
+exec --no-startup-id firefox
+exec --no-startup-id emacs
 #exec --no-startup-id steam --tcp -perfectworld
 exec --no-startup-id dex ~/.local/share/applications/xkeysnail.desktop
-exec_always --no-startup-id "killall polybar; polybar -c ~/.config/i3/polybar top"
+exec_always --no-startup-id "killall polybar || sleep 1; polybar -c ~/.config/i3/polybar top"
 exec_always --no-startup-id "killall compton; compton -d :0.0 --config /dev/null --inactive-dim=0.3 --detect-transient"
+exec --no-startup-id i3-msg workspace $workspace2

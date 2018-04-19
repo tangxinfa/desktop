@@ -59,7 +59,7 @@ bindsym $mod+l exec $i3lock
 
 # program launcher: rofi
 ##  depends: yaourt -S rofi
-bindsym $mod+p exec "rofi -combi-modi drun,run,window -show drun -modi combi -theme arthur -width 30 -combi-hide-mode-prefix -terminal gnome-terminal"
+bindsym $mod+p exec "rofi -no-config -combi-modi window,drun,run -show combi -modi combi -no-tokenize -no-show-match -bw 0 -theme arthur -width 30 -terminal gnome-terminal"
 
 # change focus
 bindsym $mod+j focus left

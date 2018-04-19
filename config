@@ -59,7 +59,7 @@ bindsym $mod+l exec $i3lock
 
 # program launcher: rofi
 ##  depends: yaourt -S rofi
-bindsym $mod+p exec "rofi -no-config -combi-modi window,drun,run -show combi -modi combi -no-tokenize -no-show-match -bw 0 -theme arthur -width 30 -terminal gnome-terminal"
+bindsym $mod+p exec cd ~/Opensource/rofi/ && rofi -show drun -config ~/.config/i3/rofi
 
 # change focus
 bindsym $mod+j focus left
@@ -284,7 +284,7 @@ client.urgent           $urgent-bg-color    $urgent-bg-color   $text-color      
 # autostart
 #exec --no-startup-id /usr/lib/gsd-xsettings
 #exec --no-startup-id /usr/lib/notify-osd/notify-osd
-exec --no-startup-id dunst
+exec --no-startup-id dunst -conf ~/.config/i3/dunst
 exec --no-startup-id fcitx
 exec --no-startup-id blueman-applet
 exec --no-startup-id mate-volume-control-applet
@@ -299,6 +299,7 @@ exec --no-startup-id firefox
 exec --no-startup-id emacs
 #exec --no-startup-id steam --tcp -perfectworld
 exec --no-startup-id dex ~/.local/share/applications/xkeysnail.desktop
+exec --no-startup-id dex /usr/share/applications/redshift-gtk.desktop
 exec_always --no-startup-id "killall polybar || sleep 1; polybar -c ~/.config/i3/polybar top"
 exec_always --no-startup-id "killall compton; compton -d :0.0 --config /dev/null --inactive-dim=0.3 --detect-transient"
 exec --no-startup-id i3-msg workspace $workspace2

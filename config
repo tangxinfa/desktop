@@ -59,7 +59,7 @@ bindsym $mod+l exec $i3lock
 
 # program launcher: rofi
 ##  depends: yaourt -S rofi
-bindsym $mod+p exec cd ~/Opensource/rofi/ && rofi -show drun -config ~/.config/i3/rofi
+bindsym $mod+p exec rofi -show run -config ~/.config/i3/rofi
 
 # change focus
 bindsym $mod+j focus left
@@ -301,5 +301,5 @@ exec --no-startup-id emacs
 exec --no-startup-id dex ~/.local/share/applications/xkeysnail.desktop
 exec --no-startup-id dex /usr/share/applications/redshift-gtk.desktop
 exec_always --no-startup-id "killall polybar || sleep 1; polybar -c ~/.config/i3/polybar top"
-exec_always --no-startup-id "killall compton; compton -d :0.0 --config /dev/null --inactive-dim=0.3 --detect-transient"
+exec_always --no-startup-id "killall compton; compton -d :0.0 --config /dev/null --inactive-dim=0.15 --detect-transient"
 exec --no-startup-id i3-msg workspace $workspace2

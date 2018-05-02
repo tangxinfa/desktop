@@ -1,5 +1,5 @@
 ! "Enabled modi" Set from: Commandline
-rofi.modi:                           window,drun,run
+rofi.modi:                           run,drun,window
 ! "Window width" Set from: Commandline
 rofi.width:                          30
 ! "Number of lines" Set from: Default
@@ -27,13 +27,13 @@ rofi.terminal:                       gnome-terminal
 ! "Ssh client to use" Set from: Default
 ! rofi.ssh-client:                     ssh
 ! "Ssh command to execute" Set from: Default
-! rofi.ssh-command:                    {terminal} -e {ssh-client} {host}
+rofi.ssh-command:                    {terminal} -- {ssh-client} {host}
 ! "Run command to execute" Set from: Default
 ! rofi.run-command:                    {cmd}
 ! "Command to get extra run targets" Set from: Default
 ! rofi.run-list-command:               
 ! "Run command to execute that runs in shell" Set from: Default
-! rofi.run-shell-command:              {terminal} -e {cmd}
+rofi.run-shell-command:              {terminal} -- {cmd}
 ! "Command executed on accep-entry-custom for window modus" Set from: Default
 ! rofi.window-command:                 xkill -id {window}
 ! "Window fields to match in window mode" Set from: Commandline
@@ -45,7 +45,7 @@ rofi.window-match-fields:            class
 ! "Disable history in run/ssh" Set from: Default
 ! rofi.disable-history:                false
 ! "Use sorting" Set from: Default
-! rofi.sort:                           false
+rofi.sort:                             true
 ! "Use levenshtein sorting also for fuzzy matching" Set from: Default
 ! rofi.levenshtein-sort:               false
 ! "Set case-sensitivity" Set from: Default
@@ -99,7 +99,7 @@ rofi.tokenize:                       false
 ! "Click outside the window to exit" Set from: Default
 ! rofi.click-to-exit:                  true
 ! "Indicate how it match by underlining it." Set from: Commandline
-rofi.show-match:                     false
+rofi.show-match:                       false
 ! "New style theme file" Set from: Commandline
 rofi.theme:                          arthur
 ! "Color scheme for normal row" Set from: Default

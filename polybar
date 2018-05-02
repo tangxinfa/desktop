@@ -43,7 +43,7 @@ module-margin-left = 1
 module-margin-right = 2
 
 font-0 = "Microsoft YaHei:size=12:antialias=true:style=Normal;1"
-font-1 = "Unifont:fontformat=truetype:size:12:antialias=false;0"
+font-1 = "Material Icons:size:12:antialias=false;0"
 font-2 = "Wuncon Siji:pixelsize=12;1"
 font-3 = "Font Awesome 5 Free:style=Solid:size=12;1"
 
@@ -101,7 +101,7 @@ format-offset = 10
 type = custom/script
 label-foreground = ${colors.primary}
 exec-if = /home/tangxinfa/Dropbox/Linux/xkeysnail/status && /home/tangxinfa/Dropbox/Linux/xhhkb/status
-exec = echo ""
+exec = echo 
 format-offset = 10
 
 [module/filesystem]
@@ -109,7 +109,7 @@ type = internal/fs
 interval = 25
 
 mount-0 = /
-format-mounted-prefix = 
+format-mounted-prefix = 
 format-mounted-prefix-foreground = ${colors.foreground-alt}
 format-mounted = <label-mounted>
 label-mounted = %percentage_used:3%%
@@ -198,9 +198,9 @@ label-song-ellipsis = true
 [module/xbacklight]
 type = internal/xbacklight
 
-format-prefix = 
+format-prefix = 
 format-prefix-foreground = ${colors.foreground-alt}
-format = <label> <bar>
+format = <label>
 label = %percentage:3%%
 label-foreground = ${colors.foreground}
 
@@ -223,7 +223,7 @@ card = intel_backlight
 [module/cpu]
 type = internal/cpu
 interval = 2
-format-prefix = 
+format-prefix = 
 format-prefix-foreground = ${colors.foreground-alt}
 format-underline = #f90000
 label = %percentage:3%%
@@ -231,7 +231,7 @@ label = %percentage:3%%
 [module/memory]
 type = internal/memory
 interval = 2
-format-prefix = 
+format-prefix = 
 format-prefix-foreground = ${colors.foreground-alt}
 format-underline = #4bffdc
 label = %percentage_used:3%%
@@ -246,32 +246,36 @@ format-connected-underline = #9f78e1
 label-connected = %essid%
 
 format-disconnected =
+;format-disconnected-prefix = 
+;format-disconnected-prefix-foreground = ${colors.foreground-alt}
 ;format-disconnected = <label-disconnected>
 ;format-disconnected-underline = ${self.format-connected-underline}
-;label-disconnected = %ifname% disconnected
+;label-disconnected = " WiFi"
 ;label-disconnected-foreground = ${colors.foreground-alt}
 
-ramp-signal-0 = 
-ramp-signal-1 = 
-ramp-signal-2 = 
-ramp-signal-3 = 
-ramp-signal-4 = 
+ramp-signal-0 = 
+ramp-signal-1 = 
+ramp-signal-2 = 
+ramp-signal-3 = 
+ramp-signal-4 = 
 ramp-signal-foreground = ${colors.foreground-alt}
 
 [module/eth]
 type = internal/network
-interface = vboxnet0
+interface = enp0s25
 interval = 3.0
 
 format-connected-underline = #55aa55
-format-connected-prefix = " "
+format-connected-prefix = 
 format-connected-prefix-foreground = ${colors.foreground-alt}
 label-connected = %local_ip%
 
 format-disconnected =
+;format-disconnected-prefix = 
 ;format-disconnected = <label-disconnected>
+;format-disconnected-prefix-foreground = ${colors.foreground-alt}
 ;format-disconnected-underline = ${self.format-connected-underline}
-;label-disconnected = %ifname% disconnected
+;label-disconnected = " Eth"
 ;label-disconnected-foreground = ${colors.foreground-alt}
 
 [module/date]
@@ -284,7 +288,7 @@ date-alt = " %Y-%m-%d"
 time = %H:%M
 time-alt = %H:%M:%S
 
-format-prefix = 
+format-prefix = 
 format-prefix-foreground = ${colors.foreground-alt}
 format-underline = #0a6cf5
 
@@ -293,15 +297,16 @@ label = %date% %time%
 [module/pulseaudio]
 type = internal/pulseaudio
 
-format-volume-prefix = 
+format-volume-prefix =  
 format-volume-prefix-foreground = ${colors.foreground-alt}
-format-volume = <label-volume> <bar-volume>
+format-volume = <label-volume>
 label-volume = %percentage:3%%
 label-volume-foreground = ${root.foreground}
 
-format-muted-prefix = 
+format-muted-prefix =  
 format-muted-prefix-foreground = ${colors.foreground-alt}
-label-muted = ─────
+format-muted = <label-muted>
+label-muted = %percentage:3%%
 label-muted-foreground = ${colors.foreground-alt}
 
 bar-volume-width = 10
@@ -325,15 +330,17 @@ bar-volume-empty-foreground = ${colors.foreground-alt}
 [module/alsa]
 type = internal/alsa
 
-format-volume-prefix = 
+format-volume-prefix =  
 format-volume-prefix-foreground = ${colors.foreground-alt}
-format-volume = <label-volume> <bar-volume>
+format-volume = <label-volume>
 label-volume = %percentage:3%%
 label-volume-foreground = ${root.foreground}
 
-format-muted-prefix = 
-label-muted = ─────
-format-muted-foreground = ${colors.foreground-alt}
+format-muted-prefix =  
+format-muted-prefix-foreground = ${colors.foreground-alt}
+format-muted = <label-muted>
+label-muted = %percentage:3%%
+label-muted-foreground = ${colors.foreground-alt}
 
 bar-volume-width = 10
 bar-volume-foreground-0 = #55aa55
@@ -365,18 +372,18 @@ format-charging-underline = #ffb52a
 format-discharging = <ramp-capacity> <label-discharging>
 format-discharging-underline = ${self.format-charging-underline}
 
-format-full-prefix = " "
+format-full-prefix = " "
 format-full-prefix-foreground = ${colors.foreground-alt}
 format-full-underline = ${self.format-charging-underline}
 
-ramp-capacity-0 = 
-ramp-capacity-1 = 
-ramp-capacity-2 = 
+ramp-capacity-0 = 
+ramp-capacity-1 = 
+ramp-capacity-2 = 
 ramp-capacity-foreground = ${colors.foreground-alt}
 
-animation-charging-0 = 
-animation-charging-1 = 
-animation-charging-2 = 
+animation-charging-0 = 
+animation-charging-1 = 
+animation-charging-2 = 
 animation-charging-foreground = ${colors.foreground-alt}
 animation-charging-framerate = 750
 
@@ -394,9 +401,9 @@ label = %temperature-c%
 label-warn = %temperature-c%
 label-warn-foreground = ${colors.secondary}
 
-ramp-0 = 
-ramp-1 = 
-ramp-2 = 
+ramp-0 = 
+ramp-1 = 
+ramp-2 = 
 ramp-foreground = ${colors.foreground-alt}
 
 [module/powermenu]

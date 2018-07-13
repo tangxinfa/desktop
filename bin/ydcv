@@ -1,0 +1,11 @@
+#!/bin/bash
+
+if [[ "$@" != "" ]]; then
+    ydcv "$@"
+    exit 0
+fi
+
+text="$(xclip -o)"
+if [[ "$text" != "" ]]; then
+    ydcv "$text"
+fi

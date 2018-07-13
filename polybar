@@ -8,12 +8,10 @@
 ;=====================================================
 
 [colors]
-;background = ${xrdb:color0:#222}
 background = #222
 background-alt = #444
-;foreground = ${xrdb:color7:#222}
 foreground = #dfdfdf
-foreground-alt = #555
+foreground-alt = #8d8d8d
 primary = #ffb52a
 secondary = #e60053
 alert = #bd2c40
@@ -25,7 +23,7 @@ height = 35
 ;offset-x = 1%
 ;offset-y = 1%
 ;radius = 6.0
-fixed-center = false
+;fixed-center = false
 
 background = ${colors.background}
 foreground = ${colors.foreground}
@@ -39,7 +37,7 @@ border-color = #00000000
 padding-left = 0
 padding-right = 2
 
-module-margin-left = 1
+module-margin-left = 0
 module-margin-right = 2
 
 font-0 = "Microsoft YaHei:size=12:antialias=true:style=Normal;1"
@@ -51,9 +49,9 @@ modules-left = i3 keymap1 keymap2 xwindow
 modules-center =
 modules-right = filesystem xbacklight pulseaudio cpu memory battery temperature eth wlan date
 
-tray-position = right
-tray-padding = 0
-tray-maxsize = 20
+tray-position = center
+tray-padding = 5
+tray-maxsize = 25
 ;tray-transparent = true
 ;tray-background = #0063ff
 
@@ -81,25 +79,23 @@ blacklist-0 = num lock
 
 format-prefix = " "
 format-prefix-foreground = ${colors.foreground-alt}
-format-prefix-underline = ${colors.secondary}
 
 label-layout = %layout%
-label-layout-underline = ${colors.secondary}
 
 label-indicator-padding = 2
 label-indicator-margin = 1
 label-indicator-background = ${colors.secondary}
-label-indicator-underline = ${colors.secondary}
 
 [module/keymap1]
 type = custom/script
+label-foreground = ${colors.primary}
 exec-if = let "n=0"; /home/tangxinfa/Dropbox/Linux/xkeysnail/status; let "n=n+$?"; /home/tangxinfa/Dropbox/Linux/xhhkb/status; let "n=n+$?"; test $n -eq 1
 exec = echo 
 format-offset = 10
 
 [module/keymap2]
 type = custom/script
-label-foreground = ${colors.primary}
+label-foreground = ${colors.secondary}
 exec-if = /home/tangxinfa/Dropbox/Linux/xkeysnail/status && /home/tangxinfa/Dropbox/Linux/xhhkb/status
 exec = echo 
 format-offset = 10
@@ -109,11 +105,11 @@ type = internal/fs
 interval = 25
 
 mount-0 = /
-format-mounted-prefix = 
+format-mounted-prefix = 
 format-mounted-prefix-foreground = ${colors.foreground-alt}
 format-mounted = <label-mounted>
-label-mounted = %percentage_used:3%%
-label-unmounted = 
+label-mounted = %percentage_used:2%%
+label-unmounted = 
 label-unmounted-foreground = ${colors.alert}
 
 [module/bspwm]
@@ -201,7 +197,7 @@ type = internal/xbacklight
 format-prefix = 
 format-prefix-foreground = ${colors.foreground-alt}
 format = <label>
-label = %percentage:3%%
+label = %percentage:2%%
 label-foreground = ${colors.foreground}
 
 bar-width = 10
@@ -225,16 +221,14 @@ type = internal/cpu
 interval = 2
 format-prefix = 
 format-prefix-foreground = ${colors.foreground-alt}
-format-underline = #f90000
-label = %percentage:3%%
+label = %percentage:2%%
 
 [module/memory]
 type = internal/memory
 interval = 2
 format-prefix = 
 format-prefix-foreground = ${colors.foreground-alt}
-format-underline = #4bffdc
-label = %percentage_used:3%%
+label = %percentage_used:2%%
 
 [module/wlan]
 type = internal/network
@@ -242,7 +236,6 @@ interface = wlp4s0
 interval = 3.0
 
 format-connected = <ramp-signal> <label-connected>
-format-connected-underline = #9f78e1
 label-connected = %essid%
 
 format-disconnected =
@@ -265,8 +258,7 @@ type = internal/network
 interface = enp0s25
 interval = 3.0
 
-format-connected-underline = #55aa55
-format-connected-prefix = 
+format-connected-prefix = 
 format-connected-prefix-foreground = ${colors.foreground-alt}
 label-connected = %local_ip%
 
@@ -290,7 +282,6 @@ time-alt = %H:%M:%S
 
 format-prefix = 
 format-prefix-foreground = ${colors.foreground-alt}
-format-underline = #0a6cf5
 
 label = %date% %time%
 
@@ -300,13 +291,13 @@ type = internal/pulseaudio
 format-volume-prefix =  
 format-volume-prefix-foreground = ${colors.foreground-alt}
 format-volume = <label-volume>
-label-volume = %percentage:3%%
+label-volume = %percentage:2%%
 label-volume-foreground = ${root.foreground}
 
 format-muted-prefix =  
 format-muted-prefix-foreground = ${colors.foreground-alt}
 format-muted = <label-muted>
-label-muted = %percentage:3%%
+label-muted = %percentage:2%%
 label-muted-foreground = ${colors.foreground-alt}
 
 bar-volume-width = 10
@@ -333,13 +324,13 @@ type = internal/alsa
 format-volume-prefix =  
 format-volume-prefix-foreground = ${colors.foreground-alt}
 format-volume = <label-volume>
-label-volume = %percentage:3%%
+label-volume = %percentage:2%%
 label-volume-foreground = ${root.foreground}
 
 format-muted-prefix =  
 format-muted-prefix-foreground = ${colors.foreground-alt}
 format-muted = <label-muted>
-label-muted = %percentage:3%%
+label-muted = %percentage:2%%
 label-muted-foreground = ${colors.foreground-alt}
 
 bar-volume-width = 10
@@ -364,26 +355,27 @@ bar-volume-empty-foreground = ${colors.foreground-alt}
 type = internal/battery
 battery = BAT0
 adapter = AC
-full-at = 78
+full-at = 80 ;; see /etc/default/tlp START_CHARGE_THRESH_BAT0
 
 format-charging = <animation-charging> <label-charging>
-format-charging-underline = #ffb52a
-
 format-discharging = <ramp-capacity> <label-discharging>
-format-discharging-underline = ${self.format-charging-underline}
+format-discharging-underline = ${colors.alert}
 
-format-full-prefix = " "
+format-full-prefix = 
 format-full-prefix-foreground = ${colors.foreground-alt}
-format-full-underline = ${self.format-charging-underline}
 
-ramp-capacity-0 = 
-ramp-capacity-1 = 
-ramp-capacity-2 = 
-ramp-capacity-foreground = ${colors.foreground-alt}
+ramp-capacity-0 = 
+ramp-capacity-1 = 
+ramp-capacity-2 = 
+ramp-capacity-3 = 
+ramp-capacity-4 = 
+ramp-capacity-foreground = ${colors.primary}
 
-animation-charging-0 = 
-animation-charging-1 = 
-animation-charging-2 = 
+animation-charging-0 = 
+animation-charging-1 = 
+animation-charging-2 = 
+animation-charging-3 = 
+animation-charging-4 = 
 animation-charging-foreground = ${colors.foreground-alt}
 animation-charging-framerate = 750
 
@@ -392,18 +384,17 @@ type = internal/temperature
 thermal-zone = 0
 warn-temperature = 60
 
-format = <ramp> <label>
-format-underline = #f50a4d
-format-warn = <ramp> <label-warn>
-format-warn-underline = ${self.format-underline}
+format = <ramp><label>
+format-warn = <ramp><label-warn>
+format-warn-underline = ${colors.alert}
 
 label = %temperature-c%
 label-warn = %temperature-c%
 label-warn-foreground = ${colors.secondary}
 
-ramp-0 = 
-ramp-1 = 
-ramp-2 = 
+ramp-0 = 
+ramp-1 = 
+ramp-2 = 
 ramp-foreground = ${colors.foreground-alt}
 
 [module/powermenu]

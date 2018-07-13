@@ -1,0 +1,15 @@
+@import "android_notification"
+
+#prompt {
+     enabled: true;
+     padding: 5px;
+}
+
+#textbox-prompt-colon {
+     enabled: false;
+}
+
+#window {
+    border:       0 0 3 0;
+    border-color: #e60053;
+}

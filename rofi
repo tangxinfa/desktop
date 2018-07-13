@@ -1,13 +1,13 @@
 ! "Enabled modi" Set from: Commandline
-rofi.modi:                           run,drun,window
+rofi.modi:                           run,drun,:~/.config/i3/bin/ydcv,window
 ! "Window width" Set from: Commandline
 rofi.width:                          30
 ! "Number of lines" Set from: Default
-! rofi.lines:                          15
+rofi.lines:                          10
 ! "Number of columns" Set from: Default
 ! rofi.columns:                        1
 ! "Font to use" Set from: Default
-! rofi.font:                           mono 12
+rofi.font:                           Source Code Pro 12
 ! "Border width" Set from: Commandline
 rofi.bw:                             0
 ! "Location on screen" Set from: Default
@@ -19,9 +19,9 @@ rofi.bw:                             0
 ! "X-offset relative to location" Set from: Default
 ! rofi.xoffset:                        0
 ! "Always show number of lines" Set from: Default
-! rofi.fixed-num-lines:                true
+rofi.fixed-num-lines:                true
 ! "Whether to load and show icons" Set from: Rasi File
-rofi.show-icons:                     true
+rofi.show-icons:                       true
 ! "Terminal to use" Set from: Commandline
 rofi.terminal:                       gnome-terminal
 ! "Ssh client to use" Set from: Default
@@ -31,7 +31,7 @@ rofi.ssh-command:                    {terminal} -- {ssh-client} {host}
 ! "Run command to execute" Set from: Default
 ! rofi.run-command:                    {cmd}
 ! "Command to get extra run targets" Set from: Default
-! rofi.run-list-command:               
+! rofi.run-list-command:
 ! "Run command to execute that runs in shell" Set from: Default
 rofi.run-shell-command:              {terminal} -- {cmd}
 ! "Command executed on accep-entry-custom for window modus" Set from: Default
@@ -39,7 +39,7 @@ rofi.run-shell-command:              {terminal} -- {cmd}
 ! "Window fields to match in window mode" Set from: Commandline
 rofi.window-match-fields:            class
 ! "Theme to use to look for icons" Set from: Default
-! rofi.drun-icon-theme:                
+! rofi.drun-icon-theme:
 ! "Desktop entry fields to match in drun" Set from: Default
 ! rofi.drun-match-fields:              name,generic,exec,categories
 ! "Disable history in run/ssh" Set from: Default
@@ -53,7 +53,7 @@ rofi.sort:                             true
 ! "Cycle through the results list" Set from: Default
 ! rofi.cycle:                          true
 ! "Enable sidebar-mode" Set from: Default
-! rofi.sidebar-mode:                   false
+rofi.sidebar-mode:                     true
 ! "Row height (in chars)" Set from: Default
 ! rofi.eh:                             1
 ! "Enable auto select mode" Set from: Default
@@ -75,7 +75,7 @@ rofi.tokenize:                       false
 ! "Padding within rows *DEPRECATED*" Set from: Default
 ! rofi.line-padding:                   1
 ! "Pre-set filter" Set from: Default
-! rofi.filter:                         
+! rofi.filter:
 ! "Separator style (none, dash, solid) *DEPRECATED*" Set from: Default
 ! rofi.separator-style:                dash
 ! "Hide scroll-bar *DEPRECATED*" Set from: Default
@@ -85,7 +85,7 @@ rofi.tokenize:                       false
 ! "Fake transparency *DEPRECATED*" Set from: Default
 ! rofi.fake-transparency:              false
 ! "DPI" Set from: Default
-! rofi.dpi:                            -1
+rofi.dpi:                              0
 ! "Threads to use for string matching" Set from: Default
 ! rofi.threads:                        0
 ! "Scrollbar width *DEPRECATED*" Set from: Default
@@ -101,15 +101,15 @@ rofi.tokenize:                       false
 ! "Indicate how it match by underlining it." Set from: Commandline
 rofi.show-match:                       false
 ! "New style theme file" Set from: Commandline
-rofi.theme:                          arthur
+rofi.theme:                            ~/.config/i3/rofi.rasi
 ! "Color scheme for normal row" Set from: Default
-! rofi.color-normal:                   
+! rofi.color-normal:
 ! "Color scheme for urgent row" Set from: Default
-! rofi.color-urgent:                   
+! rofi.color-urgent:
 ! "Color scheme for active row" Set from: Default
-! rofi.color-active:                   
+! rofi.color-active:
 ! "Color scheme window" Set from: Default
-! rofi.color-window:                   
+! rofi.color-window:
 ! "Max history size (WARNING: can cause slowdowns when set to high)." Set from: Default
 ! rofi.max-history-size:               25
 ! "Hide the prefix mode prefix on the combi view." Set from: Default
@@ -117,23 +117,23 @@ rofi.theme:                          arthur
 ! "Pidfile location" Set from: Default
 ! rofi.pid:                            /run/user/1000/rofi.pid
 ! "The display name of this browser" Set from: Rasi File
-rofi.display-window:                 
+rofi.display-window:                   
 ! "The display name of this browser" Set from: Default
-! rofi.display-windowcd:               
+! rofi.display-windowcd:
 ! "The display name of this browser" Set from: Rasi File
-rofi.display-run:                    
+rofi.display-run:                      
 ! "The display name of this browser" Set from: Rasi File
-rofi.display-ssh:                      
+! rofi.display-ssh:                    
 ! "The display name of this browser" Set from: Rasi File
-rofi.display-drun:                   
+rofi.display-drun:                     
 ! "The display name of this browser" Set from: Rasi File
-rofi.display-combi:                  
+! rofi.display-combi:                  
 ! "The display name of this browser" Set from: Default
-! rofi.display-keys:                   
+! rofi.display-keys:
 ! "Paste primary selection" Set from: Default
 ! rofi.kb-primary-paste:               Control+V,Shift+Insert
 ! "Paste clipboard" Set from: Default
-! rofi.kb-secondary-paste:             Control+v,Insert
+rofi.kb-secondary-paste:             Control+y
 ! "Clear input line" Set from: Default
 ! rofi.kb-clear-line:                  Control+w
 ! "Beginning of line" Set from: Default
@@ -181,17 +181,17 @@ rofi.display-combi:                  
 ! "Select next entry" Set from: Default
 ! rofi.kb-row-down:                    Down,Control+n
 ! "Go to next row, if one left, accept it, if no left next mode." Set from: Default
-! rofi.kb-row-tab:                     Tab
+rofi.kb-row-tab:
 ! "Go to the previous page" Set from: Default
-! rofi.kb-page-prev:                   Page_Up
+rofi.kb-page-prev:                   Alt+v
 ! "Go to the next page" Set from: Default
-! rofi.kb-page-next:                   Page_Down
+rofi.kb-page-next:                   Control+v
 ! "Go to the first entry" Set from: Default
 ! rofi.kb-row-first:                   Home,KP_Home
 ! "Go to the last entry" Set from: Default
 ! rofi.kb-row-last:                    End,KP_End
 ! "Set selected item as input text" Set from: Default
-! rofi.kb-row-select:                  Control+space
+rofi.kb-row-select:                  Tab
 ! "Take a screenshot of the rofi window" Set from: Default
 ! rofi.kb-screenshot:                  Alt+S
 ! "Toggle case sensitivity" Set from: Default

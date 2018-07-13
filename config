@@ -21,6 +21,7 @@ set $inactive-text-color #676E7D
 set $urgent-bg-color     #E53935
 set $separator-color     #757575
 set $indicator-color     #00ff00
+set $highlight-color     #e60053
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
@@ -36,7 +37,7 @@ font pango:Source Code Pro 12,Awesome 12
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
 floating_minimum_size 200 x -1
-floating_maximum_size 960 x -1
+floating_maximum_size 1280 x -1
 
 focus_follows_mouse no
 
@@ -59,7 +60,9 @@ bindsym $mod+l exec $i3lock
 
 # program launcher: rofi
 ##  depends: yaourt -S rofi
-bindsym $mod+p exec rofi -show run -config ~/.config/i3/rofi
+bindsym $mod+r exec rofi -show run -config ~/.config/i3/rofi
+bindsym $mod+d exec rofi -show drun -config ~/.config/i3/rofi
+bindsym $mod+t exec rofi -show  -config ~/.config/i3/rofi
 
 # change focus
 bindsym $mod+j focus left
@@ -144,12 +147,12 @@ bindsym $mod+Shift+r restart
 #bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
 
 # resize window (you can also use the mouse for that)
-set $resize Resize:       [d]+Width    [a]-Width    [s]+Height    [w]-Height
+set $resize [f]    [b]    [n]    [p]
 mode "$resize" {
-        bindsym a resize shrink width 10 px or 10 ppt
-        bindsym d resize grow width 10 px or 10 ppt
-        bindsym w resize shrink height 10 px or 10 ppt
-        bindsym s resize grow height 10 px or 10 ppt
+        bindsym f resize grow width 10 px or 10 ppt
+        bindsym b resize shrink width 10 px or 10 ppt
+        bindsym n resize grow height 10 px or 10 ppt
+        bindsym p resize shrink height 10 px or 10 ppt
         bindsym Left resize shrink width 10 px or 10 ppt
         bindsym Right resize grow width 10 px or 10 ppt
         bindsym Down resize grow height 10 px or 10 ppt
@@ -163,36 +166,14 @@ mode "$resize" {
 
 bindsym $mod+Shift+s mode "$resize"
 
-
-# Start i3bar to display a workspace bar (plus the system information i3status
-# finds out, if available)
-# bar {
-#     strip_workspace_numbers yes
-#     status_command ~/.config/i3/bin/i3status
-#     position top
-#     mode hide
-# #   hidden_state show
-# #   i3bar_command i3bar -t
-#     height 32
-
-#     colors {
-# 		background $bg-color
-# 	   	separator  $separator-color
-# 		#                  border             background         text
-# 		focused_workspace  $bg-color          $bg-color          $text-color
-# 		inactive_workspace $inactive-bg-color $inactive-bg-color $inactive-text-color
-# 		urgent_workspace   $urgent-bg-color   $urgent-bg-color   $text-color
-# 	}
-# }
-
 # Screen brightness controls
 bindsym XF86MonBrightnessDown exec --no-startup-id ~/.config/i3/bin/i3brightness '-%5'
 bindsym XF86MonBrightnessUp exec --no-startup-id ~/.config/i3/bin/i3brightness '+%5'
 # Screen brightness mode
-set $brightness_management Brightness:       [U]p       [D]own
+set $brightness_management U[p]    Dow[n]
 mode "$brightness_management" {
-     bindsym u exec --no-startup-id ~/.config/i3/bin/i3brightness '+%5'
-     bindsym d exec --no-startup-id ~/.config/i3/bin/i3brightness '-%5'
+     bindsym p exec --no-startup-id ~/.config/i3/bin/i3brightness '+%5'
+     bindsym n exec --no-startup-id ~/.config/i3/bin/i3brightness '-%5'
 
      # back to normal: Enter or Escape or q
      bindsym Return mode "default"
@@ -206,11 +187,11 @@ bindsym XF86AudioRaiseVolume exec amixer set Master playback 1000+
 bindsym XF86AudioLowerVolume exec amixer set Master playback 1000-
 bindsym XF86AudioMute exec amixer set Master toggle
 
-set $volume Volume:       [U]p       [D]own       [M]ute
+set $volume U[p]    Dow[n]    Mut[e]
 mode "$volume" {
-        bindsym u exec amixer set Master playback 1000+
-        bindsym d exec amixer set Master playback 1000-
-        bindsym m exec amixer set Master toggle, mode "default"
+        bindsym p exec amixer set Master playback 1000+
+        bindsym n exec amixer set Master playback 1000-
+        bindsym e exec amixer set Master toggle, mode "default"
 
         # back to normal: Enter or Escape or q
         bindsym Return mode "default"
@@ -221,7 +202,7 @@ bindsym $mod+Shift+v mode "$volume"
 
 
 # power management mode
-set $power_management Power Management:       [P]owerOff       [R]eboot      [E]xit      [H]ibernate      [S]uspend       [L]ockscreen
+set $power_management [P]owerOff    [R]eboot    [E]xit    [H]ibernate    [S]uspend    [L]ockscreen
 mode "$power_management" {
      bindsym p exec --no-startup-id ~/.config/i3/i3close && (i3-msg exit || systemctl poweroff), mode "default"
      bindsym r exec --no-startup-id ~/.config/i3/i3close && (i3-msg exit || systemctl reboot), mode "default"
@@ -253,12 +234,13 @@ for_window [class="Dia" window_role="toolbox_window"] floating enable
 assign [title="Electronic WeChat"] $workspace4
 assign [class="dingtalk"] $workspace4
 assign [class="netease-cloud-music"] $workspace4
+assign [class="vlc"] $workspace4
 assign [class="Wine"] $workspace4
 assign [class="VirtualBox"] $workspace5
 assign [class="Steam"] $workspace6
 assign [title="Steam"] $workspace6
-for_window [class="Keepassx"] floating enable, move scratchpad, move absolute position center
-for_window [class="Keepassx" window_type="normal"] resize set 800 600
+for_window [class="keepassxc"] floating enable, move scratchpad, move absolute position center, resize set 600 400
+for_window [class="Zeal" window_type="normal"] floating enable, resize set 800 600, move absolute position center, focus
 for_window [class="Conky"] floating enable, resize set 400 400, move absolute position center
 for_window [class="Wine" title="迅雷网络" window_type="dialog"] floating disable, move container to workspace $workspace4 # Main RTX window
 assign [class="Seafile*"] $workspace1
@@ -273,13 +255,14 @@ smart_borders on
 new_window none
 hide_edge_borders both
 for_window [class="^.*"] border pixel 0
+for_window [class="keepassxc"] border pixel 2
 
 # window colors
 #                       border              background         text                 indicator
-client.focused          $bg-color           $bg-color          $text-color          $indicator-color
-client.unfocused        $inactive-bg-color  $inactive-bg-color $inactive-text-color $indicator-color
-client.focused_inactive $inactive-bg-color  $inactive-bg-color $inactive-text-color $indicator-color
-client.urgent           $urgent-bg-color    $urgent-bg-color   $text-color          $indicator-color
+client.focused          $bg-color           $highlight-color   $text-color          $indicator-color
+client.unfocused        $inactive-bg-color  $highlight-color   $inactive-text-color $indicator-color
+client.focused_inactive $inactive-bg-color  $highlight-color   $inactive-text-color $indicator-color
+client.urgent           $urgent-bg-color    $highlight-color   $text-color          $indicator-color
 
 # autostart
 #exec --no-startup-id /usr/lib/gsd-xsettings

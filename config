@@ -145,6 +145,8 @@ bindsym $mod+Shift+c reload
 bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
 #bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
+# open system monitor
+bindsym $mod+m exec gnome-system-monitor
 
 # resize window (you can also use the mouse for that)
 set $resize [f]    [b]    [n]    [p]
@@ -272,7 +274,7 @@ exec --no-startup-id fcitx
 exec --no-startup-id blueman-applet
 exec --no-startup-id mate-volume-control-applet
 exec --no-startup-id nm-applet
-exec --no-startup-id udiskie &
+exec --no-startup-id udiskie -t &
 exec --no-startup-id ~/.emacs.d/ssh_proxy.sh
 exec --no-startup-id feh --bg-fill ~/.config/i3/desktop.jpg
 exec --no-startup-id xautolock -time 10 -locker "$i3lock"

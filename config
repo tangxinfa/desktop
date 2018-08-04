@@ -246,6 +246,7 @@ for_window [class="Zeal" window_type="normal"] floating enable, resize set 800 6
 for_window [class="Conky"] floating enable, resize set 400 400, move absolute position center
 for_window [class="Wine" title="迅雷网络" window_type="dialog"] floating disable, move container to workspace $workspace4 # Main RTX window
 assign [class="Seafile*"] $workspace1
+for_window [class="Solaar"] floating enable
 
 #i3-gaps
 gaps inner 5
@@ -284,7 +285,9 @@ exec --no-startup-id firefox
 exec --no-startup-id emacs
 #exec --no-startup-id steam --tcp -perfectworld
 exec --no-startup-id dex ~/.local/share/applications/xkeysnail.desktop
+exec --no-startup-id dex /etc/xdg/autostart/geoclue-demo-agent.desktop
 exec --no-startup-id dex /usr/share/applications/redshift-gtk.desktop
+exec --no-startup-id dex /etc/xdg/autostart/solaar.desktop
 exec_always --no-startup-id "killall polybar || sleep 1; polybar -c ~/.config/i3/polybar top"
 exec_always --no-startup-id "killall compton; compton -d :0.0 --config /dev/null --inactive-dim=0.15 --detect-transient"
 exec --no-startup-id i3-msg workspace $workspace2

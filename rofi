@@ -1,5 +1,5 @@
 ! "Enabled modi" Set from: Commandline
-rofi.modi:                           run,drun,:~/.config/i3/bin/ydcv,window
+rofi.modi:                           drun,run,:~/.config/i3/bin/ydcv,window
 ! "Window width" Set from: Commandline
 rofi.width:                          30
 ! "Number of lines" Set from: Default
@@ -33,7 +33,7 @@ rofi.ssh-command:                    {terminal} -- {ssh-client} {host}
 ! "Command to get extra run targets" Set from: Default
 ! rofi.run-list-command:
 ! "Run command to execute that runs in shell" Set from: Default
-rofi.run-shell-command:              {terminal} -- {cmd}
+rofi.run-shell-command:              {terminal} --role=gnome-terminal-popup -- {cmd}
 ! "Command executed on accep-entry-custom for window modus" Set from: Default
 ! rofi.window-command:                 xkill -id {window}
 ! "Window fields to match in window mode" Set from: Commandline

@@ -14,14 +14,15 @@ set $mod Mod4
 set $i3lock ~/.config/i3/i3lock
 
 # define colors
-set $bg-color 	         #2f343f
-set $inactive-bg-color   #2f343f
-set $text-color          #f3f4f5
-set $inactive-text-color #676E7D
-set $urgent-bg-color     #E53935
-set $separator-color     #757575
-set $indicator-color     #00ff00
-set $highlight-color     #e60053
+set $background-color 	     #ffffff
+set $border-color 	         #2f343f
+set $inactive-border-color   #2f343f
+set $text-color              #f3f4f5
+set $inactive-text-color     #676E7D
+set $urgent-border-color     #E53935
+set $separator-color         #757575
+set $indicator-color         #00ff00
+set $highlight-color         #e60053
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
@@ -224,7 +225,8 @@ popup_during_fullscreen leave_fullscreen
 
 # workspace arrangement
 assign [class="Emacs"] $workspace2
-assign [class="Gnome-terminal"] $workspace1
+assign [class="Gnome-terminal" window_role="gnome-terminal-window.*"] $workspace1
+for_window [class="Gnome-terminal" window_role="gnome-terminal-popup.*"] floating enable
 assign [class="Firefox"] $workspace1
 assign [class="Dia"] $workspace3
 assign [class="Pencil"] $workspace3
@@ -258,14 +260,15 @@ smart_borders on
 new_window none
 hide_edge_borders both
 for_window [class="^.*"] border pixel 0
-for_window [class="keepassxc"] border pixel 2
+for_window [class="keepassxc"] border pixel 1
+for_window [class="Gnome-terminal" window_role="gnome-terminal-.*"] border pixel 1
 
 # window colors
-#                       border              background         text                 indicator
-client.focused          $bg-color           $highlight-color   $text-color          $indicator-color
-client.unfocused        $inactive-bg-color  $highlight-color   $inactive-text-color $indicator-color
-client.focused_inactive $inactive-bg-color  $highlight-color   $inactive-text-color $indicator-color
-client.urgent           $urgent-bg-color    $highlight-color   $text-color          $indicator-color
+#                       border                  background             text                     indicator
+client.focused          $border-color           $background-color      $text-color              $indicator-color
+client.unfocused        $inactive-border-color  $background-color      $inactive-text-color     $indicator-color
+client.focused_inactive $inactive-border-color  $background-color      $inactive-text-color     $indicator-color
+client.urgent           $urgent-border-color    $background-color      $text-color              $indicator-color
 
 # autostart
 #exec --no-startup-id /usr/lib/gsd-xsettings
@@ -288,6 +291,6 @@ exec --no-startup-id dex ~/.local/share/applications/xkeysnail.desktop
 exec --no-startup-id dex /etc/xdg/autostart/geoclue-demo-agent.desktop
 exec --no-startup-id dex /usr/share/applications/redshift-gtk.desktop
 exec --no-startup-id dex /etc/xdg/autostart/solaar.desktop
-exec_always --no-startup-id "killall polybar || sleep 1; polybar -c ~/.config/i3/polybar top"
+exec_always --no-startup-id ~/.config/i3/bin/i3polybar
 exec_always --no-startup-id "killall compton; compton -d :0.0 --config /dev/null --inactive-dim=0.15 --detect-transient"
 exec --no-startup-id i3-msg workspace $workspace2

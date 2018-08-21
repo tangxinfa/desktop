@@ -1,15 +1,77 @@
-@import "android_notification"
+@import "Arc"
+@import "/home/tangxinfa/.emacs.d/.rasi"
+
+* {
+    selected-normal-foreground:  @emacs-region-foreground;
+    foreground:                  @emacs-region-foreground;
+    normal-foreground:           @emacs-region-foreground;
+    alternate-normal-background: @emacs-region-background;
+    red:                         @emacs-error-foreground;
+    selected-urgent-foreground:  @emacs-error-foreground;
+    blue:                        @emacs-warning-foreground;
+    urgent-foreground:           @emacs-error-foreground;
+    alternate-urgent-background: @emacs-region-background;
+    active-foreground:           @emacs-region-foreground;
+    lightbg:                     @emacs-region-background;
+    selected-active-foreground:  @emacs-region-foreground;
+    alternate-active-background: @emacs-region-background;
+    background:                  @emacs-region-background;
+    bordercolor:                 @emacs-modeline-underline;
+    alternate-normal-foreground: @emacs-region-foreground;
+    normal-background:           @emacs-region-background;
+    lightfg:                     @emacs-shadow-foreground;
+    selected-normal-background:  @emacs-region-background;
+    border-color:                @emacs-modeline-underline;
+    separatorcolor:              @emacs-modeline-underline;
+    urgent-background:           @emacs-region-background;
+    selected-urgent-background:  @emacs-region-background;
+    alternate-urgent-foreground: @emacs-error-foreground;
+    background-color:            @emacs-region-background;
+    alternate-active-foreground: @emacs-region-foreground;
+    active-background:           @emacs-region-background;
+    selected-active-background:  @emacs-region-background;
+}
+
+#inputbar {
+    children:   [ prompt,entry ];
+}
 
 #prompt {
-     enabled: true;
-     padding: 5px;
+    padding: 5px;
 }
 
-#textbox-prompt-colon {
-     enabled: false;
+#entry {
+    border:       0 0 1px 0;
+    border-color: @emacs-modeline-underline;
 }
 
-#window {
-    border:       0 0 3 0;
-    border-color: #e60053;
+#listview {
+    border: 0;
+    padding: 5px;
+    spacing: 0;
+    scrollbar: false;
+}
+
+#element {
+    padding: 2px;
+    border-color: @background;
+    border: 0 0 0 5px;
+}
+
+#element.selected.normal {
+    text-color: @urgent-foreground;
+    border-color: @urgent-foreground;
+}
+
+#button.selected {
+    background-color: @background;
+}
+
+#button {
+    text-color: @lightfg;
+}
+
+#sidebar {
+    border: 0;
+    padding: 5px 0px;
 }

@@ -8,16 +8,15 @@
 ;=====================================================
 
 [colors]
-background = ${xrdb:Emacs.ModeLine.background}
-background-alt = ${xrdb:Emacs.Default.background}
-foreground = ${xrdb:Emacs.ModeLine.foreground}
-foreground-alt = ${xrdb:Emacs.Default.foreground}
+background = ${xrdb:Emacs.ModeLineInactive.background}
+background-alt = ${xrdb:Emacs.ModeLineInactive.background}
+foreground = ${xrdb:Emacs.ModeLineInactive.foreground}
+foreground-alt = ${xrdb:Emacs.ModeLineInactive.foreground}
 underline = ${xrdb:Emacs.ModeLine.underline}
-region-background = ${xrdb:Emacs.Region.background}
-region-foreground = ${xrdb:Emacs.Region.foreground}
-highlight-background = ${xrdb:Emacs.Highlight.background}
-changed-foreground = ${xrdb:Emacs.Changed.foreground}
+border-foreground = ${xrdb:Emacs.VerticalBorder.foreground}
+border-background = ${xrdb:Emacs.VerticalBorder.background}
 cursor-background = ${xrdb:Emacs.Cursor.background}
+warning-foreground = ${xrdb:Emacs.Warning.foreground}
 primary = #ffb52a
 secondary = #e60053
 alert = ${xrdb:Emacs.Error.foreground}
@@ -37,8 +36,8 @@ foreground = ${colors.foreground}
 line-size = 3
 line-color = ${colors.underline}
 
-;border-size = 4
-border-color = #00000000
+border-bottom-size = 1
+border-color = ${colors.border-foreground}
 
 padding-left = 0
 padding-right = 2
@@ -111,7 +110,8 @@ interval = 25
 
 mount-0 = /
 format-mounted-prefix = 
-format-mounted-prefix-foreground = ${colors.foreground}
+format-mounted-prefix-background = ${colors.background-alt}
+format-mounted-prefix-foreground = ${colors.foreground-alt}
 format-mounted = <label-mounted>
 label-mounted = %percentage_used:2%%
 label-unmounted = 
@@ -121,8 +121,8 @@ label-unmounted-foreground = ${colors.alert}
 type = internal/bspwm
 
 label-focused = %index%
-label-focused-foreground = ${colors.region-foreground}
-label-focused-background = ${colors.region-background}
+label-focused-foreground = ${colors.foreground}
+label-focused-background = ${colors.background}
 label-focused-underline= ${colors.cursor-background}
 label-focused-padding = 2
 
@@ -162,13 +162,15 @@ ws-icon-5 = "6:;"
 
 ; focused = Active workspace on focused monitor
 label-focused = "%icon%"
-label-focused-foreground = ${colors.region-foreground}
-label-focused-background = ${colors.region-background}
+label-focused-foreground = ${colors.foreground}
+label-focused-background = ${colors.background}
 label-focused-underline = ${colors.cursor-background}
 label-focused-padding = ${module/bspwm.label-focused-padding}
 
 ; unfocused = Inactive workspace on any monitor
 label-unfocused = %icon%
+label-unfocused-foreground = ${colors.foreground-alt}
+label-unfocused-background = ${colors.background-alt}
 label-unfocused-padding = ${module/bspwm.label-occupied-padding}
 
 ; visible = Active workspace on unfocused monitor
@@ -180,7 +182,7 @@ label-visible-padding = ${self.label-focused-padding}
 ; urgent = Workspace with urgency hint set
 label-urgent = %icon%
 ;label-urgent-underline = ${module/bspwm.label-urgent-background}
-label-urgent-foreground = ${colors.changed-foreground}
+label-urgent-foreground = ${colors.warning-foreground}
 label-urgent-padding = ${module/bspwm.label-urgent-padding}
 
 ; Separator in between workspaces
@@ -203,7 +205,8 @@ label-song-ellipsis = true
 type = internal/xbacklight
 
 format-prefix = 
-format-prefix-foreground = ${colors.foreground}
+format-prefix-background = ${colors.background-alt}
+format-prefix-foreground = ${colors.foreground-alt}
 format = <label>
 label = %percentage:2%%
 label-foreground = ${colors.foreground}
@@ -228,14 +231,16 @@ card = intel_backlight
 type = internal/cpu
 interval = 2
 format-prefix = 
-format-prefix-foreground = ${colors.foreground}
+format-prefix-background = ${colors.background-alt}
+format-prefix-foreground = ${colors.foreground-alt}
 label = %percentage:2%%
 
 [module/memory]
 type = internal/memory
 interval = 2
 format-prefix = 
-format-prefix-foreground = ${colors.foreground}
+format-prefix-background = ${colors.background-alt}
+format-prefix-foreground = ${colors.foreground-alt}
 label = %percentage_used:2%%
 
 [module/wlan]
@@ -243,12 +248,13 @@ type = internal/network
 interface = wlp4s0
 interval = 3.0
 
-format-connected = <ramp-signal> <label-connected>
+format-connected = <ramp-signal><label-connected>
 label-connected = %essid%
 
 format-disconnected =
 ;format-disconnected-prefix = 
-;format-disconnected-prefix-foreground = ${colors.foreground}
+;format-disconnected-prefix-background = ${colors.background-alt}
+;format-disconnected-prefix-foreground = ${colors.foreground-alt}
 ;format-disconnected = <label-disconnected>
 ;format-disconnected-underline = ${self.format-connected-underline}
 ;label-disconnected = " WiFi"
@@ -259,7 +265,8 @@ ramp-signal-1 = 
 ramp-signal-2 = 
 ramp-signal-3 = 
 ramp-signal-4 = 
-ramp-signal-foreground = ${colors.foreground}
+ramp-signal-foreground = ${colors.foreground-alt}
+ramp-signal-background = ${colors.background-alt}
 
 [module/eth]
 type = internal/network
@@ -267,13 +274,15 @@ interface = enp0s25
 interval = 3.0
 
 format-connected-prefix = 
-format-connected-prefix-foreground = ${colors.foreground}
+format-connected-prefix-background = ${colors.background-alt}
+format-connected-prefix-foreground = ${colors.foreground-alt}
 label-connected = %local_ip%
 
 format-disconnected =
 ;format-disconnected-prefix = 
 ;format-disconnected = <label-disconnected>
-;format-disconnected-prefix-foreground = ${colors.foreground}
+;format-disconnected-prefix-background = ${colors.background-alt}
+;format-disconnected-prefix-foreground = ${colors.foreground-alt}
 ;format-disconnected-underline = ${self.format-connected-underline}
 ;label-disconnected = " Eth"
 ;label-disconnected-foreground = ${colors.foreground-alt}
@@ -283,27 +292,30 @@ type = internal/date
 interval = 5
 
 date =
-date-alt = " %Y-%m-%d"
+date-alt = "%Y-%m-%d "
 
 time = %H:%M
 time-alt = %H:%M:%S
 
 format-prefix = 
-format-prefix-foreground = ${colors.foreground}
+format-prefix-background = ${colors.background-alt}
+format-prefix-foreground = ${colors.foreground-alt}
 
-label = %date% %time%
+label = %date%%time%
 
 [module/pulseaudio]
 type = internal/pulseaudio
 
 format-volume-prefix =  
-format-volume-prefix-foreground = ${colors.foreground}
+format-volume-prefix-background = ${colors.background-alt}
+format-volume-prefix-foreground = ${colors.foreground-alt}
 format-volume = <label-volume>
 label-volume = %percentage:2%%
 label-volume-foreground = ${root.foreground}
 
 format-muted-prefix =  
-format-muted-prefix-foreground = ${colors.foreground}
+format-muted-prefix-background = ${colors.background-alt}
+format-muted-prefix-foreground = ${colors.foreground-alt}
 format-muted = <label-muted>
 label-muted = %percentage:2%%
 label-muted-foreground = ${colors.foreground-alt}
@@ -330,13 +342,15 @@ bar-volume-empty-foreground = ${colors.foreground-alt}
 type = internal/alsa
 
 format-volume-prefix =  
-format-volume-prefix-foreground = ${colors.foreground}
+format-volume-prefix-background = ${colors.background-alt}
+format-volume-prefix-foreground = ${colors.foreground-alt}
 format-volume = <label-volume>
 label-volume = %percentage:2%%
 label-volume-foreground = ${root.foreground}
 
 format-muted-prefix =  
-format-muted-prefix-foreground = ${colors.foreground}
+format-muted-prefix-background = ${colors.background-alt}
+format-muted-prefix-foreground = ${colors.foreground-alt}
 format-muted = <label-muted>
 label-muted = %percentage:2%%
 label-muted-foreground = ${colors.foreground-alt}
@@ -370,7 +384,8 @@ format-discharging = <ramp-capacity> <label-discharging>
 format-discharging-underline = ${colors.alert}
 
 format-full-prefix = 
-format-full-prefix-foreground = ${colors.foreground}
+format-full-prefix-background = ${colors.background-alt}
+format-full-prefix-foreground = ${colors.foreground-alt}
 
 ramp-capacity-0 = 
 ramp-capacity-1 = 
@@ -384,7 +399,7 @@ animation-charging-1 = 
 animation-charging-2 = 
 animation-charging-3 = 
 animation-charging-4 = 
-animation-charging-foreground = ${colors.foreground-alt}
+animation-charging-foreground = ${colors.foreground}
 animation-charging-framerate = 750
 
 [module/temperature]
@@ -398,12 +413,13 @@ format-warn-underline = ${colors.alert}
 
 label = %temperature-c%
 label-warn = %temperature-c%
-label-warn-foreground = ${colors.foreground}
+label-warn-foreground = ${colors.warning-foreground}
 
 ramp-0 = 
 ramp-1 = 
 ramp-2 = 
-ramp-foreground = ${colors.foreground}
+ramp-background = ${colors.background-alt}
+ramp-foreground = ${colors.foreground-alt}
 
 [module/powermenu]
 type = custom/menu

@@ -3,7 +3,7 @@ rofi.modi:                           drun,run,:~/.config/i3/bin/ydcv,window
 ! "Window width" Set from: Commandline
 rofi.width:                          30
 ! "Number of lines" Set from: Default
-rofi.lines:                          10
+rofi.lines:                          7
 ! "Number of columns" Set from: Default
 ! rofi.columns:                        1
 ! "Font to use" Set from: Default

@@ -61,9 +61,9 @@ bindsym $mod+l exec $i3lock
 
 # program launcher: rofi
 ##  depends: yaourt -S rofi
-bindsym $mod+r exec rofi -show run -config ~/.config/i3/rofi
-bindsym $mod+d exec rofi -show drun -config ~/.config/i3/rofi
-bindsym $mod+t exec rofi -show  -config ~/.config/i3/rofi
+bindsym $mod+r exec --no-startup-id ~/.config/i3/bin/i3rofi run
+bindsym $mod+d exec --no-startup-id ~/.config/i3/bin/i3rofi drun
+bindsym $mod+t exec --no-startup-id ~/.config/i3/bin/i3rofi 
 
 # change focus
 bindsym $mod+j focus left
@@ -251,7 +251,7 @@ assign [class="Seafile*"] $workspace1
 for_window [class="Solaar"] floating enable
 
 #i3-gaps
-gaps inner 5
+gaps inner 10
 gaps outer 0
 # fix graphics glitch
 smart_gaps on
@@ -273,8 +273,8 @@ client.urgent           $urgent-border-color    $background-color      $text-col
 # autostart
 #exec --no-startup-id /usr/lib/gsd-xsettings
 #exec --no-startup-id /usr/lib/notify-osd/notify-osd
-exec --no-startup-id dunst -conf ~/.config/i3/dunst
 exec --no-startup-id fcitx
+exec_always --no-startup-id ~/.config/i3/bin/i3dunst
 exec --no-startup-id blueman-applet
 exec --no-startup-id mate-volume-control-applet
 exec --no-startup-id nm-applet
@@ -292,5 +292,5 @@ exec --no-startup-id dex /etc/xdg/autostart/geoclue-demo-agent.desktop
 exec --no-startup-id dex /usr/share/applications/redshift-gtk.desktop
 exec --no-startup-id dex /etc/xdg/autostart/solaar.desktop
 exec_always --no-startup-id ~/.config/i3/bin/i3polybar
-exec_always --no-startup-id "killall compton; compton -d :0.0 --config /dev/null --inactive-dim=0.15 --detect-transient"
+exec_always --no-startup-id ~/.config/i3/bin/i3compton
 exec --no-startup-id i3-msg workspace $workspace2

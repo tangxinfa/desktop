@@ -1,0 +1,11 @@
+#!/bin/bash
+
+killall dunst || sleep 1
+dunst -conf ~/.config/i3/dunst \
+      -frame_color `grep Emacs.VerticalBorder.foreground ~/.emacs.d/.Xresources | awk '{print $2}'` \
+      -lb          `grep Emacs.ModeLineInactive.background ~/.emacs.d/.Xresources | awk '{print $2}'` \
+      -lf          `grep Emacs.ModeLineInactive.foreground ~/.emacs.d/.Xresources | awk '{print $2}'` \
+      -nb          `grep Emacs.ModeLine.background ~/.emacs.d/.Xresources | awk '{print $2}'` \
+      -nf          `grep Emacs.ModeLine.foreground ~/.emacs.d/.Xresources | awk '{print $2}'` \
+      -cb          `grep Emacs.Tooltip.background ~/.emacs.d/.Xresources | awk '{print $2}'` \
+      -cf          `grep Emacs.Tooltip.foreground ~/.emacs.d/.Xresources | awk '{print $2}'` &

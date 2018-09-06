@@ -3,75 +3,89 @@
 
 * {
     selected-normal-foreground:  @emacs-region-foreground;
-    foreground:                  @emacs-region-foreground;
-    normal-foreground:           @emacs-region-foreground;
-    alternate-normal-background: @emacs-region-background;
-    red:                         @emacs-error-foreground;
+    foreground:                  @emacs-menu-foreground;
+    normal-foreground:           @emacs-menu-foreground;
+    alternate-normal-background: @emacs-menu-background;
+    red:                         rgba ( 220, 50, 47, 100 % );
     selected-urgent-foreground:  @emacs-error-foreground;
-    blue:                        @emacs-warning-foreground;
+    blue:                        rgba ( 38, 139, 210, 100 % );
     urgent-foreground:           @emacs-error-foreground;
-    alternate-urgent-background: @emacs-region-background;
-    active-foreground:           @emacs-region-foreground;
-    lightbg:                     @emacs-region-background;
+    alternate-urgent-background: @emacs-menu-background;
+    active-foreground:           @emacs-menu-foreground;
+    lightbg:                     @emacs-fringe-background;
     selected-active-foreground:  @emacs-region-foreground;
-    alternate-active-background: @emacs-region-background;
-    background:                  @emacs-region-background;
-    bordercolor:                 @emacs-modeline-underline;
-    alternate-normal-foreground: @emacs-region-foreground;
-    normal-background:           @emacs-region-background;
-    lightfg:                     @emacs-shadow-foreground;
+    alternate-active-background: @emacs-menu-background;
+    background:                  @emacs-menu-background;
+    alternate-normal-foreground: @emacs-menu-foreground;
+    normal-background:           @emacs-menu-background;
+    lightfg:                     @emacs-fringe-foreground;
     selected-normal-background:  @emacs-region-background;
-    border-color:                @emacs-modeline-underline;
-    separatorcolor:              @emacs-modeline-underline;
-    urgent-background:           @emacs-region-background;
+    border-color:                @emacs-vertical-border-foreground;
+    cursor-color:                @emacs-cursor-background;
+    separatorcolor:              @emacs-menu-underline;
+    urgent-background:           @emacs-menu-background;
     selected-urgent-background:  @emacs-region-background;
     alternate-urgent-foreground: @emacs-error-foreground;
-    background-color:            @emacs-region-background;
-    alternate-active-foreground: @emacs-region-foreground;
-    active-background:           @emacs-region-background;
+    background-color:            @emacs-menu-background;
+    alternate-active-foreground: @emacs-menu-foreground;
+    active-background:           @emacs-menu-background;
     selected-active-background:  @emacs-region-background;
 }
 
-#inputbar {
-    children:   [ prompt,entry ];
+#window {
+    children: [ inputbar, listview ];
+    border: 1px;
+    padding: 0;
+    spacing: 0;
+    border-radius: 0.75em;
 }
 
-#prompt {
-    padding: 5px;
+#inputbar {
+    children:   [ entry, sidebar ];
+    padding: 0.5em 0 0.5em 2em;
+    border:  0 0.5em;
+    border-color: @lightbg;
 }
 
 #entry {
-    border:       0 0 1px 0;
-    border-color: @emacs-modeline-underline;
+    padding: 0.25em;
 }
 
 #listview {
     border: 0;
-    padding: 5px;
     spacing: 0;
+    padding: 0;
     scrollbar: false;
+    background-color: @lightbg;
+    border: 1px 0 0 0;
 }
 
 #element {
-    padding: 2px;
-    border-color: @background;
-    border: 0 0 0 5px;
+    padding: 0.5em 2em;
+    border: 0 0.5em 0 0.5em;
+    border-color: @lightbg;
 }
 
-#element.selected.normal {
-    text-color: @urgent-foreground;
-    border-color: @urgent-foreground;
-}
-
-#button.selected {
-    background-color: @background;
+#element.selected {
+    border-color: @cursor-color;
 }
 
 #button {
-    text-color: @lightfg;
+    background-color: @background;
+    text-color: @foreground;
+    border: 1px;
+    padding: 0.25em;
+    border-color: @border-color;
+    border-radius: 0.25em;
+}
+
+#button.selected {
+    background-color: @selected-normal-background;
+    text-color: @selected-normal-foreground;
 }
 
 #sidebar {
     border: 0;
-    padding: 5px 0px;
+    padding: 0 0.5em;
+    width: 8em;
 }

@@ -42,13 +42,13 @@
 
 #inputbar {
     children:   [ entry, sidebar ];
-    padding: 0.5em 0 0.5em 2em;
+    padding: 0 1em;
     border:  0 0.5em;
     border-color: @lightbg;
 }
 
 #entry {
-    padding: 0.25em;
+    padding: 0.5em;
 }
 
 #listview {
@@ -61,7 +61,7 @@
 }
 
 #element {
-    padding: 0.5em 2em;
+    padding: 0.5em 1.5em;
     border: 0 0.5em 0 0.5em;
     border-color: @lightbg;
 }
@@ -73,19 +73,20 @@
 #button {
     background-color: @background;
     text-color: @foreground;
-    border: 1px;
-    padding: 0.25em;
-    border-color: @border-color;
-    border-radius: 0.25em;
+    padding: 0;
+    spacing: 0;
+    border: 0 0 2px 0;
+    border-color: @background;
 }
 
 #button.selected {
-    background-color: @selected-normal-background;
-    text-color: @selected-normal-foreground;
+    background-color: @background;
+    text-color: @foreground;
+    border-color: @cursor-color;
 }
 
 #sidebar {
+    padding: 0;
+    width: 6em;
     border: 0;
-    padding: 0 0.5em;
-    width: 8em;
 }

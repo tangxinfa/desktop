@@ -282,7 +282,7 @@
 
 [dingtalk-ignore]
     # Dingtalk has desktop notification toggle option but not works, ignore here
-    summary = 钉钉
+    summary = "*钉钉*"
     format = ""
 
 [mouse-ignore]

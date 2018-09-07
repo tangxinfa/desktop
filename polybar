@@ -33,7 +33,7 @@ height = 35
 background = ${colors.background}
 foreground = ${colors.foreground}
 
-line-size = 3
+line-size = 2
 line-color = ${colors.underline}
 
 border-bottom-size = 1
@@ -50,7 +50,7 @@ font-1 = "Material Icons:size:12:antialias=false;0"
 font-2 = "Wuncon Siji:pixelsize=12;1"
 font-3 = "Font Awesome 5 Free:style=Solid:size=12;1"
 
-modules-left = i3 keymap1 keymap2 xwindow
+modules-left = i3 keymap xwindow
 modules-center =
 modules-right = filesystem xbacklight pulseaudio cpu memory battery temperature eth wlan date
 
@@ -61,7 +61,7 @@ tray-maxsize = 25
 ;tray-background = #0063ff
 
 ;wm-restack = bspwm
-;wm-restack = i3
+wm-restack = i3
 
 ;override-redirect = true
 
@@ -90,17 +90,10 @@ label-indicator-padding = 2
 label-indicator-margin = 1
 label-indicator-background = ${colors.secondary}
 
-[module/keymap1]
+[module/keymap]
 type = custom/script
 label-foreground = ${colors.foreground}
-exec-if = let "n=0"; /home/tangxinfa/Dropbox/Linux/xkeysnail/status; let "n=n+$?"; /home/tangxinfa/Dropbox/Linux/xhhkb/status; let "n=n+$?"; test $n -eq 1
-exec = echo 
-format-offset = 10
-
-[module/keymap2]
-type = custom/script
-label-foreground = ${colors.foreground}
-exec-if = /home/tangxinfa/Dropbox/Linux/xkeysnail/status && /home/tangxinfa/Dropbox/Linux/xhhkb/status
+exec-if = /home/tangxinfa/Dropbox/Linux/xkeysnail/status
 exec = echo 
 format-offset = 10
 

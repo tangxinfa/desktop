@@ -243,7 +243,7 @@ assign [class="Wine"] $workspace4
 assign [class="VirtualBox"] $workspace5
 assign [class="Steam"] $workspace6
 assign [title="Steam"] $workspace6
-for_window [class="keepassxc"] floating enable, move scratchpad, move absolute position center, resize set 600 400
+for_window [class="keepassxc"] floating enable, move scratchpad, move absolute position center, resize set 640 360
 for_window [class="Zeal" window_type="normal"] floating enable, resize set 800 600, move absolute position center, focus
 for_window [class="Conky"] floating enable, resize set 400 400, move absolute position center
 for_window [class="Wine" title="迅雷网络" window_type="dialog"] floating disable, move container to workspace $workspace4 # Main RTX window

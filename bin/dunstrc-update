@@ -1,0 +1,73 @@
+#!/usr/bin/env bash
+
+# Reference https://github.com/dunst-project/dunst/blob/master/contrib/dunst_xr_theme_changer.sh
+
+set -e
+
+#
+# Attributes dictionary. Add or remove attributes (see header for more info)
+#
+
+declare -A theme_attr_dict=(
+    ["global-frame_color"]="\"$(grep Emacs.VerticalBorder.foreground ~/.emacs.d/.Xresources | awk '{print $2}')\""
+    ["urgency_low-background"]="\"$(grep Emacs.ModeLineInactive.background ~/.emacs.d/.Xresources | awk '{print $2}')\""
+    ["urgency_low-foreground"]="\"$(grep Emacs.ModeLineInactive.foreground ~/.emacs.d/.Xresources | awk '{print $2}')\""
+
+    ["urgency_normal-background"]="\"$(grep Emacs.ModeLine.background ~/.emacs.d/.Xresources | awk '{print $2}')\""
+    ["urgency_normal-foreground"]="\"$(grep Emacs.ModeLine.foreground ~/.emacs.d/.Xresources | awk '{print $2}')\""
+
+    ["urgency_critical-background"]="\"$(grep Emacs.Tooltip.background ~/.emacs.d/.Xresources | awk '{print $2}')\""
+    ["urgency_critical-foreground"]="\"$(grep Emacs.Tooltip.foreground ~/.emacs.d/.Xresources | awk '{print $2}')\""
+)
+
+# Attributes dictionary keys.
+readonly valid_keys="${!theme_attr_dict[@]}"
+
+#
+# File paths
+#
+# User config dir and file
+readonly user_conf="$HOME/.config/dunst/dunstrc"
+
+# Check if the user config file exists
+if ! [ -f "$user_conf" ]; then
+    printf '"%s" file does not exist.' \
+               "$user_conf"
+    exit 1
+fi
+
+# Regular expressions
+readonly re_section_line='^\[(.*)\]$'
+readonly re_empty_comment_line='(^$)|(^[[:space:]]*(\#)|(;))'
+readonly re_attribute_line='^([[:space:]]*)([_[:alnum:]]+)'
+
+# Create an array with the file lines
+mapfile -t conf < "$user_conf"
+
+# Iterate over the file lines
+for idx in "${!conf[@]}"; do
+    # Current line
+    curr_line="${conf[$idx]}"
+    # If we are in a new section:
+    if [[ "$curr_line" =~ $re_section_line ]]; then
+        curr_section="${BASH_REMATCH[1]}"
+        continue
+    fi
+    # Skip the line if it is empty or has a comment
+    if [[ "$curr_line" =~ $re_empty_comment_line ]]; then
+        continue
+    fi
+    # Get the attribute in the current line
+    [[ "$curr_line" =~ $re_attribute_line ]]
+    curr_attr_name="${BASH_REMATCH[2]}"
+    curr_sett_name="${curr_section}-${curr_attr_name}"
+    # If the current attribute is not in our dictionary, continue
+    case "$valid_keys" in
+        *"$curr_sett_name"*)
+            printf -v conf[$idx] '    %s = %s' \
+                   "${curr_attr_name}" \
+                   "${theme_attr_dict[$curr_sett_name]}"
+            ;;
+    esac
+done
+printf '%s\n' "${conf[@]}" > "$user_conf"

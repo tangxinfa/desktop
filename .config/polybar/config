@@ -1,0 +1,358 @@
+;==========================================================
+;
+;
+;   ██████╗  ██████╗ ██╗  ██╗   ██╗██████╗  █████╗ ██████╗
+;   ██╔══██╗██╔═══██╗██║  ╚██╗ ██╔╝██╔══██╗██╔══██╗██╔══██╗
+;   ██████╔╝██║   ██║██║   ╚████╔╝ ██████╔╝███████║██████╔╝
+;   ██╔═══╝ ██║   ██║██║    ╚██╔╝  ██╔══██╗██╔══██║██╔══██╗
+;   ██║     ╚██████╔╝███████╗██║   ██████╔╝██║  ██║██║  ██║
+;   ╚═╝      ╚═════╝ ╚══════╝╚═╝   ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝
+;
+;
+;   To learn more about how to configure Polybar
+;   go to https://github.com/jaagr/polybar
+;
+;   The README contains alot of information
+;
+;==========================================================
+
+[colors]
+background = ${xrdb:Emacs.ModeLineInactive.background}
+background-alt = ${xrdb:Emacs.ModeLineInactive.background}
+foreground = ${xrdb:Emacs.ModeLineInactive.foreground}
+foreground-alt = ${xrdb:Emacs.ModeLineInactive.foreground}
+border = ${xrdb:Emacs.VerticalBorder.foreground}
+underline = ${xrdb:Emacs.Cursor.background}
+warning = #ffb52a
+alert = #bd2c40
+
+[bar/top]
+;monitor = ${env:MONITOR:HDMI-1}
+width = 100%
+height = 35
+;offset-x = 1%
+;offset-y = 1%
+;radius = 6.0
+;fixed-center = false
+
+background = ${colors.background}
+foreground = ${colors.foreground}
+
+line-size = 2
+border-bottom-size = 1
+border-color = ${colors.border}
+
+padding-left = 0
+padding-right = 0
+
+module-margin-left = 0
+module-margin-right = 2
+separator =
+
+font-0 = "Microsoft YaHei:size=12:antialias=true:style=Normal;1"
+font-1 = "Material Icons:size:12:antialias=false;0"
+font-2 = "Font Awesome 5 Free:style=Solid:size=12;1"
+
+modules-left = i3 xwindow
+modules-center = keymap
+modules-right = filesystem xbacklight pulseaudio  memory cpu temperature battery eth wlan date
+
+tray-position = center
+tray-padding = 5
+tray-maxsize = 25
+;tray-transparent = true
+;tray-background = ${root.background}
+;tray-scale = 1.0
+
+;wm-restack = i3
+
+;override-redirect = true
+
+;scroll-up = i3wm-wsnext
+;scroll-down = i3wm-wsprev
+
+cursor-click = pointer
+cursor-scroll = ns-resize
+
+[module/xwindow]
+type = internal/xwindow
+label = %title:0:40:...%
+label-padding = 2
+
+[module/keymap]
+type = custom/script
+exec-if = not /home/tangxinfa/Dropbox/Linux/xkeysnail/status
+format = <label>
+exec = echo 
+format-offset = 10
+label-foreground = ${colors.warning}
+click-left = dex ~/.local/share/applications/xkeysnail.desktop
+
+[module/filesystem]
+type = internal/fs
+interval = 25
+
+mount-0 = /
+format-mounted = <ramp-capacity><label-mounted>
+label-mounted = %percentage_used%
+label-unmounted = 
+label-unmounted-foreground = ${colors.alert}
+ramp-background = ${colors.background-alt}
+ramp-capacity-0 = 
+ramp-capacity-0-foreground = ${colors.alert}
+ramp-capacity-1 = 
+ramp-capacity-1-foreground = ${colors.warning}
+ramp-capacity-2 = 
+ramp-capacity-2-foreground = ${colors.foreground-alt}
+ramp-capacity-3 = 
+ramp-capacity-3-foreground = ${colors.foreground-alt}
+ramp-capacity-4 = 
+ramp-capacity-4-foreground = ${colors.foreground-alt}
+ramp-capacity-5 = 
+ramp-capacity-5-foreground = ${colors.foreground-alt}
+ramp-capacity-6 = 
+ramp-capacity-6-foreground = ${colors.foreground-alt}
+ramp-capacity-7 = 
+ramp-capacity-7-foreground = ${colors.foreground-alt}
+ramp-capacity-8 = 
+ramp-capacity-8-foreground = ${colors.foreground-alt}
+ramp-capacity-9 = 
+ramp-capacity-9-foreground = ${colors.foreground-alt}
+
+
+[module/i3]
+type = internal/i3
+format = <label-state> <label-mode>
+index-sort = true
+wrapping-scroll = false
+
+; Only show workspaces on the same output as the bar
+pin-workspaces = true
+
+ws-icon-0 = "1:;"
+ws-icon-1 = "2:;"
+ws-icon-2 = "3:;"
+ws-icon-3 = "4:;"
+ws-icon-4 = "5:;"
+ws-icon-5 = "6:;"
+
+; focused = Active workspace on focused monitor
+label-focused = %icon%
+label-focused-foreground = ${colors.foreground}
+label-focused-background = ${colors.background}
+label-focused-underline = ${colors.underline}
+label-focused-padding = 2
+
+; unfocused = Inactive workspace on any monitor
+label-unfocused = %icon%
+label-unfocused-foreground = ${colors.foreground-alt}
+label-unfocused-background = ${colors.background-alt}
+label-unfocused-padding = 2
+
+; visible = Active workspace on unfocused monitor
+label-visible = %icon%
+label-visible-background = ${colors.background}
+label-visible-underline = ${colors.underline}
+label-visible-padding = 2
+
+; urgent = Workspace with urgency hint set
+label-urgent = %icon%
+;label-urgent-underline = ${colors.alert}
+label-urgent-foreground = ${colors.warning}
+label-urgent-padding = 2
+
+; Separator in between workspaces
+; label-separator = |
+
+[module/xbacklight]
+type = internal/xbacklight
+
+format-prefix = 
+format-prefix-background = ${colors.background-alt}
+format-prefix-foreground = ${colors.foreground-alt}
+format = <label>
+label = %percentage%
+label-foreground = ${colors.foreground}
+
+[module/cpu]
+type = internal/cpu
+interval = 2
+label = %percentage%
+format = <ramp-load><label>
+ramp-background = ${colors.background-alt}
+ramp-load-0 = 
+ramp-load-0-foreground = ${colors.foreground-alt}
+ramp-load-1 = 
+ramp-load-1-foreground = ${colors.foreground-alt}
+ramp-load-2 = 
+ramp-load-2-foreground = ${colors.warning}
+
+[module/memory]
+type = internal/memory
+interval = 2
+label = %percentage_used%
+format = <ramp-used><label>
+ramp-background = ${colors.background-alt}
+ramp-used-0 = 
+ramp-used-0-foreground = ${colors.foreground-alt}
+ramp-used-1 = 
+ramp-used-1-foreground = ${colors.foreground-alt}
+ramp-used-2 = 
+ramp-used-2-foreground = ${colors.warning}
+
+[module/wlan]
+type = internal/network
+interface = wlp4s0
+interval = 3.0
+
+format-connected = <ramp-signal><label-connected>
+label-connected = %essid%
+
+format-disconnected =
+;format-disconnected-prefix = 
+;format-disconnected-prefix-background = ${colors.background-alt}
+;format-disconnected-prefix-foreground = ${colors.foreground-alt}
+;format-disconnected = <label-disconnected>
+;format-disconnected-underline = ${self.format-connected-underline}
+;label-disconnected = " WiFi"
+;label-disconnected-foreground = ${colors.foreground-alt}
+
+ramp-signal-0 = 
+ramp-signal-1 = 
+ramp-signal-2 = 
+ramp-signal-3 = 
+ramp-signal-4 = 
+ramp-signal-foreground = ${colors.foreground-alt}
+ramp-signal-background = ${colors.background-alt}
+
+[module/eth]
+type = internal/network
+interface = enp0s25
+interval = 3.0
+
+format-connected-prefix = 
+format-connected-prefix-background = ${colors.background-alt}
+format-connected-prefix-foreground = ${colors.foreground-alt}
+label-connected = %local_ip%
+
+format-disconnected =
+;format-disconnected-prefix = 
+;format-disconnected = <label-disconnected>
+;format-disconnected-prefix-background = ${colors.background-alt}
+;format-disconnected-prefix-foreground = ${colors.foreground-alt}
+;format-disconnected-underline = ${self.format-connected-underline}
+;label-disconnected = " Eth"
+;label-disconnected-foreground = ${colors.foreground-alt}
+
+[module/date]
+type = internal/date
+interval = 5
+
+date =
+date-alt = "%Y-%m-%d "
+
+time = %H:%M
+time-alt = %H:%M:%S
+
+format-prefix = 
+format-prefix-background = ${colors.background-alt}
+format-prefix-foreground = ${colors.foreground-alt}
+
+label = "%date%%time% "
+
+
+[module/pulseaudio]
+type = internal/pulseaudio
+
+format-volume-prefix =  
+format-volume-prefix-background = ${colors.background-alt}
+format-volume-prefix-foreground = ${colors.foreground-alt}
+format-volume = <label-volume>
+label-volume = %percentage%
+label-volume-foreground = ${colors.foreground}
+
+format-muted-prefix =  
+format-muted-prefix-background = ${colors.background-alt}
+format-muted-prefix-foreground = ${colors.foreground-alt}
+format-muted = <label-muted>
+label-muted = %percentage%
+label-muted-foreground = ${colors.foreground-alt}
+
+[module/alsa]
+type = internal/alsa
+
+format-volume-prefix =  
+format-volume-prefix-background = ${colors.background-alt}
+format-volume-prefix-foreground = ${colors.foreground-alt}
+format-volume = <label-volume>
+label-volume = %percentage%
+label-volume-foreground = ${colors.foreground}
+
+format-muted-prefix =  
+format-muted-prefix-background = ${colors.background-alt}
+format-muted-prefix-foreground = ${colors.foreground-alt}
+format-muted = <label-muted>
+label-muted = %percentage%
+label-muted-foreground = ${colors.foreground-alt}
+
+[module/battery]
+type = internal/battery
+battery = BAT0
+adapter = AC
+full-at = 80 ;; see /etc/default/tlp START_CHARGE_THRESH_BAT0
+
+label-full = %percentage%
+label-discharging = %percentage%
+label-charging = %percentage%
+
+format-full = <ramp-capacity><label-full>
+format-charging = <animation-charging><label-charging>
+format-discharging = <ramp-capacity><label-discharging>
+
+ramp-capacity-background = ${colors.background-alt}
+ramp-capacity-0 = 
+ramp-capacity-0-foreground = ${colors.alert}
+ramp-capacity-1 = 
+ramp-capacity-1-foreground = ${colors.warning}
+ramp-capacity-2 = 
+ramp-capacity-2-foreground = ${colors.foreground-alt}
+ramp-capacity-3 = 
+ramp-capacity-3-foreground = ${colors.foreground-alt}
+ramp-capacity-4 = 
+ramp-capacity-4-foreground = ${colors.foreground-alt}
+
+animation-charging-0 = 
+animation-charging-1 = 
+animation-charging-2 = 
+animation-charging-3 = 
+animation-charging-foreground = ${colors.warning}
+animation-charging-framerate = 750
+
+[module/temperature]
+type = internal/temperature
+thermal-zone = 0
+warn-temperature = 90
+format = <ramp><label>
+format-warn = <ramp><label-warn>
+label = %temperature-c%
+label-warn = %temperature-c%
+ramp-background = ${colors.background-alt}
+ramp-0 = 
+ramp-0-foreground = ${colors.foreground-alt}
+ramp-1 = 
+ramp-1-foreground = ${colors.foreground-alt}
+ramp-2 = 
+ramp-2-foreground = ${colors.warning}
+
+[settings]
+screenchange-reload = true
+;compositing-background = xor
+;compositing-background = screen
+;compositing-foreground = source
+;compositing-border = over
+
+[global/wm]
+margin-top = 5
+margin-bottom = 5
+
+; vim:ft=dosini

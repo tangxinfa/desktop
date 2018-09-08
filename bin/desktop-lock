@@ -1,0 +1,17 @@
+#!/bin/sh
+
+revert() {
+    xset dpms 0 0 0
+}
+trap revert HUP INT TERM
+
+if true; then
+    # screen delay close
+    xset +dpms dpms 5 5 5
+else
+    # fallback if screen delay close not works
+    (sleep 1; xset dpms force off) &
+fi
+
+i3lock-fancy -n -f Source-Code-Pro -t '' -gp
+revert

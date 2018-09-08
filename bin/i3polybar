@@ -1,4 +1,0 @@
-#!/bin/bash
-
-killall polybar || sleep 1
-polybar -c ~/.config/i3/polybar top &

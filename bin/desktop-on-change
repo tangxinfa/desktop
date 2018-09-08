@@ -1,0 +1,6 @@
+#!/bin/bash
+
+~/bin/dunstrc-update
+killall dunst
+killall polybar || sleep 1
+polybar top

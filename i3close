@@ -1,5 +1,0 @@
-#!/bin/bash
-
-VBoxManage list runningvms | awk -F'"' '{system("VBoxManage controlvm " $2 " savestate")}'
-emacsclient --eval '(progn (ignore-errors (desktop-save desktop-dirname)) (save-buffers-kill-terminal))'
-exit 0

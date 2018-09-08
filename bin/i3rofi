@@ -1,5 +1,0 @@
-#!/bin/bash
-
-SHOW=${1:-drun}
-killall rofi
-rofi -show ${SHOW} -config ~/.config/i3/rofi

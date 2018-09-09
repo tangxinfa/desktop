@@ -55,15 +55,17 @@ bindsym $mod+Shift+minus move scratchpad
 #Show the first scratchpad window
 bindsym $mod+minus scratchpad show
 
-# lock screen
+# power management
 bindsym Control+$mod+l exec $i3lock
 bindsym $mod+l exec $i3lock
+bindsym $mod+p exec ~/bin/power-menu
+
 
 # program launcher: rofi
 ##  depends: yaourt -S rofi
-bindsym $mod+r exec --no-startup-id rofi -show run
-bindsym $mod+d exec --no-startup-id rofi -show drun
-bindsym $mod+t exec --no-startup-id rofi -show 
+bindsym $mod+r exec --no-startup-id rofi -p '' -show run
+bindsym $mod+d exec --no-startup-id rofi -p '' -show drun
+bindsym $mod+t exec --no-startup-id rofi -p '' -show 
 
 # change focus
 bindsym $mod+j focus left
@@ -206,24 +208,6 @@ mode "$volume" {
 }
 bindsym $mod+Shift+v mode "$volume"
 
-
-# power management mode
-set $power_management [P]owerOff    [R]eboot    [E]xit    [H]ibernate    [S]uspend    [L]ockscreen
-mode "$power_management" {
-     bindsym p exec --no-startup-id ~/bin/desktop-on-close && (i3-msg exit || systemctl poweroff), mode "default"
-     bindsym r exec --no-startup-id ~/bin/desktop-on-close && (i3-msg exit || systemctl reboot), mode "default"
-     bindsym h exec --no-startup-id systemctl hibernate, mode "default"
-     bindsym e exec --no-startup-id ~/bin/desktop-on-close && i3-msg exit, mode "default"
-     bindsym s exec --no-startup-id systemctl suspend, mode "default"
-     bindsym l exec --no-startup-id $i3lock, mode "default"
-
-     # back to normal: Enter or Escape or q
-     bindsym Return mode "default"
-     bindsym Escape mode "default"
-     bindsym q mode "default"
-     bindsym Control+g mode "default"
-}
-bindsym $mod+Shift+p mode "$power_management"
 
 popup_during_fullscreen leave_fullscreen
 

@@ -121,11 +121,11 @@ rofi.display-window:                   
 ! "The display name of this browser" Set from: Default
 ! rofi.display-windowcd:
 ! "The display name of this browser" Set from: Rasi File
-rofi.display-run:                      
+rofi.display-run:                      
 ! "The display name of this browser" Set from: Rasi File
 ! rofi.display-ssh:                    
 ! "The display name of this browser" Set from: Rasi File
-rofi.display-drun:                     
+rofi.display-drun:                     
 ! "The display name of this browser" Set from: Rasi File
 ! rofi.display-combi:                  
 ! "The display name of this browser" Set from: Default

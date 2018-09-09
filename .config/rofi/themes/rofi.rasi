@@ -41,14 +41,14 @@
 }
 
 #inputbar {
-    children:   [ entry, sidebar ];
-    padding: 0 1em;
+    children:   [ prompt, entry, sidebar ];
+    padding: 0.75em 1em;
     border:  0 0.5em;
     border-color: @lightbg;
 }
 
-#entry {
-    padding: 0.5em;
+#prompt {
+    padding: 2 0.25em 0 0.25em;
 }
 
 #listview {
@@ -61,7 +61,7 @@
 }
 
 #element {
-    padding: 0.5em 1.5em;
+    padding: 0.5em 1em;
     border: 0 0.5em 0 0.5em;
     border-color: @lightbg;
 }
@@ -75,7 +75,7 @@
     text-color: @foreground;
     padding: 0;
     spacing: 0;
-    border: 0 0 2px 0;
+    border: 0 0 1px 0;
     border-color: @background;
 }
 

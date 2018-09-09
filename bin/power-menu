@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+# Reference https://raw.githubusercontent.com/okraits/rofi-tools/master/rofi-power
+
+OPTIONS="  Lock\n  Suspend\n  Hibernate\n  Exit\n  Reboot\n  PowerOff"
+LAUNCHER="rofi -dmenu -i -p "
+
+option=`echo -e "$OPTIONS" | $LAUNCHER | awk '{print $1}' | tr -d '\r\n'`
+if [ ${#option} -gt 0 ]
+then
+    case $option in
+        )
+            ~/bin/desktop-lock
+            ;;
+        )
+            ~/bin/desktop-lock; systemctl suspend
+            ;;
+        )
+            ~/bin/desktop-lock; systemctl hibernate
+            ;;
+        )
+            ~/bin/desktop-on-close && i3-msg exit
+            ;;
+        )
+            ~/bin/desktop-on-close && (i3-msg exit || systemctl reboot)
+            ;;
+        )
+            ~/bin/desktop-on-close && (i3-msg exit || systemctl poweroff)
+            ;;
+        *)
+            ;;
+    esac
+fi

@@ -8,7 +8,8 @@ acpi -b | awk -F'[,:%]' '{print $2, $3}' | {
             notify-send -u critical -t 750 -i battery-empty "Battery Empty" "Hibernate system after $i seconds ..."
             sleep 1
         done
-        ~/bin/desktop-lock
+        ~/bin/desktop-lock &
+        sleep 1
 		systemctl hibernate
 	elif [ "$status" = Discharging -a "$capacity" -lt 15 ]; then
         notify-send -u critical -t 10000 -i battery-low "Battery Low" "Please charging"

@@ -13,10 +13,14 @@ then
             ~/bin/desktop-lock
             ;;
         )
-            ~/bin/desktop-lock; systemctl suspend
+            ~/bin/desktop-lock &
+            sleep 1
+            systemctl suspend
             ;;
         )
-            ~/bin/desktop-lock; systemctl hibernate
+            ~/bin/desktop-lock &
+            sleep 1
+            systemctl hibernate
             ;;
         )
             ~/bin/desktop-on-close && i3-msg exit

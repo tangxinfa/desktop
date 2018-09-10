@@ -1,10 +1,10 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 # Reference https://raw.githubusercontent.com/okraits/rofi-tools/master/rofi-power
 
 OPTIONS="  Lock\n  Suspend\n  Hibernate\n  Exit\n  Reboot\n  PowerOff"
 LAUNCHER="rofi -dmenu -i -p "
-
+killall rofi
 option=`echo -e "$OPTIONS" | $LAUNCHER | awk '{print $1}' | tr -d '\r\n'`
 if [ ${#option} -gt 0 ]
 then

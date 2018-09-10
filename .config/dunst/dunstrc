@@ -29,7 +29,7 @@
     # the top and down respectively.
     # The width can be negative.  In this case the actual width is the
     # screen width minus the width defined in within the geometry option.
-    geometry = "320x5-30+45"
+    geometry = "360x5-20+50"
 
     # Show how many messages are currently hidden (because of geometry).
     indicate_hidden = yes
@@ -261,13 +261,13 @@
     #close = ctrl+space
 
     # Close all notifications.
-    close_all = mod4+shift+n
+    close_all = mod4+n
 
     # Redisplay last message(s).
     # On the US keyboard layout "grave" is normally above TAB and left
     # of "1". Make sure this key actually exists on your keyboard layout,
     # e.g. check output of 'xmodmap -pke'
-    history = mod4+n
+    history = mod4+shift+n
 
     # Context menu.
     context = mod4+period

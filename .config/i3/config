@@ -63,9 +63,9 @@ bindsym $mod+p exec ~/bin/power-menu
 
 # program launcher: rofi
 ##  depends: yaourt -S rofi
-bindsym $mod+r exec --no-startup-id rofi -p '' -show run
-bindsym $mod+d exec --no-startup-id rofi -p '' -show drun
-bindsym $mod+t exec --no-startup-id rofi -p '' -show 
+bindsym $mod+r exec --no-startup-id "killall rofi; rofi -p '' -show run"
+bindsym $mod+d exec --no-startup-id "killall rofi; rofi -p '' -show drun"
+bindsym $mod+t exec --no-startup-id "killall rofi; rofi -p '' -show "
 
 # change focus
 bindsym $mod+j focus left
@@ -286,7 +286,7 @@ exec --no-startup-id dex ~/.local/share/applications/xkeysnail.desktop
 exec --no-startup-id dex /etc/xdg/autostart/geoclue-demo-agent.desktop
 exec --no-startup-id dex /usr/share/applications/redshift-gtk.desktop
 exec --no-startup-id dex /etc/xdg/autostart/solaar.desktop
-exec_always --no-startup-id killall polybar || sleep 1; polybar top
+exec_always --no-startup-id "killall polybar && sleep 1; polybar top"
 exec --no-startup-id compton -cCGb\
      -d :0.0\
      -t 0\

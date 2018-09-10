@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 # Reference https://github.com/dunst-project/dunst/blob/master/contrib/dunst_xr_theme_changer.sh
 

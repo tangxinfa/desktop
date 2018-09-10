@@ -1,0 +1,16 @@
+#!/bin/bash
+
+acpi -b | awk -F'[,:%]' '{print $2, $3}' | {
+	read -r status capacity
+	if [ "$status" = Discharging -a "$capacity" -lt 5 ]; then
+        for i in 10 9 8 7 6 5 4 3 2 1
+        do
+            notify-send -u critical -t 750 -i battery-empty "Battery Empty" "Hibernate system after $i seconds ..."
+            sleep 1
+        done
+        ~/bin/desktop-lock
+		systemctl hibernate
+	elif [ "$status" = Discharging -a "$capacity" -lt 15 ]; then
+        notify-send -u critical -t 10000 -i battery-low "Battery Low" "Please charging"
+	fi
+}

@@ -286,7 +286,7 @@ exec --no-startup-id dex ~/.local/share/applications/xkeysnail.desktop
 exec --no-startup-id dex /etc/xdg/autostart/geoclue-demo-agent.desktop
 exec --no-startup-id dex /usr/share/applications/redshift-gtk.desktop
 exec --no-startup-id dex /etc/xdg/autostart/solaar.desktop
-exec_always --no-startup-id "killall polybar && sleep 1; polybar top"
+exec --no-startup-id "killall polybar; polybar top"
 exec --no-startup-id compton -cCGb\
      -d :0.0\
      -t 0\

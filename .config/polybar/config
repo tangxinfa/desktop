@@ -18,9 +18,9 @@
 
 [colors]
 background = ${xrdb:Emacs.ModeLineInactive.background}
-background-alt = ${xrdb:Emacs.ModeLineInactive.background}
+background-alt = ${xrdb:Emacs.ModeLine.background}
 foreground = ${xrdb:Emacs.ModeLineInactive.foreground}
-foreground-alt = ${xrdb:Emacs.ModeLineInactive.foreground}
+foreground-alt = ${xrdb:Emacs.ModeLine.foreground}
 border = ${xrdb:Emacs.VerticalBorder.foreground}
 underline = ${xrdb:Emacs.Cursor.background}
 warning = #ffb52a
@@ -58,8 +58,8 @@ modules-center =
 modules-right = xkeysnail filesystem xbacklight pulseaudio memory cpu temperature battery battery-monitor eth wlan date
 
 tray-position = center
-tray-padding = 0
-tray-maxsize = 28
+tray-padding = 3
+tray-maxsize = 26
 ;tray-transparent = true
 ;tray-background = ${root.background}
 ;tray-scale = 1.0
@@ -99,27 +99,18 @@ format-mounted = <ramp-capacity><label-mounted>
 label-mounted = %percentage_used%
 label-unmounted =
 label-unmounted-foreground = ${colors.alert}
-ramp-background = ${colors.background-alt}
 ramp-capacity-0 = 
 ramp-capacity-0-foreground = ${colors.alert}
 ramp-capacity-1 = 
 ramp-capacity-1-foreground = ${colors.warning}
 ramp-capacity-2 = 
-ramp-capacity-2-foreground = ${colors.foreground-alt}
 ramp-capacity-3 = 
-ramp-capacity-3-foreground = ${colors.foreground-alt}
 ramp-capacity-4 = 
-ramp-capacity-4-foreground = ${colors.foreground-alt}
 ramp-capacity-5 = 
-ramp-capacity-5-foreground = ${colors.foreground-alt}
 ramp-capacity-6 = 
-ramp-capacity-6-foreground = ${colors.foreground-alt}
 ramp-capacity-7 = 
-ramp-capacity-7-foreground = ${colors.foreground-alt}
 ramp-capacity-8 = 
-ramp-capacity-8-foreground = ${colors.foreground-alt}
 ramp-capacity-9 = 
-ramp-capacity-9-foreground = ${colors.foreground-alt}
 
 
 [module/i3]
@@ -140,15 +131,13 @@ ws-icon-5 = "6:;"
 
 ; focused = Active workspace on focused monitor
 label-focused = %icon%
-label-focused-foreground = ${colors.foreground}
-label-focused-background = ${colors.background}
+label-focused-foreground = ${colors.foreground-alt}
+label-focused-background = ${colors.background-alt}
 label-focused-underline = ${colors.underline}
 label-focused-padding = 2
 
 ; unfocused = Inactive workspace on any monitor
 label-unfocused = %icon%
-label-unfocused-foreground = ${colors.foreground-alt}
-label-unfocused-background = ${colors.background-alt}
 label-unfocused-padding = 2
 
 ; visible = Active workspace on unfocused monitor
@@ -169,23 +158,32 @@ label-urgent-padding = 2
 [module/xbacklight]
 type = internal/xbacklight
 
-format-prefix = 
-format-prefix-background = ${colors.background-alt}
-format-prefix-foreground = ${colors.foreground-alt}
-format = <label>
+format = <ramp><label>
 label = %percentage%
-label-foreground = ${colors.foreground}
+ramp-0 = 
+ramp-0-foreground = ${colors.warning}
+ramp-1 = 
+ramp-1-foreground = ${colors.warning}
+ramp-2 = 
+ramp-2-foreground = ${colors.warning}
+ramp-3 = 
+ramp-3-foreground = ${colors.warning}
+ramp-4 = 
+ramp-4-foreground = ${colors.warning}
+ramp-5 = 
+ramp-6 = 
+ramp-7 = 
+ramp-8 = 
+ramp-9 = 
+ramp-9-foreground = ${colors.warning}
 
 [module/cpu]
 type = internal/cpu
 interval = 2
 label = %percentage%
 format = <ramp-load><label>
-ramp-background = ${colors.background-alt}
 ramp-load-0 = 
-ramp-load-0-foreground = ${colors.foreground-alt}
 ramp-load-1 = 
-ramp-load-1-foreground = ${colors.foreground-alt}
 ramp-load-2 = 
 ramp-load-2-foreground = ${colors.warning}
 
@@ -194,11 +192,8 @@ type = internal/memory
 interval = 2
 label = %percentage_used%
 format = <ramp-used><label>
-ramp-background = ${colors.background-alt}
 ramp-used-0 = 
-ramp-used-0-foreground = ${colors.foreground-alt}
 ramp-used-1 = 
-ramp-used-1-foreground = ${colors.foreground-alt}
 ramp-used-2 = 
 ramp-used-2-foreground = ${colors.warning}
 
@@ -216,8 +211,6 @@ ramp-signal-1 = 
 ramp-signal-2 = 
 ramp-signal-3 = 
 ramp-signal-4 = 
-ramp-signal-foreground = ${colors.foreground-alt}
-ramp-signal-background = ${colors.background-alt}
 
 [module/eth]
 type = internal/network
@@ -225,8 +218,6 @@ interface = enp0s25
 interval = 3.0
 
 format-connected-prefix = 
-format-connected-prefix-background = ${colors.background-alt}
-format-connected-prefix-foreground = ${colors.foreground-alt}
 label-connected = %local_ip%
 format-disconnected =
 
@@ -241,8 +232,6 @@ time = %a %H:%M
 time-alt = %H:%M:%S
 
 format-prefix = 
-format-prefix-background = ${colors.background-alt}
-format-prefix-foreground = ${colors.foreground-alt}
 
 label = "%date%%time% "
 
@@ -250,36 +239,19 @@ label = "%date%%time% "
 [module/pulseaudio]
 type = internal/pulseaudio
 
-format-volume-prefix = 
-format-volume-prefix-background = ${colors.background-alt}
-format-volume-prefix-foreground = ${colors.foreground-alt}
-format-volume = <label-volume>
+format-volume = <ramp-volume><label-volume>
 label-volume = %percentage%
-label-volume-foreground = ${colors.foreground}
+ramp-volume-0 = 
+ramp-volume-1 = 
+ramp-volume-2 = 
+ramp-volume-3 = 
+ramp-volume-4 = 
+ramp-volume-4-foreground = ${colors.warning}
 
 format-muted-prefix = 
-format-muted-prefix-background = ${colors.background-alt}
-format-muted-prefix-foreground = ${colors.foreground-alt}
 format-muted = <label-muted>
 label-muted = %percentage%
-label-muted-foreground = ${colors.foreground-alt}
 
-[module/alsa]
-type = internal/alsa
-
-format-volume-prefix =  
-format-volume-prefix-background = ${colors.background-alt}
-format-volume-prefix-foreground = ${colors.foreground-alt}
-format-volume = <label-volume>
-label-volume = %percentage%
-label-volume-foreground = ${colors.foreground}
-
-format-muted-prefix =  
-format-muted-prefix-background = ${colors.background-alt}
-format-muted-prefix-foreground = ${colors.foreground-alt}
-format-muted = <label-muted>
-label-muted = %percentage%
-label-muted-foreground = ${colors.foreground-alt}
 
 [module/battery]
 type = internal/battery
@@ -295,34 +267,24 @@ format-full = <ramp-capacity><label-full>
 format-charging = <animation-charging><label-charging>
 format-discharging = <ramp-capacity><label-discharging>
 
-ramp-capacity-background = ${colors.background-alt}
 ramp-capacity-0 = 
 ramp-capacity-0-foreground = ${colors.alert}
 ramp-capacity-1 = 
 ramp-capacity-1-foreground = ${colors.warning}
 ramp-capacity-2 = 
-ramp-capacity-2-foreground = ${colors.foreground-alt}
 ramp-capacity-3 = 
-ramp-capacity-3-foreground = ${colors.foreground-alt}
 ramp-capacity-4 = 
-ramp-capacity-4-foreground = ${colors.foreground-alt}
 ramp-capacity-5 = 
-ramp-capacity-5-foreground = ${colors.foreground-alt}
 ramp-capacity-6 = 
-ramp-capacity-6-foreground = ${colors.foreground-alt}
 ramp-capacity-7 = 
-ramp-capacity-7-foreground = ${colors.foreground-alt}
 ramp-capacity-8 = 
-ramp-capacity-8-foreground = ${colors.foreground-alt}
 ramp-capacity-9 = 
-ramp-capacity-9-foreground = ${colors.foreground-alt}
 
 animation-charging-0 = 
 animation-charging-1 = 
 animation-charging-2 = 
 animation-charging-3 = 
 animation-charging-4 = 
-animation-charging-foreground = ${colors.foreground-alt}
 animation-charging-framerate = 750
 
 
@@ -340,11 +302,8 @@ format = <ramp><label>
 format-warn = <ramp><label-warn>
 label = %temperature-c%
 label-warn = %temperature-c%
-ramp-background = ${colors.background-alt}
 ramp-0 = 
-ramp-0-foreground = ${colors.foreground-alt}
 ramp-1 = 
-ramp-1-foreground = ${colors.foreground-alt}
 ramp-2 = 
 ramp-2-foreground = ${colors.warning}
 
@@ -354,7 +313,6 @@ type = custom/script
 format = <label>
 exec = echo 
 format-offset = 6
-label-foreground = ${colors.foreground-alt}
 click-left = ~/bin/desktop-lock
 click-right = ~/bin/power-menu
 

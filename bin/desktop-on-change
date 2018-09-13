@@ -2,5 +2,5 @@
 
 ~/bin/dunstrc-update
 killall dunst
-killall polybar && sleep 1
+killall polybar
 polybar top

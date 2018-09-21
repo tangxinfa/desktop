@@ -1,7 +1,5 @@
 #!/bin/bash
 
-echo $0 $@ >> /tmp/polybar-calendar.log
-
 n=$(xdotool search --onlyvisible --class chinese-calendar | wc -l)
 if [ "$1" = "on" ]; then
     if [ "$n" -gt "1" ]; then

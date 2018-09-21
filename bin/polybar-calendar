@@ -1,0 +1,29 @@
+#!/bin/bash
+
+echo $0 $@ >> /tmp/polybar-calendar.log
+
+n=$(xdotool search --onlyvisible --class chinese-calendar | wc -l)
+if [ "$1" = "on" ]; then
+    if [ "$n" -gt "1" ]; then
+        exit 0
+    fi
+elif [ "$1" = "off" ]; then
+    if [ "$n" -lt "2" ]; then
+        exit 0
+    fi
+fi
+
+# toggle
+for i in 1 2
+do
+    WINDOW=$(xdotool search --name chinese-calendar | sort | head -1)
+    if [ -z "$WINDOW" ]; then
+        dex /usr/share/applications/chinese-calendar.desktop
+        sleep 1
+    else
+        # double click
+        xdotool click --window $WINDOW 1
+        xdotool click --window $WINDOW 1
+        exit 0
+    fi
+done

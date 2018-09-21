@@ -232,11 +232,10 @@ interval = 5
 
 date =
 date-alt = "%a %Y-%m-%d "
-time = %a %H:%M
-time-alt = %H:%M:%S
-format = <label>
-label = "%date%%time% "
-
+time = "%a %H:%M"
+time-alt = "%H:%M:%S"
+format = <label>
+label = "%{A5:~/bin/polybar-calendar on:}%{A4:~/bin/polybar-calendar off:}%date%%time%　%{A}%{A}%{A}"
 
 [module/pulseaudio]
 type = internal/pulseaudio
@@ -312,10 +311,8 @@ ramp-2-foreground = ${colors.warning}
 [module/power]
 type = custom/script
 format = <label>
-exec = echo 
-format-offset = 6
+exec = echo "%{A5:~/bin/power-menu:}　%{A}"
 click-left = ~/bin/desktop-lock
-click-right = ~/bin/power-menu
 
 
 [module/weather]

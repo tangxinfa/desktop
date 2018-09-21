@@ -49,13 +49,14 @@ module-margin-left = 1
 module-margin-right = 2
 separator =
 
-font-0 = "Microsoft YaHei:size=12:antialias=true:style=Normal;1"
+font-0 = "Microsoft YaHei:size=12:antialias=true:style=Normal;0"
 font-1 = "Material Icons:size=13:style=Regular;1"
 font-2 = "Font Awesome 5 Free:style=Solid:size=12;1"
+font-3 = "Weather Icons:size=12;1"
 
 modules-left = power i3 xwindow
 modules-center =
-modules-right = xkeysnail filesystem xbacklight pulseaudio memory cpu temperature battery battery-monitor eth wlan date
+modules-right = xkeysnail filesystem xbacklight pulseaudio memory cpu temperature battery battery-monitor eth wlan weather date
 
 tray-position = center
 tray-padding = 3
@@ -182,20 +183,24 @@ type = internal/cpu
 interval = 2
 label = %percentage%
 format = %{A1:gnome-system-monitor -p&:}<ramp-load><label>%{A}
-ramp-load-0 = 
-ramp-load-1 = 
-ramp-load-2 = 
-ramp-load-2-foreground = ${colors.warning}
+ramp-load-0 = 
+ramp-load-1 = 
+ramp-load-2 = 
+ramp-load-3 = 
+ramp-load-4 = 
+ramp-load-4-foreground = ${colors.warning}
 
 [module/memory]
 type = internal/memory
 interval = 2
 label = %percentage_used%
 format = %{A1:gnome-system-monitor -p&:}<ramp-used><label>%{A}
-ramp-used-0 = 
-ramp-used-1 = 
-ramp-used-2 = 
-ramp-used-2-foreground = ${colors.warning}
+ramp-used-0 = 
+ramp-used-1 = 
+ramp-used-2 = 
+ramp-used-3 = 
+ramp-used-4 = 
+ramp-used-4-foreground = ${colors.warning}
 
 [module/wlan]
 type = internal/network
@@ -311,6 +316,13 @@ exec = echo 
 format-offset = 6
 click-left = ~/bin/desktop-lock
 click-right = ~/bin/power-menu
+
+
+[module/weather]
+type = custom/script
+exec = ~/bin/polybar-weather
+interval = 1800
+click-left = dex /usr/share/applications/org.gnome.Weather.Application.desktop
 
 
 [settings]

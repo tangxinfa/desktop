@@ -1,0 +1,82 @@
+#!/bin/bash
+
+# Reference https://raw.githubusercontent.com/x70b1/polybar-scripts/master/polybar-scripts/openweathermap-fullfeatured/openweathermap-fullfeatured.sh
+
+get_icon() {
+    case $1 in
+        01d) icon="";;
+        01n) icon="";;
+        02d) icon="";;
+        02n) icon="";;
+        03*) icon="";;
+        04*) icon="";;
+        09d) icon="";;
+        09n) icon="";;
+        10d) icon="";;
+        10n) icon="";;
+        11d) icon="";;
+        11n) icon="";;
+        13d) icon="";;
+        13n) icon="";;
+        50d) icon="";;
+        50n) icon="";;
+        *) icon="";
+    esac
+
+    echo $icon
+}
+
+get_duration() {
+
+    osname=$(uname -s)
+
+    case $osname in
+        *BSD) date -r "$1" -u +%H:%M;;
+        *) date --date="@$1" -u +%H:%M;;
+    esac
+
+}
+
+UNITS="metric"
+SYMBOL="°"
+source ~/.config/polybar/weather.env
+if [ -z "$OPEN_WEATHER_MAP_KEY" ]; then
+   echo "~/.config/polybar/weather.env must have: export OPEN_WEATHER_MAP_KEY=?"
+   exit 1
+fi
+
+~/bin/geo-location | while read -r name value
+do
+    if [ "$name" == "Latitude:" ]; then
+        location_lat="${value//°}"
+    elif [ "$name" == "Longitude:" ]; then
+        location_lon="${value//°}"
+    fi
+
+    if [ -z "$location_lat" -o -z "$location_lon" ]; then
+        continue
+    fi
+
+    current=$(curl -sf "http://api.openweathermap.org/data/2.5/weather?appid=$OPEN_WEATHER_MAP_KEY&lat=$location_lat&lon=$location_lon&units=$UNITS")
+    forecast=$(curl -sf "http://api.openweathermap.org/data/2.5/forecast?APPID=$OPEN_WEATHER_MAP_KEY&lat=$location_lat&lon=$location_lon&units=$UNITS&cnt=1")
+
+    if [ ! -z "$current" ] && [ ! -z "$forecast" ]; then
+        current_temp=$(echo "$current" | jq ".main.temp" | cut -d "." -f 1)
+        current_icon=$(echo "$current" | jq -r ".weather[0].icon")
+
+        forecast_temp=$(echo "$forecast" | jq ".list[].main.temp" | cut -d "." -f 1)
+        forecast_icon=$(echo "$forecast" | jq -r ".list[].weather[0].icon")
+
+        if [ "$current_temp" -gt "$forecast_temp" ]; then
+            trend=""
+        elif [ "$forecast_temp" -gt "$current_temp" ]; then
+            trend=""
+        else
+            trend=""
+        fi
+
+        echo "%{T4}$(get_icon "$current_icon")%{T-}%{T1}${current_temp}%{T-}%{T4}${SYMBOL} ${trend} $(get_icon "$forecast_icon")%{T-}%{T1}${forecast_temp}%{T-}%{T4}${SYMBOL}%{T-}"
+    fi
+
+    exit 0
+done

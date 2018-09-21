@@ -1,0 +1,4 @@
+#!/bin/bash
+
+PID=$$
+/usr/lib/geoclue-2.0/demos/where-am-i | grep -E '(Latitude|Longitude)' --line-buffered | awk -v PID=${PID} '{ print $0; if (NR > 1) { CMD="sleep 1; kill "PID; system(CMD) } }'

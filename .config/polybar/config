@@ -40,14 +40,12 @@ foreground = ${colors.foreground}
 
 line-size = 3
 border-bottom-size = 1
-border-left-size = 10
-border-right-size = 10
 border-left-color = ${colors.background}
 border-right-color = ${colors.background}
 border-color = ${colors.border}
 
 padding-left = 0
-padding-right = 0
+padding-right = 2
 
 module-margin-left = 2
 module-margin-right = 0
@@ -63,17 +61,19 @@ modules-center =
 modules-right = xkeysnail filesystem xbacklight pulseaudio memory cpu temperature battery battery-monitor eth wlan weather date
 
 tray-position = center
-tray-padding = 3
+tray-padding = 0
 tray-maxsize = 26
+
+;tray-detached = false
 ;tray-transparent = true
 ;tray-background = ${root.background}
 ;tray-scale = 1.0
 tray-offset-x = -240
 
-
 ;wm-restack = i3
-
 ;override-redirect = true
+
+enable-ipc = true
 
 ;scroll-up = i3wm-wsnext
 ;scroll-down = i3wm-wsprev
@@ -315,7 +315,7 @@ ramp-2-foreground = ${colors.warning}
 [module/power]
 type = custom/script
 format = <label>
-exec = echo "%{A5:~/bin/power-menu:}%{A}"
+exec = echo "%{A5:~/bin/power-menu:}  %{A}"
 click-left = ~/bin/desktop-lock
 
 

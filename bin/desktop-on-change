@@ -2,5 +2,4 @@
 
 ~/bin/dunstrc-update
 killall dunst
-killall polybar
-polybar top
+polybar-msg cmd restart

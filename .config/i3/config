@@ -287,7 +287,7 @@ exec --no-startup-id dex ~/.local/share/applications/xkeysnail.desktop
 exec --no-startup-id dex /etc/xdg/autostart/geoclue-demo-agent.desktop
 exec --no-startup-id dex /usr/share/applications/redshift-gtk.desktop
 exec --no-startup-id dex /etc/xdg/autostart/solaar.desktop
-exec --no-startup-id polybar-msg cmd ping || polybar top
+exec_always --no-startup-id polybar-msg cmd restart || polybar top
 exec --no-startup-id compton -cCGb\
      -d :0.0\
      -t 0\

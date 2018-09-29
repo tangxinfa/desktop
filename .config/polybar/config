@@ -211,7 +211,7 @@ type = internal/network
 interface = wlp4s0
 interval = 3.0
 
-format-connected = %{A1:dex /usr/share/applications/nm-connection-editor.desktop:}<ramp-signal><label-connected>%{A}
+format-connected = %{A1:networkmanager_dmenu -l 7:}<ramp-signal><label-connected>%{A}
 label-connected = %essid%
 format-disconnected =
 

@@ -19,9 +19,7 @@ do
         dex /usr/share/applications/chinese-calendar.desktop
         sleep 1
     else
-        # double click
-        xdotool click --window $WINDOW 1
-        xdotool click --window $WINDOW 1
+        xdotool click --repeat 2 --window $WINDOW 1
         exit 0
     fi
 done

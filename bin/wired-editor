@@ -1,0 +1,3 @@
+#!/bin/bash
+
+nm-connection-editor `nmcli --fields type,uuid connection show | awk '{if ($1=="ethernet" && $2!="") print "-e",$2}'`

@@ -211,11 +211,12 @@ type = internal/network
 interface = wlp4s0
 interval = 3.0
 
-format-connected = %{A1:networkmanager_dmenu -l 7:}<ramp-signal><label-connected>%{A}
+format-connected = %{A1:nmcli d wifi >/dev/null 2>&1 && networkmanager_dmenu:}<ramp-signal><label-connected>%{A}
 label-connected = %essid%
-format-disconnected =
+format-disconnected = %{A1:nmcli d wifi >/dev/null 2>&1 && networkmanager_dmenu:}%{A}
 
 ramp-signal-0 = 
+ramp-signal-0-foreground = ${colors.alert}
 ramp-signal-1 = 
 ramp-signal-2 = 
 ramp-signal-3 = 
@@ -226,9 +227,9 @@ type = internal/network
 interface = enp0s25
 interval = 3.0
 
-format-connected = %{A1:dex /usr/share/applications/nm-connection-editor.desktop:}<label-connected>%{A}
+format-connected = %{A1:~/bin/wired-editor:}<label-connected>%{A}
 label-connected = %local_ip%
-format-disconnected = %{A1:dex /usr/share/applications/nm-connection-editor.desktop:}%{A}
+format-disconnected = %{A1:~/bin/wired-editor:}%{A}
 
 [module/date]
 type = internal/date

@@ -15,11 +15,11 @@ rofi.bw:                             0
 ! "Padding" Set from: Default
 ! rofi.padding:                        5
 ! "Y-offset relative to location" Set from: Default
-! rofi.yoffset:                        0
+rofi.yoffset:                        -200
 ! "X-offset relative to location" Set from: Default
 ! rofi.xoffset:                        0
 ! "Always show number of lines" Set from: Default
-rofi.fixed-num-lines:                true
+rofi.fixed-num-lines:                false
 ! "Whether to load and show icons" Set from: Rasi File
 rofi.show-icons:                       true
 ! "Terminal to use" Set from: Commandline

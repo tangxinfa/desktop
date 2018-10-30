@@ -1,0 +1,23 @@
+#!/bin/bash
+
+PRIMARY_OLD="$(grep -E '^DualScreen.Primary:' ~/.Xresources | awk '{print $2}')"
+SECONDARY_OLD="$(grep -E '^DualScreen.Secondary:' ~/.Xresources | awk '{print $2}')"
+if [ -z "${SECONDARY_OLD}" ]; then
+    SECONDARY_OLD=${PRIMARY_OLD}
+fi
+PRIMARY_NEW="$(xrandr | grep ' connected' | grep primary | awk '{print $1}' | head -1)"
+SECONDARY_NEW="$(xrandr | grep ' connected' | grep -v primary | awk '{print $1}' | head -1)"
+if [ -z "${SECONDARY_NEW}" ]; then
+    SECONDARY_NEW=${PRIMARY_NEW}
+fi
+
+if [ "$PRIMARY_OLD" == "$PRIMARY_NEW" ] && [ "$SECONDARY_OLD" == "$SECONDARY_NEW" ]; then
+    echo "DualScreen no update"
+    exit 1
+fi
+
+sed -i -e '/^DualScreen\./d' ~/.Xresources
+sed -i -e "/^! Generate by $(basename $0)/d" ~/.Xresources
+echo "! Generate by $(basename $0)" >> ~/.Xresources
+echo "DualScreen.Primary:   ${PRIMARY_NEW}" >> ~/.Xresources
+echo "DualScreen.Secondary: ${SECONDARY_NEW}" >> ~/.Xresources

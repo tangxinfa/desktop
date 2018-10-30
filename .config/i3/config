@@ -10,8 +10,12 @@
 # Please see http://i3wm.org/docs/userguide.html for a complete reference!
 
 set $mod Mod4
-
 set $i3lock ~/bin/desktop-lock
+
+exec --no-startup-id ~/bin/dual-screen-detect
+
+set_from_resource $dual-screen-primary DualScreen.Primary HDMI-0
+set_from_resource $dual-screen-secondary DualScreen.Secondary HDMI-1
 
 # define colors
 set $background-color 	     #ffffff
@@ -58,6 +62,7 @@ bindsym $mod+minus scratchpad show
 # power management
 bindsym Control+$mod+l exec $i3lock
 bindsym $mod+l exec $i3lock
+bindsym Control+$mod+p exec ~/bin/power-menu
 bindsym $mod+p exec ~/bin/power-menu
 
 
@@ -66,6 +71,7 @@ bindsym $mod+p exec ~/bin/power-menu
 bindsym $mod+r exec --no-startup-id "killall rofi; rofi -p '' -show run"
 bindsym $mod+d exec --no-startup-id "killall rofi; rofi -p '' -show drun"
 bindsym $mod+t exec --no-startup-id "killall rofi; rofi -p '' -show "
+bindsym $mod+w exec --no-startup-id "killall rofi; rofi -p '' -show window"
 
 # change focus
 bindsym $mod+j focus left
@@ -98,9 +104,7 @@ bindsym $mod+v split v
 # enter fullscreen mode for the focused container
 bindsym $mod+f fullscreen toggle
 
-# change container layout (stacked, tabbed, toggle split)
-bindsym $mod+s layout stacking
-bindsym $mod+w layout tabbed
+# change container layout (toggle split)
 bindsym $mod+e layout toggle split
 
 # toggle tiling / floating
@@ -118,10 +122,20 @@ bindsym $mod+a focus parent
 set $workspace1 "1:"
 set $workspace2 "2:"
 set $workspace3 "3:"
-set $workspace4 "4:"
-set $workspace5 "5:"
-set $workspace6 "6:"
+set $workspace4 "4:"
+set $workspace5 "5:"
+set $workspace6 "6:"
+set $workspace7 "7:"
+set $workspace8 "8:"
 
+workspace $workspace1 output $dual-screen-primary
+workspace $workspace2 output $dual-screen-primary
+workspace $workspace3 output $dual-screen-primary
+workspace $workspace4 output $dual-screen-primary
+workspace $workspace5 output $dual-screen-primary
+workspace $workspace6 output $dual-screen-primary
+workspace $workspace7 output $dual-screen-primary
+workspace $workspace8 output $dual-screen-secondary
 
 # switch to workspace
 bindsym $mod+1 workspace $workspace1
@@ -130,6 +144,8 @@ bindsym $mod+3 workspace $workspace3
 bindsym $mod+4 workspace $workspace4
 bindsym $mod+5 workspace $workspace5
 bindsym $mod+6 workspace $workspace6
+bindsym $mod+7 workspace $workspace7
+bindsym $mod+8 workspace $workspace8
 
 # move focused container to workspace
 bindsym $mod+Shift+1 move container to workspace $workspace1
@@ -138,6 +154,8 @@ bindsym $mod+Shift+3 move container to workspace $workspace3
 bindsym $mod+Shift+4 move container to workspace $workspace4
 bindsym $mod+Shift+5 move container to workspace $workspace5
 bindsym $mod+Shift+6 move container to workspace $workspace6
+bindsym $mod+Shift+7 move container to workspace $workspace7
+bindsym $mod+Shift+8 move container to workspace $workspace8
 
 # cycle through active workspaces
 bindsym $mod+Tab workspace next
@@ -225,13 +243,14 @@ assign [class="Java" title="XMind"] $workspace3
 for_window [class="Dia" window_role="toolbox_window"] floating enable
 assign [title="Electronic WeChat"] $workspace4
 assign [class="dingtalk"] $workspace4
-assign [class="netease-cloud-music"] $workspace4
-assign [class="vlc"] $workspace4
+for_window [class="Blueman-manager"] floating enable, move absolute position center, resize set 600 400
 assign [class="Wine"] $workspace4
-assign [class="VirtualBox"] $workspace5
-assign [class="Steam"] $workspace6
-assign [title="Steam"] $workspace6
-for_window [class="keepassxc"] floating enable, move scratchpad, move absolute position center, resize set 640 360
+assign [class="VirtualBox"] $workspace6
+assign [class="netease-cloud-music"] $workspace5
+assign [class="vlc"] $workspace5
+assign [class="Steam"] $workspace5
+assign [title="Steam"] $workspace5
+for_window [class="keepassxc"] floating enable, move scratchpad, resize set 640 360
 for_window [class="Zeal" window_type="normal"] floating enable, resize set 800 600, move absolute position center, focus
 for_window [class="Conky"] floating enable, resize set 400 400, move absolute position center
 for_window [class="Wine" title="迅雷网络" window_type="dialog"] floating disable, move container to workspace $workspace4 # Main RTX window
@@ -287,6 +306,7 @@ exec --no-startup-id dex ~/.local/share/applications/xkeysnail.desktop
 exec --no-startup-id dex /etc/xdg/autostart/geoclue-demo-agent.desktop
 exec --no-startup-id dex /usr/share/applications/redshift-gtk.desktop
 exec --no-startup-id dex /etc/xdg/autostart/solaar.desktop
+exec --no-startup-id dex /usr/share/applications/org.keepassxc.KeePassXC.desktop
 exec_always --no-startup-id polybar-msg cmd restart || polybar top
 exec --no-startup-id compton -cCGb\
      -d :0.0\

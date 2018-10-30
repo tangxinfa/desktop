@@ -5,4 +5,5 @@ My desktop configurations
 ## Installation ##
 
     git clone https://github.com/tangxinfa/desktop.git
-    cp -rs ${PWD}/desktop/{bin,.config,.xinitrc} ~/
+    cd desktop
+    cp -rs ${PWD}/{bin,.config,.emacs.d,.xinitrc} ~/

@@ -9,15 +9,15 @@ set -e
 #
 
 declare -A theme_attr_dict=(
-    ["global-frame_color"]="\"$(grep Emacs.VerticalBorder.foreground ~/.emacs.d/.Xresources | awk '{print $2}')\""
-    ["urgency_low-background"]="\"$(grep Emacs.ModeLineInactive.background ~/.emacs.d/.Xresources | awk '{print $2}')\""
-    ["urgency_low-foreground"]="\"$(grep Emacs.ModeLineInactive.foreground ~/.emacs.d/.Xresources | awk '{print $2}')\""
+    ["global-frame_color"]="\"$(grep Emacs.VerticalBorder.foreground ~/.Xresources | awk '{print $2}')\""
+    ["urgency_low-background"]="\"$(grep Emacs.ModeLineInactive.background ~/.Xresources | awk '{print $2}')\""
+    ["urgency_low-foreground"]="\"$(grep Emacs.ModeLineInactive.foreground ~/.Xresources | awk '{print $2}')\""
 
-    ["urgency_normal-background"]="\"$(grep Emacs.ModeLine.background ~/.emacs.d/.Xresources | awk '{print $2}')\""
-    ["urgency_normal-foreground"]="\"$(grep Emacs.ModeLine.foreground ~/.emacs.d/.Xresources | awk '{print $2}')\""
+    ["urgency_normal-background"]="\"$(grep Emacs.ModeLine.background ~/.Xresources | awk '{print $2}')\""
+    ["urgency_normal-foreground"]="\"$(grep Emacs.ModeLine.foreground ~/.Xresources | awk '{print $2}')\""
 
-    ["urgency_critical-background"]="\"$(grep Emacs.Tooltip.background ~/.emacs.d/.Xresources | awk '{print $2}')\""
-    ["urgency_critical-foreground"]="\"$(grep Emacs.Tooltip.foreground ~/.emacs.d/.Xresources | awk '{print $2}')\""
+    ["urgency_critical-background"]="\"$(grep Emacs.Tooltip.background ~/.Xresources | awk '{print $2}')\""
+    ["urgency_critical-foreground"]="\"$(grep Emacs.Tooltip.foreground ~/.Xresources | awk '{print $2}')\""
 )
 
 # Attributes dictionary keys.

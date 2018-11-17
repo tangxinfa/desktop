@@ -1,17 +1,20 @@
 #!/bin/bash
 
-acpi -b | awk -F'[,:%]' '{print $2, $3}' | {
-	read -r status capacity
+for i in 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1
+do
+    data=$(acpi -b | head -1 | awk -F'[,:%]' '{print $2, $3}')
+    read -r status capacity <<<"$data"
 	if [ "$status" = Discharging -a "$capacity" -lt 5 ]; then
-        for i in 10 9 8 7 6 5 4 3 2 1
-        do
-            notify-send -u critical -t 750 -i battery-empty "Battery Empty" "Hibernate system after $i seconds ..."
-            sleep 1
-        done
-        ~/bin/desktop-lock &
+        notify-send -u critical -t 1000 -i battery-empty "Battery Empty" "Hibernate after $i seconds ..."
         sleep 1
-		systemctl hibernate
-	elif [ "$status" = Discharging -a "$capacity" -lt 15 ]; then
+        continue
+    fi
+	if [ "$status" = Discharging -a "$capacity" -lt 15 ]; then
         notify-send -u critical -t 10000 -i battery-low "Battery Low" "Please charging"
 	fi
-}
+    exit 0
+done
+
+~/bin/desktop-lock &
+sleep 1
+systemctl hibernate

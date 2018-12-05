@@ -1,0 +1,17 @@
+#!/bin/bash
+
+for ((i=0;i<30;i++));
+do
+    state=$(awk '{print $2}' /proc/acpi/button/lid/LID/state)
+    if [ "$state" == "open" ]; then
+        exit 0
+    fi
+    if [ $i -ge 10 ]; then
+        echo -e "`date '+%Y-%m-%d %H:%M:%S'`\tLaptop LID closed, why not suspend?" >> ~/lid-monitor.log
+    fi
+    sleep 1
+done
+
+echo -e "`date '+%Y-%m-%d %H:%M:%S'`\tLaptop LID closed without suspend, rescue with power off" >> ~/lid-monitor.log
+sync ~/lid-monitor.log
+systemctl poweroff

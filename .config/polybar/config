@@ -47,18 +47,18 @@ border-color = ${colors.border}
 padding-left = 0
 padding-right = 2
 
-module-margin-left = 2
+module-margin-left = 1
 module-margin-right = 0
 separator =
 
-font-0 = "Microsoft YaHei:size=12:antialias=true:style=Normal;0"
+font-0 = "YaHei Consolas Hybrid:size=12:antialias=true:style=Normal;0"
 font-1 = "Material Icons:size=13:style=Regular;1"
 font-2 = "Font Awesome 5 Free:style=Solid:size=12;1"
 font-3 = "Weather Icons:size=12;1"
 
 modules-left = power i3 xwindow
 modules-center =
-modules-right = xkeysnail dual-screen filesystem xbacklight pulseaudio memory cpu temperature battery battery-monitor eth wlan weather date
+modules-right = xkeysnail dual-screen filesystem xbacklight pulseaudio memory cpu temperature battery battery-monitor lid-monitor eth wlan weather date
 
 tray-position = center
 tray-padding = 0
@@ -103,7 +103,7 @@ type = internal/fs
 interval = 25
 
 mount-0 = /
-format-mounted = %{A1:gnome-system-monitor -f&:}<ramp-capacity><label-mounted>%{A}
+format-mounted = %{A1:gnome-system-monitor -f&:}%{A3:gnome-terminal --role=gnome-terminal-popup -- sudo iotop:}<ramp-capacity><label-mounted>%{A}%{A}
 label-mounted = %percentage_used%
 label-unmounted =
 label-unmounted-foreground = ${colors.alert}
@@ -305,6 +305,12 @@ exec = ~/bin/battery-monitor
 interval = 180
 format =
 
+[module/lid-monitor]
+type = custom/script
+exec = ~/bin/lid-monitor
+interval = 180
+format =
+
 [module/temperature]
 type = internal/temperature
 thermal-zone = 0
@@ -322,7 +328,7 @@ ramp-2-foreground = ${colors.warning}
 [module/power]
 type = custom/script
 format = <label>
-exec = echo "%{A5:~/bin/power-menu:}  %{A}"
+exec = echo "%{A5:~/bin/power-menu:}   %{A}"
 click-left = ~/bin/desktop-lock
 
 

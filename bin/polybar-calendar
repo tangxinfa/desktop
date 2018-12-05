@@ -14,7 +14,7 @@ fi
 # toggle
 for i in 1 2
 do
-    WINDOW=$(xdotool search --name chinese-calendar | sort | head -1)
+    WINDOW=$(xdotool search --class chinese-calendar | sort | head -1)
     if [ -z "$WINDOW" ]; then
         dex /usr/share/applications/chinese-calendar.desktop
         sleep 1

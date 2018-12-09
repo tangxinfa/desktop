@@ -5,16 +5,31 @@ do
     data=$(acpi -b | head -1 | awk -F'[,:%]' '{print $2, $3}')
     read -r status capacity <<<"$data"
 	if [ "$status" = Discharging -a "$capacity" -lt 5 ]; then
-        notify-send -u critical -t 1000 -i battery-empty "Battery Empty" "Hibernate after $i seconds ..."
+        TITLE="Battery Empty"
+        DESCRIPTION="Hibernate after $i seconds ..."
+        if [ "$DISPLAY" != "" ]; then
+            notify-send -u critical -t 1000 -i battery-empty "$TITLE" "$DESCRIPTION"
+        else
+            echo "${TITLE}, ${DESCRIPTION}" >/dev/stderr
+        fi
         sleep 1
         continue
     fi
 	if [ "$status" = Discharging -a "$capacity" -lt 15 ]; then
-        notify-send -u critical -t 10000 -i battery-low "Battery Low" "Please charging"
+        TITLE="Battery Low"
+        DESCRIPTION="Please charging"
+        if [ "$DISPLAY" != "" ]; then
+            notify-send -u critical -t 10000 -i battery-low "$TITLE" "$DESCRIPTION"
+        else
+            echo "${TITLE}, ${DESCRIPTION}" >/dev/stderr
+        fi
 	fi
     exit 0
 done
 
-~/bin/desktop-lock &
-sleep 1
+if [ "$DISPLAY" != "" ]; then
+    ~/bin/desktop-lock &
+    sleep 1
+fi
+
 systemctl hibernate

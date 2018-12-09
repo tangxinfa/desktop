@@ -77,7 +77,8 @@ do
             trend=""
         fi
 
-        if [ "$current_id" -lt 803 ]; then
+        # 800 means clear sky, 801 means few clouds.
+        if [ "$current_id" -eq 800 ] || [ "$current_id" -eq 801 ]; then
             touch $WEATHER_BRIGHT_INDICATOR_FILE
         else
             rm $WEATHER_BRIGHT_INDICATOR_FILE 2>/dev/null

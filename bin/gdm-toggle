@@ -1,21 +1,19 @@
 #!/bin/bash
 
-systemctl status gdm | grep -E 'gdm.service; enabled; vendor preset'
+systemctl status gdm | grep -E 'gdm.service; enabled; vendor preset' >/dev/null 2>&1
 
 if [ "$?" -eq "0" ]; then
     STATUS=Disabled
     set -e
-    systemctl disable gdm
-    systemctl set-default multi-user.target
-    sed --follow-symlinks -i -e 's/^#exec dbus-launch i3/exec dbus-launch i3/g' ~/.xinitrc
-    sed --follow-symlinks -i -e 's/^#  exec startx/  exec startx/g' ~/.bash_profile
+    echo "Disable GDM ..." >/dev/stderr
+    sudo bash -c "systemctl set-default multi-user.target && systemctl disable gdm"
 else
     STATUS=Enabled
     set -e
-    systemctl enable gdm
-    systemctl set-default graphical.target
-    sed --follow-symlinks -i -e 's/^exec dbus-launch i3/#exec dbus-launch i3/g' ~/.xinitrc
-    sed --follow-symlinks -i -e 's/^  exec startx/#  exec startx/g' ~/.bash_profile
+    echo "Enable GDM ..." >/dev/stderr
+    sudo bash -c "systemctl enable gdm && systemctl set-default graphical.target"
 fi
 
-notify-send -t 5000 -i preferences-desktop-display -u critical "GDM ${STATUS}" "Restart system to take effect"
+if [ "$DISPLAY" != "" ]; then
+    notify-send -t 5000 -i preferences-desktop-display -u critical "GDM ${STATUS}"
+fi

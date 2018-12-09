@@ -167,7 +167,7 @@ bindsym $mod+Shift+r restart
 bindsym $mod+m exec gnome-system-monitor
 
 # resize window (you can also use the mouse for that)
-set $resize [f]    [b]    [n]    [p]
+set $resize [f]  [b]  [n]  [p]
 mode "$resize" {
         bindsym f resize grow width 10 px or 10 ppt
         bindsym b resize shrink width 10 px or 10 ppt
@@ -291,17 +291,17 @@ exec --no-startup-id blueman-applet
 #exec --no-startup-id mate-volume-control-applet
 exec --no-startup-id nm-applet
 exec --no-startup-id udiskie -t &
-exec --no-startup-id feh --bg-fill ~/.config/feh/images/desktop.jpg
 exec --no-startup-id xautolock -time 10 -locker "$i3lock"
 exec --no-startup-id sleep 10 && dropbox start
 exec --no-startup-id seafile-applet
 exec --no-startup-id firefox
-exec --no-startup-id emacs
+exec --no-startup-id pidof emacs || emacs
 #exec --no-startup-id steam --tcp -perfectworld
 exec --no-startup-id dex ~/.local/share/applications/xkeysnail.desktop
 exec --no-startup-id dex /etc/xdg/autostart/geoclue-demo-agent.desktop
 exec --no-startup-id dex /usr/share/applications/redshift-gtk.desktop
 exec --no-startup-id dex /etc/xdg/autostart/solaar.desktop
+exec --no-startup-id dex /usr/share/applications/variety.desktop
 exec --no-startup-id dex /usr/share/applications/org.keepassxc.KeePassXC.desktop
 exec_always --no-startup-id polybar-msg cmd restart || polybar top
 exec --no-startup-id compton -cCGb\

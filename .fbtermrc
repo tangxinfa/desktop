@@ -8,12 +8,12 @@
 # and using a fixed width font as the first is strongly recommended
 #font-names=DejaVu Sans Mono
 #font-size=14
-font-names=YaHei Consolas Hybrid
-font-size=14
+font-names=YaHei Consolas Hybrid,DejaVu Sans Mono
+font-size=15
 
 # force font width (and/or height), usually for non-fixed width fonts
 # legal value format: n (fw_new = n), +n (fw_new = fw_old + n), -n (fw_new = fw_old - n)
-#font-width=
+font-width=-2
 #font-height=
 
 # default color of foreground/background text

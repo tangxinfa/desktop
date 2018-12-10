@@ -55,7 +55,8 @@ int execute(const char *command, const char *input) {
 
 const char *keymaps =
     "keymaps 0-2,4-6,8-9,12 # By run `sudo dumpkeys | head -1`\n"
-    "keycode 58 = Control   # Caps-Lock as Control\n";
+    "keycode 58 = Control   # Caps-Lock as Control\n"
+    "keycode 125 = Alt      # Win as Alt\n";
 
 int main(int argc, char *argv[]) {
   if (setuid(0) == -1) {

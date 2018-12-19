@@ -11,7 +11,8 @@ int tty_ready(int tty) {
       "ps aux | grep tty%d | grep -v '\\(agetty\\|grep\\)' >/dev/null 2>&1",
       tty);
   int status = system(command);
-  status = (status == -1 ? EXIT_FAILURE : WEXITSTATUS(status));
+  status = ((status == -1 || !WIFEXITED(status)) ? EXIT_FAILURE
+                                                 : WEXITSTATUS(status));
   return status;
 }
 
@@ -23,7 +24,8 @@ int tty_wait(int tty) {
   int status = EXIT_FAILURE;
   for (int i = 0; i < 10; ++i) {
     status = system(command);
-    status = (status == -1 ? EXIT_FAILURE : WEXITSTATUS(status));
+    status = ((status == -1 || !WIFEXITED(status)) ? EXIT_FAILURE
+                                                   : WEXITSTATUS(status));
     if (status == 0) {
       break;
     }
@@ -40,10 +42,12 @@ int main(int argc, char *argv[]) {
        strcmp(argv[1], "activate") != 0 && strcmp(argv[1], "lock") != 0)) {
     to_tty = atoi(argv[1]);
     if (to_tty == 0) {
-      fprintf(stderr,
-              "Usage: %s <get|get-active|next|next-create|activate|lock|N>\n\tN\tTTY number "
-              "to switch\n",
-              argv[0]);
+      fprintf(
+          stderr,
+          "Usage: %s "
+          "<get|get-active|next|next-create|activate|lock|N>\n\tN\tTTY number "
+          "to switch\n",
+          argv[0]);
       return EXIT_FAILURE;
     }
   }
@@ -65,7 +69,8 @@ int main(int argc, char *argv[]) {
   if (to_tty != 0) {
     snprintf(command, sizeof(command), "chvt %d", to_tty);
     status = system(command);
-    status = (status == -1 ? EXIT_FAILURE : WEXITSTATUS(status));
+    status = ((status == -1 || !WIFEXITED(status)) ? EXIT_FAILURE
+                                                   : WEXITSTATUS(status));
     if (0 == status) {
       tty_wait(to_tty);
     }
@@ -91,18 +96,19 @@ int main(int argc, char *argv[]) {
   if (strcmp(argv[1], "activate") == 0) {
     snprintf(command, sizeof(command), "chvt %s", my_tty);
     status = system(command);
-    status = (status == -1 ? EXIT_FAILURE : WEXITSTATUS(status));
+    status = ((status == -1 || !WIFEXITED(status)) ? EXIT_FAILURE
+                                                   : WEXITSTATUS(status));
     return 0 == status ? tty_wait(atoi(my_tty)) : status;
   }
-
 
   const int next_tty = (strcmp(my_tty, "1") == 0 ? 2 : 1);
 
   if (strcmp(argv[1], "next-create") == 0 || tty_ready(next_tty) == 0) {
     snprintf(command, sizeof(command), "chvt %d", next_tty);
     status = system(command);
-    status = (status == -1 ? EXIT_FAILURE : WEXITSTATUS(status));
-    return 0 == status ? tty_wait(next_tty): status;
+    status = ((status == -1 || !WIFEXITED(status)) ? EXIT_FAILURE
+                                                   : WEXITSTATUS(status));
+    return 0 == status ? tty_wait(next_tty) : status;
   }
   return EXIT_FAILURE;
 }

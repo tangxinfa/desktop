@@ -26,7 +26,8 @@ int main(int argc, char* argv[]) {
           "-caps; "
           "xkeysnail "
           "~/.config/xkeysnail/config.py --quiet --watch >/dev/null 2>&1 &");
-      return (status == -1 ? EXIT_FAILURE : WEXITSTATUS(status));
+      return ((status == -1 || !WIFEXITED(status)) ? EXIT_FAILURE
+                                                   : WEXITSTATUS(status));
     }
     return EXIT_FAILURE;
   } else if (strcmp(argv[1], "stop") == 0) {
@@ -35,10 +36,12 @@ int main(int argc, char* argv[]) {
       system("setcapslock off");
     }
     status = system("setleds -caps; killall xkeysnail");
-    return (status == -1 ? EXIT_FAILURE : WEXITSTATUS(status));
+    return ((status == -1 || !WIFEXITED(status)) ? EXIT_FAILURE
+                                                  : WEXITSTATUS(status));
   } else if (strcmp(argv[1], "status") == 0) {
     status = system("pgrep -x xkeysnail >/dev/null 2>&1");
-    status = (status == -1 ? EXIT_FAILURE : WEXITSTATUS(status));
+    status = ((status == -1 || !WIFEXITED(status)) ? EXIT_FAILURE
+                                                    : WEXITSTATUS(status));
     printf("%s\n", (status == 0 ? "started" : "stoped"));
     return status;
   }
@@ -48,10 +51,12 @@ int main(int argc, char* argv[]) {
     fputs("Error: $XDG_VTNR not exists\n", stderr);
     return EXIT_FAILURE;
   }
-  status = system("grep -a -E \"XDG_VTNR=`cat /sys/class/tty/tty0/active | awk -Ftty "
-           "'{print \\$2}'`[^\\d]\" \"/proc/`pgrep -x Xorg`/environ\" "
-           ">/dev/null 2>&1");
-  status = (status == -1 ? EXIT_FAILURE : WEXITSTATUS(status));
+  status = system(
+      "grep -a -E \"XDG_VTNR=`cat /sys/class/tty/tty0/active | awk -Ftty "
+      "'{print \\$2}'`[^\\d]\" \"/proc/`pgrep -x Xorg`/environ\" "
+      ">/dev/null 2>&1");
+  status = ((status == -1 || !WIFEXITED(status)) ? EXIT_FAILURE
+                                                  : WEXITSTATUS(status));
   printf("%s\n", (status == 0 ? "yes" : "no"));
   return status;
 }

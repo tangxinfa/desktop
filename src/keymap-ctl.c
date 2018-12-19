@@ -19,11 +19,9 @@ int execute(const char *command, const char *inputs[]) {
     }
   }
   int status = pclose(fp);
-  if (-1 == status) {
-    perror("pclose");
-    return EXIT_FAILURE;
-  }
-  return WEXITSTATUS(status);
+  status = ((status == -1 || !WIFEXITED(status)) ? EXIT_FAILURE
+                                                 : WEXITSTATUS(status));
+  return status;
 }
 
 const char *keymaps[] = {
@@ -37,7 +35,8 @@ const char *keymaps[] = {
 
 int main(int argc, char *argv[]) {
   if (argc != 2 ||
-      (strcmp(argv[1], "start") != 0 && strcmp(argv[1], "stop") != 0 && strcmp(argv[1], "status") != 0)) {
+      (strcmp(argv[1], "start") != 0 && strcmp(argv[1], "stop") != 0 &&
+       strcmp(argv[1], "status") != 0)) {
     fprintf(stderr, "Usage: %s <start|stop|status>\n", argv[0]);
     return EXIT_FAILURE;
   }
@@ -53,8 +52,10 @@ int main(int argc, char *argv[]) {
     return execute("loadkeys -d", NULL);
   }
 
-  const int status =
-      execute("dumpkeys -k | grep -E '" ENABLED_PATTERN "'", NULL);
+  int status =
+      system("dumpkeys -k | grep -E '" ENABLED_PATTERN "' >/dev/null 2>&1");
+  status = ((status == -1 || !WIFEXITED(status)) ? EXIT_FAILURE
+                                                 : WEXITSTATUS(status));
   printf("%s\n", (status == 0 ? "started" : "stoped"));
   return status;
 }

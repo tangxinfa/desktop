@@ -13,16 +13,22 @@ fi
 
 while [ true ]; do
     if ~/bin/xkeysnail-ctl activable >/dev/null 2>&1 ; then
+        if ~/bin/keymap-ctl status >/dev/null 2>&1 ; then
+            ~/bin/keymap-ctl stop
+        fi
         if ! ~/bin/xkeysnail-ctl status >/dev/null 2>&1 ; then
             sleep 0.2
             echo -e "`date`\tStart xkeysnail"
-            ~/bin/keymap-ctl stop
             ~/bin/xkeysnail-ctl start
         fi
-    elif ~/bin/xkeysnail-ctl status >/dev/null 2>&1 ; then
-        echo -e "`date`\tStop xkeysnail"
-        ~/bin/xkeysnail-ctl stop
-        ~/bin/keymap-ctl start
+    else
+        if ~/bin/xkeysnail-ctl status >/dev/null 2>&1 ; then
+            echo -e "`date`\tStop xkeysnail"
+            ~/bin/xkeysnail-ctl stop
+        fi
+        if ! ~/bin/keymap-ctl status >/dev/null 2>&1 ; then
+            ~/bin/keymap-ctl start
+        fi
     fi
 
     if ! inotifywait -q -e modify /sys/class/tty/tty0/active >/dev/null 2>&1 ; then

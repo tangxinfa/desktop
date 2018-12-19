@@ -3,11 +3,9 @@
 #include <string.h>
 #include <unistd.h>
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
   if (argc != 2) {
-    fprintf(stderr,
-            "Usage: %s <file>\n",
-            argv[0]);
+    fprintf(stderr, "Usage: %s <file>\n", argv[0]);
     return EXIT_FAILURE;
   }
 
@@ -40,6 +38,7 @@ int main(int argc, char *argv[]) {
   char command[4096] = {'\0'};
   snprintf(command, sizeof(command), "openvt -s -w -- %s '%s'", program, file);
   int status = system(command);
-  status = (status == -1 ? EXIT_FAILURE : WEXITSTATUS(status));
+  status = ((status == -1 || !WIFEXITED(status)) ? EXIT_FAILURE
+                                                 : WEXITSTATUS(status));
   return status;
 }

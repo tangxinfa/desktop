@@ -27,9 +27,5 @@ do
     exit 0
 done
 
-if [ "$DISPLAY" != "" ]; then
-    ~/bin/desktop-lock &
-    sleep 1
-fi
-
+~/bin/tty-ctl lock &
 systemctl hibernate

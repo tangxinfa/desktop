@@ -1,5 +1,18 @@
 #!/bin/bash
 
+REASON="$1"
 VBoxManage list runningvms | awk -F'"' '{system("VBoxManage controlvm " $2 " savestate")}'
-emacsclient --eval '(progn (ignore-errors (desktop-save desktop-dirname)) (save-buffers-kill-terminal))'
+EMACS_PID="`pidof emacs | awk '{print $1}'`"
+if [ -n "$EMACS_PID" ]; then
+    if grep -a -E "XDG_VTNR=${XDG_VTNR}[^\\d]" /proc/${EMACS_PID}/environ >/dev/null 2>&1; then
+        if [ "${REASON}" = "exit" ]; then
+            REASON=kill
+        fi
+    fi
+    if [ "${REASON}" = "exit" ]; then
+        emacsclient --eval '(xclip-mode -1)'
+    else
+        emacsclient --eval '(progn (ignore-errors (desktop-save desktop-dirname)) (save-buffers-kill-terminal))'
+    fi
+fi
 exit 0

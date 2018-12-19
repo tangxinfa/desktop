@@ -10,26 +10,26 @@ if [ ${#option} -gt 0 ]
 then
     case $option in
         Lock)
-            ~/bin/desktop-lock
+            ~/bin/tty-ctl lock
             ;;
         Suspend)
-            ~/bin/desktop-lock &
+            ~/bin/tty-ctl lock &
             sleep 1
             systemctl suspend
             ;;
         Hibernate)
-            ~/bin/desktop-lock &
+            ~/bin/tty-ctl lock &
             sleep 1
             systemctl hibernate
             ;;
         Exit)
-            ~/bin/desktop-on-close && i3-msg exit
+            ~/bin/desktop-on-close exit && i3-msg exit
             ;;
         Reboot)
-            ~/bin/desktop-on-close && (i3-msg exit || systemctl reboot)
+            ~/bin/desktop-on-close reboot && (i3-msg exit || systemctl reboot)
             ;;
         PowerOff)
-            ~/bin/desktop-on-close && (i3-msg exit || systemctl poweroff)
+            ~/bin/desktop-on-close poweroff && (i3-msg exit || systemctl poweroff)
             ;;
         *)
             ;;

@@ -37,17 +37,23 @@ int tty_wait(int tty) {
 int main(int argc, char *argv[]) {
   int to_tty = 0;
   if (argc != 2 ||
-      (strcmp(argv[1], "get") != 0 && strcmp(argv[1], "get-active") != 0 &&
-       strcmp(argv[1], "next") != 0 && strcmp(argv[1], "next-create") != 0 &&
-       strcmp(argv[1], "activate") != 0 && strcmp(argv[1], "lock") != 0)) {
-    to_tty = atoi(argv[1]);
+      (strcmp(argv[1], "active") != 0 && strcmp(argv[1], "graphic") != 0 &&
+       strcmp(argv[1], "other") != 0 && strcmp(argv[1], "activate") != 0 &&
+       strcmp(argv[1], "lock") != 0)) {
+    to_tty = atoi(argc == 2 ? argv[1] : "0");
     if (to_tty == 0) {
-      fprintf(
-          stderr,
-          "Usage: %s "
-          "<get|get-active|next|next-create|activate|lock|N>\n\tN\tTTY number "
-          "to switch\n",
-          argv[0]);
+      fprintf(stderr,
+              "Usage: %s "
+              "<active|graphic|other|activate|lock|"
+              "N>\n"
+              "\tactive   Print active tty.\n"
+              "\tgraphic  Is active tty graphic.\n"
+              "\tother    Swith to other tty.\n"
+              "\t         Create tty if $TTY_CTL_OTHER_CREATE set.\n"
+              "\tactivate Active caller's tty.\n"
+              "\tlock     Lock all tty.\n"
+              "\tN        Switch to tty N.\n",
+              argv[0]);
       return EXIT_FAILURE;
     }
   }
@@ -77,20 +83,26 @@ int main(int argc, char *argv[]) {
     return status;
   }
 
-  if (strcmp(argv[1], "get-active") == 0) {
+  if (strcmp(argv[1], "active") == 0) {
     system("cat /sys/class/tty/tty0/active | awk -Ftty '{print $2}'");
     return EXIT_SUCCESS;
+  }
+
+  if (strcmp(argv[1], "graphic") == 0) {
+    status = system(
+        "grep -a -E \"XDG_VTNR=`cat /sys/class/tty/tty0/active | awk -Ftty "
+        "'{print \\$2}'`[^\\d]\" \"/proc/`pgrep -x Xorg`/environ\" "
+        ">/dev/null 2>&1");
+    status = ((status == -1 || !WIFEXITED(status)) ? EXIT_FAILURE
+                                                   : WEXITSTATUS(status));
+    printf("%s\n", (status == 0 ? "yes" : "no"));
+    return status;
   }
 
   const char *my_tty = getenv("XDG_VTNR");
   if (my_tty == NULL) {
     fputs("Warning: $XDG_VTNR not exists, default is \"1\"\n", stderr);
     my_tty = "1";
-  }
-
-  if (strcmp(argv[1], "get") == 0) {
-    printf("%s\n", my_tty);
-    return EXIT_SUCCESS;
   }
 
   if (strcmp(argv[1], "activate") == 0) {
@@ -101,14 +113,14 @@ int main(int argc, char *argv[]) {
     return 0 == status ? tty_wait(atoi(my_tty)) : status;
   }
 
-  const int next_tty = (strcmp(my_tty, "1") == 0 ? 2 : 1);
-
-  if (strcmp(argv[1], "next-create") == 0 || tty_ready(next_tty) == 0) {
-    snprintf(command, sizeof(command), "chvt %d", next_tty);
+  const int other_tty = (strcmp(my_tty, "1") == 0 ? 2 : 1);
+  if (getenv("TTY_CTL_OTHER_CREATE") || tty_ready(other_tty) == 0) {
+    snprintf(command, sizeof(command), "chvt %d", other_tty);
     status = system(command);
     status = ((status == -1 || !WIFEXITED(status)) ? EXIT_FAILURE
                                                    : WEXITSTATUS(status));
-    return 0 == status ? tty_wait(next_tty) : status;
+    return 0 == status ? tty_wait(other_tty) : status;
   }
+
   return EXIT_FAILURE;
 }

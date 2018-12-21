@@ -88,7 +88,7 @@ label-padding = 2
 
 [module/xkeysnail]
 type = custom/script
-exec-if = ps waux | grep 'python* /usr/bin/xkeysnail' | grep -v grep
+exec-if = ~/bin/xkeysnail-ctl status
 format = <label>
 exec = echo 
 
@@ -329,7 +329,7 @@ ramp-2-foreground = ${colors.warning}
 type = custom/script
 format = <label>
 exec = echo "%{A5:~/bin/power-menu:}   %{A}"
-click-left = ~/bin/desktop-lock
+click-left = ~/bin/tty-ctl lock
 
 
 [module/weather]

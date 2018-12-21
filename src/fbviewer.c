@@ -25,13 +25,14 @@ int main(int argc, char* argv[]) {
     } else if (strcasecmp(extension, ".jpg") == 0 ||
                strcasecmp(extension, ".jpeg") == 0 ||
                strcasecmp(extension, ".ppm") == 0 ||
-               strcasecmp(extension, ".gif") == 0 ||
                strcasecmp(extension, ".tiff") == 0 ||
                strcasecmp(extension, ".xwd") == 0 ||
                strcasecmp(extension, ".bmp") == 0 ||
                strcasecmp(extension, ".png") == 0 ||
                strcasecmp(extension, ".webp") == 0) {
       program = "fbi -a";
+    } else if (strcasecmp(extension, ".gif") == 0) {
+      program = "mplayer -vo fbdev2 -msglevel all=0 -fs -loop 0";
     }
   }
 

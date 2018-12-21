@@ -10,7 +10,10 @@
 # Please see http://i3wm.org/docs/userguide.html for a complete reference!
 
 set $mod Mod4
-set $i3lock ~/bin/tty-ctl lock
+set $auto-lock ~/bin/desktop-lock\ auto
+set $manual-lock ~/bin/tty-ctl lock
+
+ipc-socket /tmp/i3-ipc.sock
 
 exec --no-startup-id ~/bin/dual-screen-detect
 
@@ -51,9 +54,9 @@ focus_follows_mouse no
 #bindsym $mod+Return exec dbus-launch gnome-terminal --hide-menubar
 bindsym $mod+Return exec gnome-terminal --hide-menubar
 
-# move to next tty
-bindsym Control+Mod1+o exec --no-startup-id ~/bin/tty-ctl next
-bindsym Control+$mod+o exec --no-startup-id ~/bin/tty-ctl next
+# move to other tty
+bindsym Control+Mod1+o exec --no-startup-id ~/bin/tty-ctl other
+bindsym Control+$mod+o exec --no-startup-id ~/bin/tty-ctl other
 
 # kill focused window
 bindsym $mod+Shift+q kill
@@ -64,7 +67,7 @@ bindsym $mod+Shift+minus move scratchpad
 bindsym $mod+minus scratchpad show
 
 # power management
-bindsym Control+$mod+l exec $i3lock
+bindsym Control+$mod+l exec $manual-lock
 bindsym Control+$mod+p exec ~/bin/power-menu
 
 # program launcher: rofi
@@ -295,7 +298,7 @@ exec --no-startup-id blueman-applet
 #exec --no-startup-id mate-volume-control-applet
 exec --no-startup-id nm-applet
 exec --no-startup-id udiskie -t &
-exec --no-startup-id xautolock -time 10 -locker "$i3lock"
+exec --no-startup-id xautolock -time 10 -locker $auto-lock
 exec --no-startup-id sleep 10 && dropbox start
 exec --no-startup-id seafile-applet
 exec --no-startup-id firefox
@@ -322,3 +325,4 @@ exec --no-startup-id compton -cCGb\
      --mark-wmwin-focused\
      --detect-client-leader
 exec --no-startup-id i3-msg workspace $workspace2
+exec --no-startup-id ~/bin/desktop-on-open

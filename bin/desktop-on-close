@@ -9,9 +9,7 @@ if [ -n "$EMACS_PID" ]; then
             REASON=kill
         fi
     fi
-    if [ "${REASON}" = "exit" ]; then
-        emacsclient --eval '(xclip-mode -1)'
-    else
+    if [ "${REASON}" != "exit" ]; then
         emacsclient --eval '(progn (ignore-errors (desktop-save desktop-dirname)) (save-buffers-kill-terminal))'
     fi
 fi

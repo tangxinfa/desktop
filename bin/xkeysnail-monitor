@@ -5,14 +5,14 @@ SCRIPT_PATH_MD5=$(echo -n "${BASH_SOURCE[0]}" | md5sum | awk '{print $1}')
 SCRIPT_LOCK_FILE="/tmp/${SCRIPT_NAME}.${SCRIPT_PATH_MD5}.lock"
 
 if [ -z "$FLOCK" ]; then
-    export FLOCK=1
     touch "${SCRIPT_LOCK_FILE}"
+    export FLOCK=${SCRIPT_LOCK_FILE}
     exec flock -x -n "${SCRIPT_LOCK_FILE}" -c "${BASH_SOURCE[0]}"
     exit $?
 fi
 
 while [ true ]; do
-    if ~/bin/xkeysnail-ctl activable >/dev/null 2>&1 ; then
+    if ~/bin/tty-ctl graphic >/dev/null 2>&1 ; then
         if ~/bin/keymap-ctl status >/dev/null 2>&1 ; then
             ~/bin/keymap-ctl stop
         fi

@@ -2,8 +2,8 @@
 
 for i in 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1
 do
-    data=$(acpi -b | head -1 | awk -F'[,:%]' '{print $2, $3}')
-    read -r status capacity <<<"$data"
+    status="$(cat /sys/class/power_supply/BAT0/status)"
+    capacity="$(cat /sys/class/power_supply/BAT0/capacity)"
 	if [ "$status" = Discharging -a "$capacity" -lt 5 ]; then
         TITLE="Battery Empty"
         DESCRIPTION="Hibernate after $i seconds ..."

@@ -297,10 +297,9 @@ Emacs.Error.foreground:                %s\n"
   (interactive)
   (message "Emacs color theme %s"
            (propertize (symbol-name (or (car custom-enabled-themes) 'default-theme)) 'face 'font-lock-variable-name-face))
-  (when window-system
-    (color-theme-utils-xresources-save)
-    (color-theme-utils-rasi-save)
-    (call-process-shell-command "i3-msg exec ~/bin/desktop-on-change")))
+  (color-theme-utils-xresources-save)
+  (color-theme-utils-rasi-save)
+  (call-process-shell-command "i3-msg exec ~/bin/desktop-on-change"))
 
 (add-hook 'after-load-theme-hook #'color-theme-utils-export)
 

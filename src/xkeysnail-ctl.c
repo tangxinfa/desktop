@@ -6,8 +6,8 @@
 int main(int argc, char* argv[]) {
   if (argc != 2 ||
       (strcmp(argv[1], "start") != 0 && strcmp(argv[1], "stop") != 0 &&
-       strcmp(argv[1], "status") != 0 && strcmp(argv[1], "activable") != 0)) {
-    fprintf(stderr, "Usage: %s <start|stop|status|activable>\n", argv[0]);
+       strcmp(argv[1], "status") != 0)) {
+    fprintf(stderr, "Usage: %s <start|stop|status>\n", argv[0]);
     return EXIT_FAILURE;
   }
 
@@ -46,17 +46,5 @@ int main(int argc, char* argv[]) {
     return status;
   }
 
-  const char* my_tty = getenv("XDG_VTNR");
-  if (!my_tty) {
-    fputs("Error: $XDG_VTNR not exists\n", stderr);
-    return EXIT_FAILURE;
-  }
-  status = system(
-      "grep -a -E \"XDG_VTNR=`cat /sys/class/tty/tty0/active | awk -Ftty "
-      "'{print \\$2}'`[^\\d]\" \"/proc/`pgrep -x Xorg`/environ\" "
-      ">/dev/null 2>&1");
-  status = ((status == -1 || !WIFEXITED(status)) ? EXIT_FAILURE
-                                                  : WEXITSTATUS(status));
-  printf("%s\n", (status == 0 ? "yes" : "no"));
-  return status;
+  return EXIT_FAILURE;
 }

@@ -1,17 +1,37 @@
 #!/bin/bash
 
-revert() {
-    xset dpms 0 0 0
-}
-trap revert HUP INT TERM
+REASON="$1"
 
-if false; then
-    # screen delay close
-    xset +dpms dpms 5 5 5
-else
-    # fallback if screen delay close not works
-    (sleep 1; xset dpms force off) &
+# Use i3lock of i3.
+if [ "$XDG_CURRENT_DESKTOP" = "i3" ]; then
+    # Disable auto lock if emacs running on tty.
+    if [ "$REASON" = "auto" ]; then
+       EMACS_PID="`pidof emacs | awk '{print $1}'`"
+       if [ -n "$EMACS_PID" ]; then
+           if ! grep -a -E "XDG_VTNR=${XDG_VTNR}[^\\d]" /proc/${EMACS_PID}/environ >/dev/null 2>&1; then
+               exit 1
+           fi
+       fi
+    fi
+
+    revert() {
+        xset dpms 0 0 0
+    }
+    trap revert HUP INT TERM
+
+    if false; then
+        # screen delay close
+        xset +dpms dpms 5 5 5
+    else
+        # fallback if screen delay close not works
+        (sleep 1; xset dpms force off) &
+    fi
+
+    i3lock-fancy -n -f Source-Code-Pro -t '' -gp
+    revert
+    exit 0
 fi
 
-i3lock-fancy -n -f Source-Code-Pro -t '' -gp
-revert
+# tty lock otherwise.
+~/bin/tty-ctl lock
+exit 0

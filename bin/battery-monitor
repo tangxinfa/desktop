@@ -1,31 +1,76 @@
 #!/bin/bash
 
-for i in 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1
-do
+SCRIPT_NAME=$(basename "${BASH_SOURCE[0]}")
+SCRIPT_PATH_MD5=$(echo -n "${BASH_SOURCE[0]}" | md5sum | awk '{print $1}')
+SCRIPT_LOCK_FILE="/tmp/${SCRIPT_NAME}.${SCRIPT_PATH_MD5}.lock"
+
+if [ -z "$FLOCK" ]; then
+    touch "${SCRIPT_LOCK_FILE}"
+    export FLOCK=${SCRIPT_LOCK_FILE}
+    exec flock -x -n "${SCRIPT_LOCK_FILE}" -c "${BASH_SOURCE[0]}"
+    exit $?
+fi
+
+battery_level() {
     status="$(cat /sys/class/power_supply/BAT0/status)"
     capacity="$(cat /sys/class/power_supply/BAT0/capacity)"
-	if [ "$status" = Discharging -a "$capacity" -lt 5 ]; then
-        TITLE="Battery Empty"
-        DESCRIPTION="Hibernate after $i seconds ..."
-        if [ "$DISPLAY" != "" ]; then
-            notify-send -u critical -t 1000 -i battery-empty "$TITLE" "$DESCRIPTION"
-        else
-            echo "${TITLE}, ${DESCRIPTION}" >/dev/stderr
-        fi
-        sleep 1
-        continue
+    if [ "$status" = Discharging -a "$capacity" -lt 5 ]; then
+        echo "EMPTY"
+    elif [ "$status" = Discharging -a "$capacity" -lt 15 ]; then
+        echo "LOW"
+    else
+        echo "OK"
     fi
-	if [ "$status" = Discharging -a "$capacity" -lt 15 ]; then
-        TITLE="Battery Low"
-        DESCRIPTION="Please charging"
-        if [ "$DISPLAY" != "" ]; then
-            notify-send -u critical -t 10000 -i battery-low "$TITLE" "$DESCRIPTION"
-        else
-            echo "${TITLE}, ${DESCRIPTION}" >/dev/stderr
-        fi
-	fi
-    exit 0
-done
+}
 
-~/bin/tty-ctl lock &
-systemctl hibernate
+EMPTY_MAX_TIMES=30
+EMPTY_TIMES=0
+LOW_TIMES=0
+OK_TIMES=0
+
+while [ true ]; do
+    BATTERY_LEVEL=$(battery_level)
+    case $BATTERY_LEVEL in
+        EMPTY)
+            let EMPTY_TIMES+=1
+            LOW_TIMES=0
+            OK_TIMES=0
+            DELAY_SECONDS=1
+            EMPTY_MAX_TIMES=30
+            if [ $EMPTY_TIMES -ge ${EMPTY_MAX_TIMES} ]; then
+                ~/bin/tty-ctl lock &
+                systemctl hibernate
+            fi
+            ALERT_LEVEL="critical"
+            ALERT_TITLE="Battery Empty"
+            ALERT_DESCRIPTION="hibernate after $(( $EMPTY_MAX_TIMES - $EMPTY_TIMES )) seconds ..."
+            ALERT_ICON="battery-empty"
+            ALERT_TIMEOUT=1000
+            ;;
+        LOW)
+            let LOW_TIMES+=1
+            EMPTY_TIMES=0
+            OK_TIMES=0
+            DELAY_SECONDS=60
+            ALERT_LEVEL="critical"
+            ALERT_TITLE="Battery Low"
+            ALERT_DESCRIPTION="please charging ..."
+            ALERT_ICON="battery-low"
+            ALERT_TIMEOUT=10000
+            ;;
+        *)
+            let OK_TIMES+=1
+            EMPTY_TIMES=0
+            LOW_TIMES=0
+            DELAY_SECONDS=300
+            ALERT_LEVEL=
+            ;;
+    esac
+    if [ -n "$ALERT_LEVEL" ]; then
+        echo "${ALERT_TITLE}, ${ALERT_DESCRIPTION}" | wall
+        if pgrep -x Xorg >/dev/null 2>&1; then
+            notify-send -u "${ALERT_LEVEL}" -t ${ALERT_TIMEOUT} -i ${ALERT_ICON} "${ALERT_TITLE}" "${ALERT_DESCRIPTION}"
+        fi
+    fi
+    sleep $DELAY_SECONDS
+done

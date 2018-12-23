@@ -305,6 +305,7 @@ exec --no-startup-id firefox
 exec --no-startup-id pidof emacs || emacs
 #exec --no-startup-id steam --tcp -perfectworld
 exec --no-startup-id ~/bin/xkeysnail-monitor
+exec --no-startup-id ~/bin/battery-monitor
 exec --no-startup-id dex /etc/xdg/autostart/geoclue-demo-agent.desktop
 exec --no-startup-id dex /usr/share/applications/redshift-gtk.desktop
 exec --no-startup-id dex /etc/xdg/autostart/solaar.desktop

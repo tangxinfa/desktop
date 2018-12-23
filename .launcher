@@ -7,13 +7,16 @@ else
     ~/bin/keymap-ctl stop
 fi
 
+# Startup battery monitor.
+~/bin/battery-monitor >/dev/null 2>&1 &
+
 if [ -z $LAUNCHER ]; then
     LAUNCHER=$(dialog --clear --title "Select Desktop:" --no-lines\
                       --no-cancel \
                       --menu "" 10 79 8 \
                       emacs "GNU Emacs Editor"\
                       i3 "Tiling Window Manager"\
-                      gnome3 "GNOME 3 desktop"\
+                      gnome3 "GNOME 3 Desktop"\
                       fbterm "Frame Buffer Terminal"\
                       2>&1 >/dev/tty)
     clear

@@ -58,7 +58,7 @@ font-3 = "Weather Icons:size=12;1"
 
 modules-left = power i3 xwindow
 modules-center =
-modules-right = xkeysnail dual-screen filesystem xbacklight pulseaudio memory cpu temperature battery battery-monitor lid-monitor eth wlan weather date
+modules-right = xkeysnail dual-screen filesystem xbacklight pulseaudio memory cpu temperature battery lid-monitor eth wlan weather date
 
 tray-position = center
 tray-padding = 0
@@ -297,13 +297,6 @@ animation-charging-2 = 
 animation-charging-3 = 
 animation-charging-4 = 
 animation-charging-framerate = 750
-
-
-[module/battery-monitor]
-type = custom/script
-exec = ~/bin/battery-monitor
-interval = 180
-format =
 
 [module/lid-monitor]
 type = custom/script

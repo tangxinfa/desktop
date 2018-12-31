@@ -52,7 +52,7 @@ focus_follows_mouse no
 # start a terminal
 #bindsym $mod+Return exec i3-sensible-terminal
 #bindsym $mod+Return exec dbus-launch gnome-terminal --hide-menubar
-bindsym $mod+Return exec gnome-terminal --hide-menubar
+bindsym $mod+Return exec gnome-terminal --role=gnome-terminal-popup --hide-menubar
 
 # move to other tty
 bindsym Control+Mod1+o exec --no-startup-id ~/bin/tty-ctl other
@@ -254,7 +254,7 @@ assign [class="netease-cloud-music"] $workspace5
 assign [class="vlc"] $workspace5
 assign [class="Steam"] $workspace5
 assign [title="Steam"] $workspace5
-for_window [class="keepassxc"] floating enable, move scratchpad, resize set 640 360
+for_window [class="keepassxc" window_type="normal"] floating enable, move scratchpad, resize set 640 360
 for_window [class="Zeal" window_type="normal"] floating enable, resize set 800 600, move absolute position center, focus
 for_window [class="Conky"] floating enable, resize set 400 400, move absolute position center
 for_window [class="Wine" title="迅雷网络" window_type="dialog"] floating disable, move container to workspace $workspace4 # Main RTX window
@@ -285,15 +285,8 @@ client.urgent           $urgent-border-color    $background-color      $text-col
 # autostart
 #exec --no-startup-id /usr/lib/gsd-xsettings
 #exec --no-startup-id /usr/lib/notify-osd/notify-osd
-exec --no-startup-id fcitx
-exec --no-startup-id dunst \
-     -frame_color `grep Emacs.VerticalBorder.foreground ~/.emacs.d/.Xresources | awk '{print $2}'` \
-     -lb          `grep Emacs.ModeLineInactive.background ~/.emacs.d/.Xresources | awk '{print $2}'` \
-     -lf          `grep Emacs.ModeLineInactive.foreground ~/.emacs.d/.Xresources | awk '{print $2}'` \
-     -nb          `grep Emacs.ModeLine.background ~/.emacs.d/.Xresources | awk '{print $2}'` \
-     -nf          `grep Emacs.ModeLine.foreground ~/.emacs.d/.Xresources | awk '{print $2}'` \
-     -cb          `grep Emacs.Tooltip.background ~/.emacs.d/.Xresources | awk '{print $2}'` \
-     -cf          `grep Emacs.Tooltip.foreground ~/.emacs.d/.Xresources | awk '{print $2}'`
+exec --no-startup-id fcitx -r -d
+exec --no-startup-id dunst
 exec --no-startup-id blueman-applet
 #exec --no-startup-id mate-volume-control-applet
 exec --no-startup-id nm-applet
@@ -302,6 +295,7 @@ exec --no-startup-id xautolock -time 10 -locker $auto-lock
 exec --no-startup-id sleep 10 && dropbox start
 exec --no-startup-id seafile-applet
 exec --no-startup-id firefox
+exec --no-startup-id pidof emacs || i3-msg workspace $workspace2
 exec --no-startup-id pidof emacs || emacs
 #exec --no-startup-id steam --tcp -perfectworld
 exec --no-startup-id ~/bin/xkeysnail-monitor
@@ -325,5 +319,5 @@ exec --no-startup-id compton -cCGb\
      --use-ewmh-active-win\
      --mark-wmwin-focused\
      --detect-client-leader
-exec --no-startup-id i3-msg workspace $workspace2
 exec --no-startup-id ~/bin/desktop-on-open
+exec --no-startup-id ~/bin/on-at-`~/bin/at-place`

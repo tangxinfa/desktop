@@ -28,7 +28,7 @@
 *.x86_64
 *.hex
 bin/*-ctl
-bin/fbviewer
+bin/file-open
 
 # Debug files
 *.dSYM/

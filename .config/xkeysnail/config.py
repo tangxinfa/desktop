@@ -32,6 +32,9 @@ define_keymap(re.compile("Firefox"), {
         },
         K("C-n"): K("C-TAB"),
         K("C-p"): K("C-Shift-TAB"),
+        K("b"): {
+            K("u"): [K("F5")]
+        },
     }
 }, "Firefox")
 
@@ -46,6 +49,9 @@ define_keymap(re.compile("Google-chrome|Chromium"), {
         },
         K("C-n"): K("C-TAB"),
         K("C-p"): K("C-Shift-TAB"),
+        K("b"): {
+            K("u"): [K("F5")]
+        },
     },
 }, "Chrome")
 

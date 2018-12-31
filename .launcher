@@ -1,4 +1,5 @@
 # Enable keymaps if xkeysnail not running.
+setleds -caps
 if ! ~/bin/xkeysnail-ctl status >/dev/null 2>&1 ; then
     echo "Keymaps ... [ON]" >/dev/stderr
     ~/bin/keymap-ctl start

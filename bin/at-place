@@ -1,0 +1,35 @@
+#!/bin/bash
+
+# wifi places defined in ~/.config/wifi_places, looks like:
+#        declare -A wifi_places=( ["home_wifi"]="home"  ["office_wifi"]="office" )
+if [ ! -f ~/.config/wifi_places ]; then
+    echo "~/.config/wifi_places not exists" >/dev/stderr
+    exit 1
+fi
+source ~/.config/wifi_places
+
+pattern=
+for name in "${!wifi_places[@]}"; do
+    if [ ! -z $pattern ]; then
+        pattern="${pattern}|"
+    fi
+    pattern="${pattern}${name}"
+done
+wifis=`nmcli device wifi list 2>/dev/null | grep -E "${pattern}"`
+IFS='
+'
+count=0
+for wifi in $wifis; do
+    for name in "${!wifi_places[@]}"; do
+        if [[ $wifi == *"${name}"* ]]; then
+            echo ${wifi_places[$name]}
+            if [ -z $1 ] || [ "${wifi_places[$name]}" == "$1" ]; then
+                exit 0
+            else
+                exit 1
+            fi
+        fi
+    done
+done
+
+exit 1

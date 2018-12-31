@@ -11,12 +11,23 @@ if [ -z "$FLOCK" ]; then
     exit $?
 fi
 
+capslock_off() {
+    # setcapslock will crash with core in Non-X environments, avoid it.
+    if [ -n "$DISPLAY" ]; then
+        setcapslock off
+    fi
+    setleds -caps
+}
+
 while [ true ]; do
+    capslock_off
+
     if ~/bin/tty-ctl graphic >/dev/null 2>&1 ; then
         if ~/bin/keymap-ctl status >/dev/null 2>&1 ; then
             ~/bin/keymap-ctl stop
         fi
         if ! ~/bin/xkeysnail-ctl status >/dev/null 2>&1 ; then
+            # Delay start xkeysnail for avoid desktop freeze.
             sleep 0.2
             echo -e "`date`\tStart xkeysnail"
             ~/bin/xkeysnail-ctl start

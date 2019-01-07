@@ -7,21 +7,14 @@
 #include <unistd.h>
 
 int console_open(const char* file) {
-  const char* program = "mplayer -vo fbdev2 -msglevel all=0 -fs";
+  const char* program = NULL;
   const char* extension = strrchr(file, '.');
   const int length = strlen(file);
 
   if (extension == NULL) {
     return EXIT_FAILURE;
   }
-  if (strcasecmp(extension, ".xls") == 0 ||
-      strcasecmp(extension, ".xlsx") == 0 ||
-      strcasecmp(extension, ".doc") == 0 ||
-      strcasecmp(extension, ".docx") == 0 ||
-      strcasecmp(extension, ".ppt") == 0 ||
-      strcasecmp(extension, ".pptx") == 0) {
-    return EXIT_FAILURE;
-  } else if (strcasecmp(extension, ".pdf") == 0) {
+  if (strcasecmp(extension, ".pdf") == 0) {
     program = "fbpdf2";
   } else if (strcasecmp(extension, ".jpg") == 0 ||
              strcasecmp(extension, ".jpeg") == 0 ||
@@ -34,6 +27,56 @@ int console_open(const char* file) {
     program = "fbi -a";
   } else if (strcasecmp(extension, ".gif") == 0) {
     program = "mplayer -vo fbdev2 -msglevel all=0 -fs -loop 0";
+  } else if (strcasecmp(extension, ".3g2") == 0 ||
+             strcasecmp(extension, ".3gp") == 0 ||
+             strcasecmp(extension, ".asf") == 0 ||
+             strcasecmp(extension, ".ask") == 0 ||
+             strcasecmp(extension, ".avi") == 0 ||
+             strcasecmp(extension, ".c3d") == 0 ||
+             strcasecmp(extension, ".dat") == 0 ||
+             strcasecmp(extension, ".divx") == 0 ||
+             strcasecmp(extension, ".dvr-ms") == 0 ||
+             strcasecmp(extension, ".f4v") == 0 ||
+             strcasecmp(extension, ".flc") == 0 ||
+             strcasecmp(extension, ".fli") == 0 ||
+             strcasecmp(extension, ".flv") == 0 ||
+             strcasecmp(extension, ".flx") == 0 ||
+             strcasecmp(extension, ".m2p") == 0 ||
+             strcasecmp(extension, ".m2t") == 0 ||
+             strcasecmp(extension, ".m2ts") == 0 ||
+             strcasecmp(extension, ".m2v") == 0 ||
+             strcasecmp(extension, ".m4v") == 0 ||
+             strcasecmp(extension, ".mkv") == 0 ||
+             strcasecmp(extension, ".mlv") == 0 ||
+             strcasecmp(extension, ".mov") == 0 ||
+             strcasecmp(extension, ".mp4") == 0 ||
+             strcasecmp(extension, ".mpe") == 0 ||
+             strcasecmp(extension, ".mpeg") == 0 ||
+             strcasecmp(extension, ".mpg") == 0 ||
+             strcasecmp(extension, ".mpv") == 0 ||
+             strcasecmp(extension, ".mts") == 0 ||
+             strcasecmp(extension, ".ogm") == 0 ||
+             strcasecmp(extension, ".qt") == 0 ||
+             strcasecmp(extension, ".ra") == 0 ||
+             strcasecmp(extension, ".rm") == 0 ||
+             strcasecmp(extension, ".rmvb") == 0 ||
+             strcasecmp(extension, ".swf") == 0 ||
+             strcasecmp(extension, ".tp") == 0 ||
+             strcasecmp(extension, ".trp") == 0 ||
+             strcasecmp(extension, ".ts") == 0 ||
+             strcasecmp(extension, ".uis") == 0 ||
+             strcasecmp(extension, ".uisx") == 0 ||
+             strcasecmp(extension, ".uvp") == 0 ||
+             strcasecmp(extension, ".vob") == 0 ||
+             strcasecmp(extension, ".vsp") == 0 ||
+             strcasecmp(extension, ".webm") == 0 ||
+             strcasecmp(extension, ".wmv") == 0 ||
+             strcasecmp(extension, ".wmvhd") == 0 ||
+             strcasecmp(extension, ".wtv") == 0 ||
+             strcasecmp(extension, ".xvid") == 0) {
+    program = "mplayer -vo fbdev2 -msglevel all=0 -fs";
+  } else {
+    return EXIT_FAILURE;
   }
 
   char command[4096] = {'\0'};

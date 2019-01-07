@@ -25,10 +25,22 @@ int main(int argc, char* argv[]) {
           "(xhost +SI:localuser:root >/dev/null 2>&1; "
           "xkeysnail ~/.config/xkeysnail/config.py --quiet --watch >/dev/null "
           "2>&1 &)");
-      return ((status == -1 || !WIFEXITED(status)) ? EXIT_FAILURE
-                                                   : WEXITSTATUS(status));
+      status = ((status == -1 || !WIFEXITED(status)) ? EXIT_FAILURE
+                                                     : WEXITSTATUS(status));
+      // Wait until xkeysnail startup.
+      if (status == EXIT_SUCCESS) {
+        for (int i = 0; i < 3; ++i) {
+          status = system("pgrep -x xkeysnail >/dev/null 2>&1");
+          status = ((status == -1 || !WIFEXITED(status)) ? EXIT_FAILURE
+                                                         : WEXITSTATUS(status));
+          if (status == EXIT_SUCCESS) {
+            break;
+          }
+          sleep(1);
+        }
+      }
     }
-    return EXIT_FAILURE;
+    return status;
   } else if (strcmp(argv[1], "stop") == 0) {
     status = system("killall xkeysnail");
     return ((status == -1 || !WIFEXITED(status)) ? EXIT_FAILURE

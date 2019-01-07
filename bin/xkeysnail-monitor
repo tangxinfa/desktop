@@ -27,8 +27,6 @@ while [ true ]; do
             ~/bin/keymap-ctl stop
         fi
         if ! ~/bin/xkeysnail-ctl status >/dev/null 2>&1 ; then
-            # Delay start xkeysnail for avoid desktop freeze.
-            sleep 0.2
             echo -e "`date`\tStart xkeysnail"
             ~/bin/xkeysnail-ctl start
         fi
@@ -42,8 +40,12 @@ while [ true ]; do
         fi
     fi
 
-    if ! inotifywait -q -e modify /sys/class/tty/tty0/active >/dev/null 2>&1 ; then
-        echo -e "`date`\tinotifywait failed: $?" >/dev/stderr
-        sleep 10
+    TTY_ACTIVE_CURRENT=$(cat /sys/class/tty/tty0/active)
+    if [ "${TTY_ACTIVE_PREVIOUS}" = "${TTY_ACTIVE_CURRENT}" ]; then
+        if ! inotifywait -q -e modify /sys/class/tty/tty0/active >/dev/null 2>&1 ; then
+            echo -e "`date`\tinotifywait failed: $?" >/dev/stderr
+            sleep 10
+        fi
     fi
+    TTY_ACTIVE_PREVIOUS=${TTY_ACTIVE_CURRENT}
 done

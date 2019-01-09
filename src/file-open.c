@@ -128,7 +128,8 @@ int main(int argc, char* argv[]) {
   }
 
   int status = console_open(file);
-  if (status != EXIT_SUCCESS) {
+  // Fallback to graphic_open if file not support to open in console.
+  if (status == EXIT_FAILURE) {
     status = setuid(uid);
     status = graphic_open(file);
   }

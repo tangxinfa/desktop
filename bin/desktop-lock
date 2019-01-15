@@ -4,12 +4,14 @@ REASON="$1"
 
 # Use i3lock of i3.
 if [ "$XDG_CURRENT_DESKTOP" = "i3" ]; then
-    # Disable auto lock if emacs running on tty.
     if [ "$REASON" = "auto" ]; then
        EMACS_PID="`pidof emacs | awk '{print $1}'`"
        if [ -n "$EMACS_PID" ]; then
            if ! grep -a -E "XDG_VTNR=${XDG_VTNR}[^\\d]" /proc/${EMACS_PID}/environ >/dev/null 2>&1; then
-               exit 1
+               if [ "${XDG_VTNR}" != "`~/bin/tty-ctl active`" ]; then
+                   # Disable i3 auto lock, emacs running on other tty will did this for us.
+                   exit 1
+               fi
            fi
        fi
     fi
@@ -32,6 +34,6 @@ if [ "$XDG_CURRENT_DESKTOP" = "i3" ]; then
     exit 0
 fi
 
-# tty lock otherwise.
+# Use tty lock otherwise.
 ~/bin/tty-ctl lock
 exit 0

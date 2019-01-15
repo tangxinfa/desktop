@@ -47,7 +47,7 @@ int main(int argc, char *argv[]) {
               "<active|graphic|other|activate|lock|"
               "N>\n"
               "\tactive   Print active tty.\n"
-              "\tgraphic  Is active tty graphic.\n"
+              "\tgraphic  Print graphic tty.\n"
               "\tother    Swith to other tty.\n"
               "\t         Create tty if $TTY_CTL_OTHER_CREATE set.\n"
               "\tactivate Active caller's tty.\n"
@@ -64,9 +64,10 @@ int main(int argc, char *argv[]) {
   }
 
   if (strcmp(argv[1], "lock") == 0) {
+    setenv("TERM", "linux", 1);
     system(
-        "openvt -s -w -- bash --noediting --noprofile --norc -c 'setterm "
-        "--blank 1; vlock -a; setterm --blank 15'");
+        "openvt -s -w -- bash -c 'if ! pidof vlock >/dev/null 2>&1; then "
+        "setterm --blank 1; vlock -a; setterm --blank 15; fi'");
     return EXIT_SUCCESS;
   }
 
@@ -90,12 +91,9 @@ int main(int argc, char *argv[]) {
 
   if (strcmp(argv[1], "graphic") == 0) {
     status = system(
-        "grep -a -E \"XDG_VTNR=`cat /sys/class/tty/tty0/active | awk -Ftty "
-        "'{print \\$2}'`[^\\d]\" \"/proc/`pgrep -x Xorg`/environ\" "
-        ">/dev/null 2>&1");
+        "(cat /proc/`pgrep -x Xorg | head -1`/environ | strings | grep XDG_VTNR | head -1 | awk -F= '{print $2}') 2>/dev/null");
     status = ((status == -1 || !WIFEXITED(status)) ? EXIT_FAILURE
                                                    : WEXITSTATUS(status));
-    printf("%s\n", (status == 0 ? "yes" : "no"));
     return status;
   }
 

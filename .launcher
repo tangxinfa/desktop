@@ -29,7 +29,7 @@ fcitx -d >/dev/null 2>&1
 
 case $LAUNCHER in
     emacs)
-        exec fbterm -- emacs -nw --no-x-resources
+        exec fbterm -i ${HOME}/bin/fcitx-fbterm-launcher -- proxychains emacs -nw --no-x-resources
         ;;
     i3)
         export XDG_CURRENT_DESKTOP=i3
@@ -45,7 +45,7 @@ q
 EOF
         shift
         export FBTERM_BACKGROUND_IMAGE=1
-        exec fbterm
+        exec fbterm -i ${HOME}/bin/fcitx-fbterm-launcher
         ;;
     *)
         ;;

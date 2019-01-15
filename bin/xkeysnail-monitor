@@ -22,13 +22,18 @@ capslock_off() {
 while [ true ]; do
     capslock_off
 
-    if ~/bin/tty-ctl graphic >/dev/null 2>&1 ; then
-        if ~/bin/keymap-ctl status >/dev/null 2>&1 ; then
-            ~/bin/keymap-ctl stop
-        fi
-        if ! ~/bin/xkeysnail-ctl status >/dev/null 2>&1 ; then
-            echo -e "`date`\tStart xkeysnail"
-            ~/bin/xkeysnail-ctl start
+    if [ "`~/bin/tty-ctl graphic`" = "`~/bin/tty-ctl active`" ]; then
+        # Startup xkeysnail instantly after switch to X desktop may freeze desktop,
+        # delay startup xkeysnail for rescue.
+        sleep 0.2
+        if [ "`~/bin/tty-ctl graphic`" = "`~/bin/tty-ctl active`" ]; then
+            if ~/bin/keymap-ctl status >/dev/null 2>&1 ; then
+                ~/bin/keymap-ctl stop
+            fi
+            if ! ~/bin/xkeysnail-ctl status >/dev/null 2>&1 ; then
+                echo -e "`date`\tStart xkeysnail"
+                ~/bin/xkeysnail-ctl start
+            fi
         fi
     else
         if ~/bin/xkeysnail-ctl status >/dev/null 2>&1 ; then

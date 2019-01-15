@@ -22,9 +22,9 @@ int main(int argc, char* argv[]) {
   if (strcmp(argv[1], "start") == 0) {
     if (display && display[0] != '\0') {
       status = system(
-          "(xhost +SI:localuser:root >/dev/null 2>&1; "
+          "xhost +SI:localuser:root >/dev/null 2>&1; "
           "xkeysnail ~/.config/xkeysnail/config.py --quiet --watch >/dev/null "
-          "2>&1 &)");
+          "2>&1 &");
       status = ((status == -1 || !WIFEXITED(status)) ? EXIT_FAILURE
                                                      : WEXITSTATUS(status));
       // Wait until xkeysnail startup.

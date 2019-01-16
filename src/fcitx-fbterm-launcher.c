@@ -12,7 +12,7 @@ int main(int argc, char* argv[]) {
     return EXIT_FAILURE;
   }
 
-  const struct rlimit limit = {1 * 60, 1 * 60};
+  const struct rlimit limit = {2, 2};
   int err = setrlimit(RLIMIT_CPU, &limit);
   if (err) {
     perror("setrlimit");

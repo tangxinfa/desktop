@@ -24,14 +24,21 @@ int execute(const char *command, const char *inputs[]) {
   return status;
 }
 
-const char *keymaps[] = {
-    "keymaps 0-2,4-6,8-9,12",  // By run: sudo dumpkeys | head -1
+const char *keymaps_start[] = {
+    "keymaps 0-2,4-6,8-9,12",  // sudo dumpkeys | head -1
     "keycode 58 = Control",    // Caps-Lock as Control
-    "keycode 125 = Alt",       // Win as Alt
+    "keycode 125 = Alt",       // Left Meta(Win) as Alt
     NULL                       // Terminate with NULL
 };
 
-#define ENABLED_PATTERN " *keycode +58 *= *Control"
+const char *keymaps_stop[] = {
+    "keymaps 0-2,4-6,8-9,12",  // sudo dumpkeys | head -1
+    "keycode 58 = Caps_Lock",  // Caps-Lock
+    "keycode 125 = nul",       // Left Meta(Win)
+    NULL                       // Terminate with NULL
+};
+
+#define KEYMAPS_ENABLED_PATTERN " *keycode +58 *= *Control"
 
 int main(int argc, char *argv[]) {
   if (argc != 2 ||
@@ -46,16 +53,19 @@ int main(int argc, char *argv[]) {
     return EXIT_FAILURE;
   }
 
-  if (strcmp(argv[1], "start") == 0) {
-    return execute("loadkeys -", keymaps);
-  } else if (strcmp(argv[1], "stop") == 0) {
-    return execute("loadkeys -d", NULL);
+  if (strcmp(argv[1], "status") == 0) {
+    int status = system("dumpkeys -k | grep -E '" KEYMAPS_ENABLED_PATTERN
+                        "' >/dev/null 2>&1");
+    status = ((status == -1 || !WIFEXITED(status)) ? EXIT_FAILURE
+                                                   : WEXITSTATUS(status));
+    printf("%s\n", (status == 0 ? "started" : "stoped"));
+    return status;
   }
 
-  int status =
-      system("dumpkeys -k | grep -E '" ENABLED_PATTERN "' >/dev/null 2>&1");
-  status = ((status == -1 || !WIFEXITED(status)) ? EXIT_FAILURE
-                                                 : WEXITSTATUS(status));
-  printf("%s\n", (status == 0 ? "started" : "stoped"));
-  return status;
+  const char **keymaps = keymaps_start;
+  if (strcmp(argv[1], "stop") == 0) {
+    keymaps = keymaps_stop;
+  }
+
+  return execute("loadkeys -", keymaps);
 }

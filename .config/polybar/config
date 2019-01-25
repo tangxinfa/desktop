@@ -322,7 +322,7 @@ ramp-2-foreground = ${colors.warning}
 type = custom/script
 format = <label>
 exec = echo "%{A5:~/bin/power-menu:}   %{A}"
-click-left = ~/bin/tty-ctl lock
+click-left = ~/bin/desktop-lock
 
 
 [module/weather]

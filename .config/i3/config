@@ -11,7 +11,7 @@
 
 set $mod Mod4
 set $auto-lock ~/bin/desktop-lock\ auto
-set $manual-lock ~/bin/tty-ctl lock
+set $manual-lock ~/bin/desktop-lock
 
 ipc-socket /tmp/i3-ipc.sock
 

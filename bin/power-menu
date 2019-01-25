@@ -5,33 +5,32 @@
 OPTIONS="  Lock\n  Suspend\n  Hibernate\n  Exit\n  Reboot\n  PowerOff"
 LAUNCHER="rofi -dmenu -i -p "
 killall rofi
-option=`echo -e "$OPTIONS" | $LAUNCHER | awk '{print $NF}' | tr -d '\r\n'`
-if [ ${#option} -gt 0 ]
-then
-    case $option in
-        Lock)
-            ~/bin/tty-ctl lock
-            ;;
-        Suspend)
-            ~/bin/tty-ctl lock &
-            sleep 1
-            systemctl suspend
-            ;;
-        Hibernate)
-            ~/bin/tty-ctl lock &
-            sleep 1
-            systemctl hibernate
-            ;;
-        Exit)
-            ~/bin/desktop-on-close exit && i3-msg exit
-            ;;
-        Reboot)
-            ~/bin/desktop-on-close reboot && (i3-msg exit || systemctl reboot)
-            ;;
-        PowerOff)
-            ~/bin/desktop-on-close poweroff && (i3-msg exit || systemctl poweroff)
-            ;;
-        *)
-            ;;
-    esac
+option=$(echo -e "$OPTIONS" | $LAUNCHER | awk '{print $NF}' | tr -d '\r\n')
+if [ ${#option} -gt 0 ]; then
+  case $option in
+    Lock)
+      ~/bin/desktop-lock
+      ;;
+    Suspend)
+      ~/bin/tty-ctl lock &
+      sleep 1
+      systemctl suspend
+      ;;
+    Hibernate)
+      ~/bin/tty-ctl lock &
+      sleep 1
+      systemctl hibernate
+      ;;
+    Exit)
+      ~/bin/desktop-on-close exit && i3-msg exit
+      ;;
+    Reboot)
+      ~/bin/desktop-on-close reboot && (i3-msg exit || systemctl reboot)
+      ;;
+    PowerOff)
+      ~/bin/desktop-on-close poweroff && (i3-msg exit || systemctl poweroff)
+      ;;
+    *) ;;
+
+  esac
 fi

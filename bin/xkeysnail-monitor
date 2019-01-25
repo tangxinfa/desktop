@@ -1,56 +1,60 @@
 #!/bin/bash
 
-SCRIPT_NAME=$(basename "${BASH_SOURCE[0]}")
-SCRIPT_PATH_MD5=$(echo -n "${BASH_SOURCE[0]}" | md5sum | awk '{print $1}')
+SCRIPT_PATH=$(readlink "${BASH_SOURCE[0]}")
+if [ -z "$SCRIPT_PATH" ]; then
+  SCRIPT_PATH="${BASH_SOURCE[0]}"
+fi
+SCRIPT_NAME=$(basename "${SCRIPT_PATH}")
+SCRIPT_PATH_MD5=$(echo -n "${SCRIPT_PATH}" | md5sum | awk '{print $1}')
 SCRIPT_LOCK_FILE="/tmp/${SCRIPT_NAME}.${SCRIPT_PATH_MD5}.lock"
 
 if [ -z "$FLOCK" ]; then
-    touch "${SCRIPT_LOCK_FILE}"
-    export FLOCK=${SCRIPT_LOCK_FILE}
-    exec flock -x -n "${SCRIPT_LOCK_FILE}" -c "${BASH_SOURCE[0]}"
-    exit $?
+  touch "${SCRIPT_LOCK_FILE}"
+  export FLOCK=${SCRIPT_LOCK_FILE}
+  exec flock -x -n "${SCRIPT_LOCK_FILE}" -c "${SCRIPT_PATH}"
+  exit $?
 fi
 
 capslock_off() {
-    # setcapslock will crash with core in Non-X environments, avoid it.
-    if [ -n "$DISPLAY" ]; then
-        setcapslock off
-    fi
-    setleds -caps
+  # setcapslock will crash with core in Non-X environments, avoid it.
+  if [ -n "$DISPLAY" ]; then
+    setcapslock off
+  fi
+  setleds -caps
 }
 
 while [ true ]; do
-    capslock_off
+  capslock_off
 
-    if [ "`~/bin/tty-ctl graphic`" = "`~/bin/tty-ctl active`" ]; then
-        # Startup xkeysnail instantly after switch to X desktop may freeze desktop,
-        # delay startup xkeysnail for rescue.
-        sleep 0.2
-        if [ "`~/bin/tty-ctl graphic`" = "`~/bin/tty-ctl active`" ]; then
-            if ~/bin/keymap-ctl status >/dev/null 2>&1 ; then
-                ~/bin/keymap-ctl stop
-            fi
-            if ! ~/bin/xkeysnail-ctl status >/dev/null 2>&1 ; then
-                echo -e "`date`\tStart xkeysnail"
-                ~/bin/xkeysnail-ctl start
-            fi
-        fi
-    else
-        if ~/bin/xkeysnail-ctl status >/dev/null 2>&1 ; then
-            echo -e "`date`\tStop xkeysnail"
-            ~/bin/xkeysnail-ctl stop
-        fi
-        if ! ~/bin/keymap-ctl status >/dev/null 2>&1 ; then
-            ~/bin/keymap-ctl start
-        fi
+  if [ "$(~/bin/tty-ctl graphic)" = "$(~/bin/tty-ctl active)" ]; then
+    # Startup xkeysnail instantly after switch to X desktop may freeze desktop,
+    # delay startup xkeysnail for rescue.
+    sleep 0.2
+    if [ "$(~/bin/tty-ctl graphic)" = "$(~/bin/tty-ctl active)" ]; then
+      if ~/bin/keymap-ctl status >/dev/null 2>&1; then
+        ~/bin/keymap-ctl stop
+      fi
+      if ! ~/bin/xkeysnail-ctl status >/dev/null 2>&1; then
+        echo -e "$(date)\tStart xkeysnail"
+        ~/bin/xkeysnail-ctl start
+      fi
     fi
+  else
+    if ~/bin/xkeysnail-ctl status >/dev/null 2>&1; then
+      echo -e "$(date)\tStop xkeysnail"
+      ~/bin/xkeysnail-ctl stop
+    fi
+    if ! ~/bin/keymap-ctl status >/dev/null 2>&1; then
+      ~/bin/keymap-ctl start
+    fi
+  fi
 
-    TTY_ACTIVE_CURRENT=$(cat /sys/class/tty/tty0/active)
-    if [ "${TTY_ACTIVE_PREVIOUS}" = "${TTY_ACTIVE_CURRENT}" ]; then
-        if ! inotifywait -q -e modify /sys/class/tty/tty0/active >/dev/null 2>&1 ; then
-            echo -e "`date`\tinotifywait failed: $?" >/dev/stderr
-            sleep 10
-        fi
+  TTY_ACTIVE_CURRENT=$(cat /sys/class/tty/tty0/active)
+  if [ "${TTY_ACTIVE_PREVIOUS}" = "${TTY_ACTIVE_CURRENT}" ]; then
+    if ! inotifywait -q -e modify /sys/class/tty/tty0/active >/dev/null 2>&1; then
+      echo -e "$(date)\tinotifywait failed: $?" >/dev/stderr
+      sleep 10
     fi
-    TTY_ACTIVE_PREVIOUS=${TTY_ACTIVE_CURRENT}
+  fi
+  TTY_ACTIVE_PREVIOUS=${TTY_ACTIVE_CURRENT}
 done

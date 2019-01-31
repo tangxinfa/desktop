@@ -32,13 +32,14 @@ case $LAUNCHER in
         exec fbterm -i ${HOME}/bin/fcitx-fbterm-launcher -- proxychains emacs -nw --no-x-resources
         ;;
     i3)
-        export XDG_CURRENT_DESKTOP=i3
-        exec startx
+        XDG_CURRENT_DESKTOP=i3 exec startx
         ;;
     gnome3)
-        XDG_SESSION_TYPE=wayland exec dbus-run-session gnome-session
+        source ~/.xprofile
+        QT_QPA_PLATFORM=wayland XDG_SESSION_TYPE=wayland exec dbus-run-session gnome-session
         ;;
-    fbterm) WALLPAPER="`cat ~/.config/variety/wallpaper/wallpaper.jpg.txt 2>/dev/null`"
+    fbterm)
+        WALLPAPER="`cat ~/.config/variety/wallpaper/wallpaper.jpg.txt 2>/dev/null`"
         echo -ne "\e[?25l" # hide cursor
         fbv -ciuker "$WALLPAPER" << EOF
 q

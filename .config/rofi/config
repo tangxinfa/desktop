@@ -117,7 +117,7 @@ rofi.theme:                            ~/.config/rofi/themes/rofi.rasi
 ! "Pidfile location" Set from: Default
 ! rofi.pid:                            /run/user/1000/rofi.pid
 ! "The display name of this browser" Set from: Rasi File
-rofi.display-window:                   
+rofi.display-window:                   
 ! "The display name of this browser" Set from: Default
 ! rofi.display-windowcd:
 ! "The display name of this browser" Set from: Rasi File

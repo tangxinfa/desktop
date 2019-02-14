@@ -25,22 +25,41 @@ int execute(const char *command, const char *inputs[]) {
 }
 
 const char *keymaps_start[] = {
-    "keymaps 0-2,4-6,8-9,12",  // sudo dumpkeys | head -1
-    "keycode 58 = Control",    // Caps-Lock as Control
-    "keycode 125 = Alt",       // Left Meta(Win) as Alt
-    NULL                       // Terminate with NULL
+    NULL,                    // Placeholder of the keymaps header
+    "keycode 58 = Control",  // Caps-Lock as Control
+    "keycode 125 = Alt",     // Left Meta(Win) as Alt
+    NULL                     // Terminate with NULL
 };
 
 const char *keymaps_stop[] = {
-    "keymaps 0-2,4-6,8-9,12",  // sudo dumpkeys | head -1
+    NULL,                      // Placeholder of the keymaps header
     "keycode 58 = Caps_Lock",  // Caps-Lock
     "keycode 125 = nul",       // Left Meta(Win)
     NULL                       // Terminate with NULL
 };
 
+const char *keymaps_header() {
+  static char header[1024] = {'\0'};
+  if (header[0] == '\0') {
+    FILE *f = popen("dumpkeys | head -1", "r");
+    if (f != NULL) {
+      fgets(header, sizeof(header), f);
+      pclose(f);
+    }
+    int length = strlen(header);
+    if (length > 0 && header[length - 1] == '\n') {
+      header[length - 1] = '\0';
+    }
+  }
+
+  return header;
+}
+
 #define KEYMAPS_ENABLED_PATTERN " *keycode +58 *= *Control"
 
 int main(int argc, char *argv[]) {
+  keymaps_start[0] = keymaps_stop[0] = keymaps_header();
+
   if (argc != 2 ||
       (strcmp(argv[1], "start") != 0 && strcmp(argv[1], "stop") != 0 &&
        strcmp(argv[1], "status") != 0)) {

@@ -91,7 +91,8 @@ int main(int argc, char *argv[]) {
 
   if (strcmp(argv[1], "graphic") == 0) {
     status = system(
-        "(cat /proc/`pgrep -x 'Xorg|Xwayland' | head -1`/environ | strings | grep XDG_VTNR | head -1 | awk -F= '{print $2}') 2>/dev/null");
+        "(cat /proc/`pgrep -x 'Xorg|Xwayland' | head -1`/environ | strings | "
+        "grep XDG_VTNR | head -1 | awk -F= '{print $2}') 2>/dev/null");
     status = ((status == -1 || !WIFEXITED(status)) ? EXIT_FAILURE
                                                    : WEXITSTATUS(status));
     return status;

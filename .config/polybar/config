@@ -91,6 +91,7 @@ type = custom/script
 exec-if = ~/bin/xkeysnail-ctl status
 format = <label>
 exec = echo 
+click-left = Xdialog --under-mouse --yesno " Stop Xkeysnail?" 10 10 && ~/bin/xkeysnail-ctl stop
 
 [module/dual-screen]
 type = custom/script
@@ -217,7 +218,7 @@ type = internal/network
 interface = wlp4s0
 interval = 3.0
 
-format-connected = %{A1:nmcli d wifi >/dev/null 2>&1 && networkmanager_dmenu:}<ramp-signal><label-connected>%{A}
+format-connected = %{A1:nmcli d wifi >/dev/null 2>&1 && networkmanager_dmenu:}%{A6:~/bin/network-editor wifi &:}<ramp-signal><label-connected>%{A}%{A}
 label-connected = %essid%
 format-disconnected = %{A1:nmcli d wifi >/dev/null 2>&1 && networkmanager_dmenu:}%{A}
 
@@ -233,9 +234,9 @@ type = internal/network
 interface = enp0s25
 interval = 3.0
 
-format-connected = %{A1:~/bin/wired-editor:}<label-connected>%{A}
+format-connected = %{A1:~/bin/network-menu &:}%{A6:~/bin/network-editor ethernet &:}<label-connected>%{A}%{A}
 label-connected = %local_ip%
-format-disconnected = %{A1:~/bin/wired-editor:}%{A}
+format-disconnected = %{A1:~/bin/network-menu &:}%{A6:~/bin/network-editor ethernet &:}%{A}%{A}
 
 [module/date]
 type = internal/date

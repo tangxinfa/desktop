@@ -237,6 +237,7 @@ popup_during_fullscreen leave_fullscreen
 assign [class="Emacs"] $workspace2
 assign [class="Gnome-terminal" window_role="gnome-terminal-window.*"] $workspace1
 for_window [class="Gnome-terminal" window_role="gnome-terminal-popup.*"] floating enable
+for_window [class="Xdialog"] floating enable
 assign [class="Firefox"] $workspace1
 assign [class="Dia"] $workspace3
 assign [class="Pencil"] $workspace3
@@ -290,7 +291,7 @@ exec --no-startup-id fcitx -d
 exec --no-startup-id dunst
 exec --no-startup-id blueman-applet
 #exec --no-startup-id mate-volume-control-applet
-#exec --no-startup-id nm-applet # nm-applet consume too many memory, disable it
+exec --no-startup-id nm-applet
 exec --no-startup-id udiskie -t &
 exec --no-startup-id xautolock -time 10 -locker $auto-lock
 exec --no-startup-id sleep 10 && dropbox start

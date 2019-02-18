@@ -1,0 +1,7 @@
+#!/bin/bash
+
+if [ "$1" = "wifi" ]; then
+    nm-connection-editor `nmcli --fields type,uuid,state connection show | awk '{if ($1=="wifi" && $3=="activated") print "-e",$2}'`
+else
+    nm-connection-editor `nmcli --fields type,uuid connection show | awk '{if ($1=="ethernet" && $2!="") print "-e",$2}'`
+fi

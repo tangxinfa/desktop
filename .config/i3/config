@@ -251,8 +251,10 @@ assign [class="dingtalk"] $workspace4
 for_window [class="Blueman-manager"] floating enable, move absolute position center, resize set 600 400
 assign [class="Wine"] $workspace4
 assign [class="VirtualBox"] $workspace6
+for_window [class="VirtualBoxVM"] floating enable
 assign [class="netease-cloud-music"] $workspace5
 assign [class="vlc"] $workspace5
+assign [class="Totem"] $workspace5
 assign [class="Steam"] $workspace5
 assign [title="Steam"] $workspace5
 for_window [class="keepassxc" window_type="normal"] floating enable, move scratchpad, resize set 640 360

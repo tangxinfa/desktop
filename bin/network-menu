@@ -1,3 +1,5 @@
 #!/bin/bash
 
+eval $(xdotool getmouselocation --shell | grep -E '^[XY]')
 xdotool mousemove -w `xdotool search --class nm-applet | tail -1` 15 15 click 1
+xdotool mousemove $X $Y

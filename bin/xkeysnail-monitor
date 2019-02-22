@@ -24,8 +24,6 @@ capslock_off() {
 }
 
 while [ true ]; do
-  capslock_off
-
   if [ "$(~/bin/tty-ctl graphic)" = "$(~/bin/tty-ctl active)" ]; then
     # Startup xkeysnail instantly after switch to X desktop may freeze desktop,
     # delay startup xkeysnail for rescue.
@@ -48,6 +46,8 @@ while [ true ]; do
       ~/bin/keymap-ctl start
     fi
   fi
+
+  capslock_off
 
   TTY_ACTIVE_CURRENT=$(cat /sys/class/tty/tty0/active)
   if [ "${TTY_ACTIVE_PREVIOUS}" = "${TTY_ACTIVE_CURRENT}" ]; then

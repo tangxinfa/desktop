@@ -67,6 +67,7 @@ define_keymap(re.compile("keepassxc"), {
     # Type C-g to move to scratchpad
     # Type C-c c n to copy username
     # Type C-c c p to copy password
+    # Type C-c c o to open url
     K("C-g"): K("Super-Minus"),
     K("C-c"): {
         K("c"): {

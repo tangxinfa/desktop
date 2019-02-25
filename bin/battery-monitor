@@ -1,13 +1,16 @@
 #!/bin/bash
 
-SCRIPT_NAME=$(basename "${BASH_SOURCE[0]}")
-SCRIPT_PATH_MD5=$(echo -n "${BASH_SOURCE[0]}" | md5sum | awk '{print $1}')
-SCRIPT_LOCK_FILE="/tmp/${SCRIPT_NAME}.${SCRIPT_PATH_MD5}.lock"
+SCRIPT_PATH=$(readlink "${BASH_SOURCE[0]}")
+if [ -z "$SCRIPT_PATH" ]; then
+  SCRIPT_PATH="${BASH_SOURCE[0]}"
+fi
+SCRIPT_NAME=$(basename "${SCRIPT_PATH}")
+LOCK_FILE="/tmp/${SCRIPT_NAME}.lock"
 
-if [ -z "$FLOCK" ]; then
-    touch "${SCRIPT_LOCK_FILE}"
-    export FLOCK=${SCRIPT_LOCK_FILE}
-    exec flock -x -n "${SCRIPT_LOCK_FILE}" -c "${BASH_SOURCE[0]}"
+if [ -z "$BATTERY_MONITOR_LOCKED" ]; then
+    touch "${LOCK_FILE}"
+    export BATTERY_MONITOR_LOCKED="${LOCK_FILE}"
+    exec flock -x -n "${LOCK_FILE}" -c "${SCRIPT_PATH}"
     exit $?
 fi
 

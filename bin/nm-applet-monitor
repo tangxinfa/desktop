@@ -1,0 +1,27 @@
+#!/bin/bash
+
+SCRIPT_PATH=$(readlink "${BASH_SOURCE[0]}")
+if [ -z "$SCRIPT_PATH" ]; then
+  SCRIPT_PATH="${BASH_SOURCE[0]}"
+fi
+SCRIPT_NAME=$(basename "${SCRIPT_PATH}")
+LOCK_FILE="/tmp/${SCRIPT_NAME}.lock"
+LOG_FILE="${LOG_FILE:-/dev/null}"
+
+if [ -z "$NM_APPLET_MONITOR_LOCKED" ]; then
+    echo -e "$(date)\tStartup nm-applet-monitor" >> "${LOCK_FILE}"
+    touch "${LOCK_FILE}"
+    export NM_APPLET_MONITOR_LOCKED="${LOCK_FILE}"
+    exec flock -x -n "${LOCK_FILE}" -c "${SCRIPT_PATH}"
+    exit $?
+fi
+
+# nm-applet may leak memory, fix it by limit it's memory usage.
+ulimit -Sv 512000
+ulimit -c 0
+while [ 1 ]; do
+    echo -e "$(date)\tStartup nm-applet" >> "${LOCK_FILE}"
+    nm-applet
+    echo -e "$(date)\tDetect nm-applet dead" >> "${LOCK_FILE}"
+    sleep 3
+done

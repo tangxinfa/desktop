@@ -293,7 +293,7 @@ exec --no-startup-id fcitx -d
 exec --no-startup-id dunst
 exec --no-startup-id blueman-applet
 #exec --no-startup-id mate-volume-control-applet
-exec --no-startup-id nm-applet
+exec --no-startup-id ~/bin/nm-applet-monitor
 exec --no-startup-id udiskie -t &
 exec --no-startup-id xautolock -time 10 -locker $auto-lock
 exec --no-startup-id sleep 10 && dropbox start

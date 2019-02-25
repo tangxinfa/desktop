@@ -1,12 +1,5 @@
-# Enable keymaps if xkeysnail not running.
-setleds -caps
-if ! ~/bin/xkeysnail-ctl status >/dev/null 2>&1 ; then
-    echo "Keymaps ... [ON]" >/dev/stderr
-    ~/bin/keymap-ctl start
-else
-    echo "Keymaps ... [OFF]" >/dev/stderr
-    ~/bin/keymap-ctl stop
-fi
+# Startup xkeysnail-monitor
+~/bin/xkeysnail-monitor >/dev/null 2>&1 &
 
 # Startup battery monitor.
 ~/bin/battery-monitor >/dev/null 2>&1 &
@@ -29,7 +22,7 @@ fcitx -d >/dev/null 2>&1
 
 case $LAUNCHER in
     emacs)
-        exec fbterm -i ${HOME}/bin/fcitx-fbterm-launcher -- proxychains emacs -nw --no-x-resources
+        exec fbterm -i ${HOME}/bin/fcitx-fbterm-launcher -- emacs -nw --no-x-resources
         ;;
     i3)
         XDG_CURRENT_DESKTOP=i3 exec startx

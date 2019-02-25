@@ -29,7 +29,6 @@
 *.hex
 bin/*-ctl
 bin/file-open
-bin/fcitx-fbterm-launcher
 
 # Debug files
 *.dSYM/

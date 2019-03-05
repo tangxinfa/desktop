@@ -1,5 +1,5 @@
 ! "Enabled modi" Set from: Commandline
-rofi.modi:                           drun,run,:~/bin/ydcv,window
+rofi.modi:                           drun,run,:~/bin/rofi-ydcv,window
 ! "Window width" Set from: Commandline
 rofi.width:                          30
 ! "Number of lines" Set from: Default

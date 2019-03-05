@@ -53,7 +53,7 @@ separator =
 
 font-0 = "YaHei Consolas Hybrid:size=12:antialias=true:style=Normal;0"
 font-1 = "Material Icons:size=13:style=Regular;1"
-font-2 = "Font Awesome 5 Free:style=Solid:size=12;1"
+font-2 = "FontAwesome:size=12;1"
 font-3 = "Weather Icons:size=12;1"
 
 modules-left = power i3 xwindow
@@ -322,7 +322,7 @@ ramp-2-foreground = ${colors.warning}
 [module/power]
 type = custom/script
 format = <label>
-exec = echo "%{A5:~/bin/power-menu:}   %{A}"
+exec = echo "%{A5:~/bin/rofi-power-menu:}   %{A}"
 click-left = ~/bin/desktop-lock
 
 

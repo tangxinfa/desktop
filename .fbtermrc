@@ -8,8 +8,8 @@
 # and using a fixed width font as the first is strongly recommended
 #font-names=DejaVu Sans Mono
 #font-size=14
-font-names=YaHei Consolas Hybrid,DejaVu Sans Mono
 font-size=15
+font-names=YaHei Consolas Hybrid,FontAwesome
 
 # force font width (and/or height), usually for non-fixed width fonts
 # legal value format: n (fw_new = n), +n (fw_new = fw_old + n), -n (fw_new = fw_old - n)

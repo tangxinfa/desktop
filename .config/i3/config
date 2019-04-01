@@ -239,6 +239,8 @@ assign [class="Gnome-terminal" window_role="gnome-terminal-window.*"] $workspace
 for_window [class="Gnome-terminal" window_role="gnome-terminal-popup.*"] floating enable
 for_window [class="Xdialog"] floating enable
 assign [class="Firefox"] $workspace1
+assign [class="Chromium"] $workspace1
+assign [class="Google-chrome"] $workspace1
 assign [class="Dia"] $workspace3
 assign [class="Pencil"] $workspace3
 assign [class="XMind"] $workspace3
@@ -309,7 +311,6 @@ exec --no-startup-id dex /usr/share/applications/variety.desktop
 exec --no-startup-id dex /usr/share/applications/org.keepassxc.KeePassXC.desktop
 exec_always --no-startup-id polybar-msg cmd restart || polybar top
 exec --no-startup-id compton -cCGb\
-     -d :0.0\
      -t 0\
      --config /dev/null\
      --inactive-dim=0.15\

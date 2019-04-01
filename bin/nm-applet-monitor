@@ -12,7 +12,7 @@ if [ -z "$NM_APPLET_MONITOR_LOCKED" ]; then
     echo -e "$(date)\tStartup nm-applet-monitor" >> "${LOCK_FILE}"
     touch "${LOCK_FILE}"
     export NM_APPLET_MONITOR_LOCKED="${LOCK_FILE}"
-    exec flock -x -n "${LOCK_FILE}" -c "${SCRIPT_PATH}"
+    exec flock -x -n -o "${LOCK_FILE}" -c "${SCRIPT_PATH}"
     exit $?
 fi
 

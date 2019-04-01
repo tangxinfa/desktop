@@ -15,26 +15,35 @@ int main(int argc, char* argv[]) {
     perror("setuid");
     return EXIT_FAILURE;
   }
+  if (setgid(0) == -1) {
+    perror("setgid");
+    return EXIT_FAILURE;
+  }
 
   int status = EXIT_FAILURE;
   const char* display = getenv("DISPLAY");
+  const char* debug =
+      getenv("XKEYSNAIL_DEBUG") ? "/dev/stderr" : "/dev/null";
 
   if (strcmp(argv[1], "start") == 0) {
     if (display == NULL || display[0] == '\0') {
       setenv("DISPLAY", ":0", 1);
     }
-    status = system(
-        "xhost +SI:localuser:root >/dev/null 2>&1; "
-        "xkeysnail ~/.config/xkeysnail/config.py --quiet --watch >/dev/null "
-        "2>&1 &");
+    char command[4096] = {'\0'};
+    snprintf(command, sizeof(command),
+             "xhost +SI:localuser:root >>%s 2>&1; "
+             "xkeysnail ~/.config/xkeysnail/config.py --quiet --watch >>%s "
+             "2>&1 &",
+             debug, debug);
+    status = system(command);
     status = ((status == -1 || !WIFEXITED(status)) ? EXIT_FAILURE
-              : WEXITSTATUS(status));
+                                                   : WEXITSTATUS(status));
     // Wait until xkeysnail startup.
     if (status == EXIT_SUCCESS) {
       for (int i = 0; i < 3; ++i) {
         status = system("pgrep -x xkeysnail >/dev/null 2>&1");
         status = ((status == -1 || !WIFEXITED(status)) ? EXIT_FAILURE
-                  : WEXITSTATUS(status));
+                                                       : WEXITSTATUS(status));
         if (status == EXIT_SUCCESS) {
           break;
         }

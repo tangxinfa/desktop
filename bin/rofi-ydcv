@@ -1,11 +1,19 @@
 #!/bin/bash
 
 if [[ "$*" != "" ]]; then
-    ydcv "$*"
+    ydcv -f "$*"
     exit 0
 fi
 
-text="$(xclip -o)"
-if [[ "$text" != "" ]]; then
-    ydcv "$text"
+OLD_SESSION=$(cat /tmp/rofi-ydcv.session 2>/dev/null)
+NEW_SESSION=$(pidof rofi | awk '{print $1}')
+if [[ "${OLD_SESSION}" != "${NEW_SESSION}" ]]; then
+    echo "${NEW_SESSION}" > /tmp/rofi-ydcv.session
+    TEXT=$(xclip -o 2>/dev/null)
+    if [[ "${TEXT}" != "" ]]; then
+        ydcv -f "${TEXT}"
+        exit 0
+    fi
 fi
+
+ydcv -f

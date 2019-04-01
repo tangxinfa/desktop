@@ -6,10 +6,10 @@ build: ${CURDIR}/bin/keymap-ctl ${CURDIR}/bin/xkeysnail-ctl ${CURDIR}/bin/tty-ct
 
 install: build
 	sudo setcap 'cap_sys_tty_config+ep' `which fbterm`
-	sudo chown root:root ${CURDIR}/bin/keymap-ctl && sudo chmod u+s ${CURDIR}/bin/keymap-ctl
-	sudo chown root:root ${CURDIR}/bin/xkeysnail-ctl && sudo chmod u+s ${CURDIR}/bin/xkeysnail-ctl
-	sudo chown root:root ${CURDIR}/bin/tty-ctl && sudo chmod u+s ${CURDIR}/bin/tty-ctl
-	sudo chown root:root ${CURDIR}/bin/file-open && sudo chmod u+s ${CURDIR}/bin/file-open
+	sudo chown root:root ${CURDIR}/bin/keymap-ctl && sudo chmod gu+s ${CURDIR}/bin/keymap-ctl
+	sudo chown root:root ${CURDIR}/bin/xkeysnail-ctl && sudo chmod gu+s ${CURDIR}/bin/xkeysnail-ctl
+	sudo chown root:root ${CURDIR}/bin/tty-ctl && sudo chmod gu+s ${CURDIR}/bin/tty-ctl
+	sudo chown root:root ${CURDIR}/bin/file-open && sudo chmod gu+s ${CURDIR}/bin/file-open
 	@echo "Install by create symbol links ..."
 	-cp -rs ${CURDIR}/{bin,.config,.xinitrc,.xprofile,.fbtermrc,.launcher} ~/
 	-sudo cp -rs ${CURDIR}/lisp/* ${EMACS_LISP_DIR}/

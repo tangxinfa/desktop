@@ -62,6 +62,10 @@ int main(int argc, char *argv[]) {
     perror("setuid");
     return EXIT_FAILURE;
   }
+  if (setgid(0) == -1) {
+    perror("setgid");
+    return EXIT_FAILURE;
+  }
 
   if (strcmp(argv[1], "lock") == 0) {
     setenv("TERM", "linux", 1);

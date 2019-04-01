@@ -6,13 +6,16 @@ if [ -z "$SCRIPT_PATH" ]; then
 fi
 SCRIPT_NAME=$(basename "${SCRIPT_PATH}")
 LOCK_FILE="/tmp/${SCRIPT_NAME}.lock"
-LOG_FILE="${LOG_FILE:-/dev/null}"
+DEBUG="/dev/null"
+if [ ${XKEYSNAIL_DEBUG} ]; then
+    DEBUG="/dev/stderr"
+fi
 
 if [ -z "$XKEYSNAIL_MONITOR_LOCKED" ]; then
   # Modify LOCK_FILE for wakeup xkeysnail-monitor
-  echo -e "$(date)\tWakeup xkeysnail-monitor" | tee ${LOCK_FILE} >>${LOG_FILE}
+  echo -e "$(date)\tWakeup xkeysnail-monitor" | tee ${LOCK_FILE} >>${DEBUG}
   export XKEYSNAIL_MONITOR_LOCKED="${LOCK_FILE}"
-  exec flock -x -n "${LOCK_FILE}" -c "${SCRIPT_PATH}"
+  exec flock -x -n -o "${LOCK_FILE}" -c "${SCRIPT_PATH}"
   exit $?
 fi
 
@@ -22,7 +25,7 @@ capslock_off() {
     setcapslock off
   fi
   setleds -caps
-  echo -e "$(date)\tCapsLock off" >>${LOG_FILE}
+  echo -e "$(date)\tCapsLock off" >>${DEBUG}
 }
 
 while [ true ]; do
@@ -33,33 +36,34 @@ while [ true ]; do
     if [ "$(~/bin/tty-ctl graphic)" = "$(~/bin/tty-ctl active)" ]; then
       if ~/bin/keymap-ctl status >/dev/null 2>&1; then
         ~/bin/keymap-ctl stop
-        echo -e "$(date)\tStop keymap" >>${LOG_FILE}
+        echo -e "$(date)\tStop keymap" >>${DEBUG}
       fi
       if ! ~/bin/xkeysnail-ctl status >/dev/null 2>&1; then
-        echo -e "$(date)\tStart xkeysnail" >>${LOG_FILE}
+        echo -e "$(date)\tStart xkeysnail" >>${DEBUG}
         ~/bin/xkeysnail-ctl start
       fi
     fi
   else
     if ~/bin/xkeysnail-ctl status >/dev/null 2>&1; then
-      echo -e "$(date)\tStop xkeysnail" >>${LOG_FILE}
+      echo -e "$(date)\tStop xkeysnail" >>${DEBUG}
       ~/bin/xkeysnail-ctl stop
     fi
     if ! ~/bin/keymap-ctl status >/dev/null 2>&1; then
-      echo -e "$(date)\tStart keymap" >>${LOG_FILE}
+      echo -e "$(date)\tStart keymap" >>${DEBUG}
       ~/bin/keymap-ctl start
     fi
   fi
 
+  polybar-msg hook xkeysnail 1
   capslock_off
 
   TTY_ACTIVE_CURRENT=$(cat /sys/class/tty/tty0/active)
   if [ "${TTY_ACTIVE_PREVIOUS}" = "${TTY_ACTIVE_CURRENT}" ]; then
     if ! inotifywait -q -e modify /sys/class/tty/tty0/active "${LOCK_FILE}" >/dev/null 2>&1; then
-      echo -e "$(date)\tinotifywait failed: $?" >>${LOG_FILE}
+      echo -e "$(date)\tinotifywait failed: $?" >>${DEBUG}
       sleep 10
     fi
   fi
   TTY_ACTIVE_PREVIOUS=${TTY_ACTIVE_CURRENT}
-  echo -e "$(date)\tinotifywait successed" >>${LOG_FILE}
+  echo -e "$(date)\tinotifywait successed" >>${DEBUG}
 done

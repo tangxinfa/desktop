@@ -10,7 +10,7 @@ LOCK_FILE="/tmp/${SCRIPT_NAME}.lock"
 if [ -z "$BATTERY_MONITOR_LOCKED" ]; then
     touch "${LOCK_FILE}"
     export BATTERY_MONITOR_LOCKED="${LOCK_FILE}"
-    exec flock -x -n "${LOCK_FILE}" -c "${SCRIPT_PATH}"
+    exec flock -x -n -o "${LOCK_FILE}" -c "${SCRIPT_PATH}"
     exit $?
 fi
 

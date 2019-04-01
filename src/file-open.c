@@ -39,7 +39,7 @@ void get_file_extension(const char* file, char* extension, int extension_size) {
 
 const char* get_console_program(const char* extension) {
   if (strcasecmp(extension, "pdf") == 0) {
-    return "~/bin/pdf-viewer";
+    return "fbpdf-reader";
   }
   if (strcasecmp(extension, "jpg") == 0 || strcasecmp(extension, "jpeg") == 0 ||
       strcasecmp(extension, "ppm") == 0 || strcasecmp(extension, "tiff") == 0 ||
@@ -80,7 +80,7 @@ const char* get_console_program(const char* extension) {
   return NULL;
 }
 
-int console_open(const char* file) {
+int console_open(const char* file, uid_t uid, gid_t gid) {
   char extension[10] = {'\0'};
   get_file_extension(file, extension, sizeof(extension));
   const char* program = get_console_program(extension);
@@ -92,8 +92,8 @@ int console_open(const char* file) {
     }
   }
 
-  char command[4096] = {'\0'};
-  snprintf(command, sizeof(command), "openvt -s -w -- %s '%s'", program, file);
+  char command[PATH_MAX] = {'\0'};
+  snprintf(command, sizeof(command), "openvt -s -w -- sudo -u `id -nu %d` -g `id -ng %d` %s '%s'", uid, gid, program, file);
   int status = system(command);
   status = ((status == -1 || !WIFEXITED(status)) ? EXIT_FAILURE
                                                  : WEXITSTATUS(status));
@@ -102,7 +102,7 @@ int console_open(const char* file) {
 }
 
 int graphic_open(const char* file) {
-  char command[4096] = {'\0'};
+  char command[PATH_MAX] = {'\0'};
   const char* display = getenv("DISPLAY");
   if (display == NULL || display[0] == '\0') {
     system("~/bin/tty-ctl other");
@@ -123,27 +123,34 @@ int main(int argc, char* argv[]) {
     return EXIT_FAILURE;
   }
 
+  const char* display = getenv("DISPLAY");
+  if (display && display[0] != '\0') {
+    return graphic_open(argv[1]);
+  }
+
   char file[PATH_MAX] = {'\0'};
   if (NULL == realpath(argv[1], file)) {
     fprintf(stderr, "Error: file \"%s\" not exists\n", argv[1]);
     return EXIT_FAILURE;
   }
 
-  const char* display = getenv("DISPLAY");
-  if (display && display[0] != '\0') {
-    return graphic_open(file);
-  }
-
   const uid_t uid = getuid();
+  const uid_t gid = getgid();
   if (setuid(0) == -1) {
     perror("setuid");
     return EXIT_FAILURE;
   }
+  if (setgid(0) == -1) {
+    perror("setgid");
+    return EXIT_FAILURE;
+  }
 
-  int status = console_open(file);
+  int status = console_open(file, uid, gid);
+
   // Fallback to graphic_open if file not support to open in console.
   if (status == EXIT_FAILURE) {
-    status = setuid(uid);
+    setuid(uid);
+    setgid(gid);
     status = graphic_open(file);
   }
 

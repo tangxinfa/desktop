@@ -8,14 +8,28 @@ My desktop configurations
     cd desktop
     make install
 
-## Console Desktop Configuration ##
+## Dependencies ##
 
-### Mouse Support ###
+### Fonts ###
 
-Enable gpm service for mouse support on virtual consoles
+- YaHei Consolas Hybrid
 
-    systemctl enable gpm
-    systemctl start gpm
+- FontAwesome
 
-## Graphic Desktop Configuration ##
+    yaourt -S otf-font-awesome-4
 
+- Weather Icons
+
+    yaourt -S ttf-weather-icons
+
+## Features ##
+
+### Fbterm ###
+
+### Terminal Emacs ###
+
+### Graphic Desktop ###
+
+- I3
+
+- Gnome3

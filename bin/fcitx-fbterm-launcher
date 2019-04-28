@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# fcitx-fbterm may hang, fix by limit it's cpu usage.
+# fcitx-fbterm may hang, fix by limit it's cpu usage and automatically quit.
 ulimit -St 2
 ulimit -c 0
-exec fcitx-fbterm "$@"
+timeout 300 fcitx-fbterm "$@"

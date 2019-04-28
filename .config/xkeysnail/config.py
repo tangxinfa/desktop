@@ -32,6 +32,8 @@ define_keymap(re.compile("Firefox"), {
         },
         K("C-n"): K("C-TAB"),
         K("C-p"): K("C-Shift-TAB"),
+        K("C-b"): K("M-left"),
+        K("C-f"): K("M-right"),
         K("b"): {
             K("u"): [K("F5")]
         },

@@ -1,8 +1,8 @@
 # Startup xkeysnail-monitor
-~/bin/xkeysnail-monitor >/dev/null 2>&1 &
+nohup ~/bin/xkeysnail-monitor >/dev/null 2>&1 &
 
 # Startup battery monitor.
-~/bin/battery-monitor >/dev/null 2>&1 &
+nohup ~/bin/battery-monitor >/dev/null 2>&1 &
 
 # Prompt to select desktop.
 if [ -z $LAUNCHER ]; then

@@ -1,19 +1,24 @@
 #!/bin/bash
 
 if [[ "$*" != "" ]]; then
-    ydcv -f "$*"
-    exit 0
+  TEXT="$*"
+else
+  TEXT=$(xclip -o 2>/dev/null)
 fi
 
-OLD_SESSION=$(cat /tmp/rofi-ydcv.session 2>/dev/null)
-NEW_SESSION=$(pidof rofi | awk '{print $1}')
-if [[ "${OLD_SESSION}" != "${NEW_SESSION}" ]]; then
-    echo "${NEW_SESSION}" > /tmp/rofi-ydcv.session
-    TEXT=$(xclip -o 2>/dev/null)
-    if [[ "${TEXT}" != "" ]]; then
-        ydcv -f "${TEXT}"
-        exit 0
-    fi
+if [[ "${TEXT}" != "" ]]; then
+  if [ -n "$DISPLAY" ]; then
+    ID=${RANDOM}
+    TIMEOUT=30000
+    TITLE="有道翻译"
+    BODY="正在翻译 <u>${TEXT}</u> ..."
+    dunstify -r ${ID} -t ${TIMEOUT} -i youdao-dict "${TITLE}" "${BODY}"
+  fi
+  ydcv -f "${TEXT}"
+  if [ -n "$DISPLAY" ]; then
+    dunstify -C ${ID}
+  fi
+  exit 0
 fi
 
-ydcv -f
+exit 1

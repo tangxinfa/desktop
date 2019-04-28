@@ -39,20 +39,21 @@ int main(int argc, char *argv[]) {
   if (argc != 2 ||
       (strcmp(argv[1], "active") != 0 && strcmp(argv[1], "graphic") != 0 &&
        strcmp(argv[1], "other") != 0 && strcmp(argv[1], "activate") != 0 &&
-       strcmp(argv[1], "lock") != 0)) {
+       strcmp(argv[1], "lock") != 0 && strcmp(argv[1], "capslockoff") != 0)) {
     to_tty = atoi(argc == 2 ? argv[1] : "0");
     if (to_tty == 0) {
       fprintf(stderr,
               "Usage: %s "
-              "<active|graphic|other|activate|lock|"
+              "<active|graphic|other|activate|lock|capslockoff|"
               "N>\n"
-              "\tactive   Print active tty.\n"
-              "\tgraphic  Print graphic tty.\n"
-              "\tother    Swith to other tty.\n"
-              "\t         Create tty if $TTY_CTL_OTHER_CREATE set.\n"
-              "\tactivate Active caller's tty.\n"
-              "\tlock     Lock all tty.\n"
-              "\tN        Switch to tty N.\n",
+              "\tactive      Print active tty.\n"
+              "\tgraphic     Print graphic tty.\n"
+              "\tother       Swith to other tty.\n"
+              "\t            Create tty if $TTY_CTL_OTHER_CREATE set.\n"
+              "\tactivate    Active caller's tty.\n"
+              "\tlock        Lock all tty.\n"
+              "\tcapslockoff Set CapsLock off.\n"
+              "\tN           Switch to tty N.\n",
               argv[0]);
       return EXIT_FAILURE;
     }
@@ -75,8 +76,20 @@ int main(int argc, char *argv[]) {
     return EXIT_SUCCESS;
   }
 
-  int status = EXIT_FAILURE;
   char command[255] = {'\0'};
+  if (strcmp(argv[1], "capslockoff") == 0) {
+    system(
+        "setleds -caps < /dev/tty`cat /sys/class/tty/tty0/active | awk -Ftty "
+        "'{print $2}'`");
+    const char *display = getenv("DISPLAY");
+    if (display != NULL && display[0] != '\0') {
+      // setcapslock will crash with core in Non-X environments, avoid it.
+      system("setcapslock off");
+    }
+    return EXIT_SUCCESS;
+  }
+
+  int status = EXIT_FAILURE;
   if (to_tty != 0) {
     snprintf(command, sizeof(command), "chvt %d", to_tty);
     status = system(command);

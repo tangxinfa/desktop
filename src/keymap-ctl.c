@@ -58,8 +58,6 @@ const char *keymaps_header() {
 #define KEYMAPS_ENABLED_PATTERN " *keycode +58 *= *Control"
 
 int main(int argc, char *argv[]) {
-  keymaps_start[0] = keymaps_stop[0] = keymaps_header();
-
   if (argc != 2 ||
       (strcmp(argv[1], "start") != 0 && strcmp(argv[1], "stop") != 0 &&
        strcmp(argv[1], "status") != 0)) {
@@ -75,6 +73,8 @@ int main(int argc, char *argv[]) {
     perror("setgid");
     return EXIT_FAILURE;
   }
+
+  keymaps_start[0] = keymaps_stop[0] = keymaps_header();
 
   if (strcmp(argv[1], "status") == 0) {
     int status = system("dumpkeys -k | grep -E '" KEYMAPS_ENABLED_PATTERN

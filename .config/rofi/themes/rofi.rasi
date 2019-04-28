@@ -94,6 +94,6 @@
 
 #sidebar {
     padding: 0;
-    width: 6em;
+    width: 5em;
     border: 0;
 }

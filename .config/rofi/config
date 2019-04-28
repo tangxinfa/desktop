@@ -1,5 +1,5 @@
 ! "Enabled modi" Set from: Commandline
-rofi.modi:                           drun,run,:~/bin/rofi-ydcv,window
+rofi.modi:                           drun,run,window
 ! "Window width" Set from: Commandline
 rofi.width:                          30
 ! "Number of lines" Set from: Default
@@ -85,7 +85,7 @@ rofi.tokenize:                       false
 ! "Fake transparency *DEPRECATED*" Set from: Default
 ! rofi.fake-transparency:              false
 ! "DPI" Set from: Default
-rofi.dpi:                              0
+rofi.dpi:                              false
 ! "Threads to use for string matching" Set from: Default
 ! rofi.threads:                        0
 ! "Scrollbar width *DEPRECATED*" Set from: Default
@@ -167,7 +167,7 @@ rofi.kb-secondary-paste:             Control+y
 ! "Use alternate accept command." Set from: Default
 ! rofi.kb-accept-alt:                  Shift+Return
 ! "Delete entry from history" Set from: Default
-! rofi.kb-delete-entry:                Shift+Delete
+rofi.kb-delete-entry:                  Shift+Delete,Alt+k
 ! "Switch to the next mode." Set from: Default
 ! rofi.kb-mode-next:                   Shift+Right,Control+Tab
 ! "Switch to the previous mode." Set from: Default

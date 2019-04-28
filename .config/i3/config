@@ -74,7 +74,7 @@ bindsym Control+$mod+p exec ~/bin/rofi-power-menu
 ##  depends: yaourt -S rofi
 bindsym $mod+r exec --no-startup-id "killall rofi; rofi -p '' -show run"
 bindsym $mod+d exec --no-startup-id "killall rofi; rofi -p '' -show drun"
-bindsym $mod+t exec --no-startup-id "killall rofi; rofi -p '' -show "
+bindsym $mod+t exec --no-startup-id "killall rofi; rofi -p '' -show  -modi :~/bin/rofi-ydcv -no-sidebar-mode -lines 14"
 bindsym $mod+w exec --no-startup-id "killall rofi; rofi -p '' -show window"
 
 # change focus
@@ -324,3 +324,4 @@ exec --no-startup-id compton -cCGb\
      --detect-client-leader
 exec --no-startup-id ~/bin/desktop-on-open
 exec --no-startup-id ~/bin/on-at-`~/bin/at-place`
+exec_always --no-startup-id setcapslock off

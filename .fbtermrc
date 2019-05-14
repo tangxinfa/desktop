@@ -28,10 +28,10 @@ history-lines=1000
 # run 'iconv --list' to get available encodings.
 text-encodings=
 
-# cursor shape: 0 = underline, 1 = block, 2 = vertical
+# cursor shape: 0 = underline, 1 = block
 # cursor flash interval in milliseconds, 0 means disable flashing
-cursor-shape=2
-cursor-interval=500
+cursor-shape=0
+cursor-interval=200
 
 # additional ascii chars considered as part of a word while auto-selecting text, except ' ', 0-9, a-z, A-Z
 word-chars=._-

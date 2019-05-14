@@ -1,7 +1,5 @@
 .PHONY: all build install
 
-EMACS_LISP_DIR=$(shell emacs --batch --eval '(message "%s" (car load-path))' 2>&1)
-
 build: ${CURDIR}/bin/keymap-ctl ${CURDIR}/bin/xkeysnail-ctl ${CURDIR}/bin/tty-ctl ${CURDIR}/bin/file-open
 
 install: build
@@ -12,7 +10,6 @@ install: build
 	sudo chown root:root ${CURDIR}/bin/file-open && sudo chmod gu+s ${CURDIR}/bin/file-open
 	@echo "Install by create symbol links ..."
 	-cp -rs ${CURDIR}/{bin,.config,.xinitrc,.xprofile,.fbtermrc,.launcher} ~/
-	-sudo cp -rs ${CURDIR}/lisp/* ${EMACS_LISP_DIR}/
 
 $(CURDIR)/bin/keymap-ctl: $(CURDIR)/src/keymap-ctl.c
 	gcc -g -O0 ${CURDIR}/src/keymap-ctl.c -lm -o ${CURDIR}/bin/keymap-ctl

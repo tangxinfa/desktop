@@ -37,7 +37,7 @@ define_keymap(re.compile("Firefox"), {
         K("b"): {
             K("u"): [K("F5")]
         },
-    }
+    },
 }, "Firefox")
 
 # Keybindings for Chrome
@@ -76,7 +76,7 @@ define_keymap(re.compile("keepassxc"), {
             K("n"): [K("C-b"), K("Super-Minus")],
             K("p"): [K("C-c"), K("Super-Minus")],
         },
-        K("C-o"): [K("C-U"), K("Super-Minus")],
+        K("C-o"): [K("C-Shift-u"), K("Super-Minus")],
     }
 }, "keepassxc")
 
@@ -168,5 +168,7 @@ define_keymap(lambda wm_class: wm_class not in ("Emacs", "URxvt", "Rofi", "Gnome
             # C-x r l (List bookmarks)
             K("l"): K("C-Shift-o"),
         },
+        #C-x b (Search tabs, only firefox support)
+        K("b"): [K("C-l"), K("Shift-key_5")],
     }
 }, "Emacs-like keys")

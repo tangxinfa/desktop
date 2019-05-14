@@ -3,4 +3,4 @@
 # fcitx-fbterm may hang, fix by limit it's cpu usage and automatically quit.
 ulimit -St 2
 ulimit -c 0
-timeout 300 fcitx-fbterm "$@"
+exec timeout 300 fcitx-fbterm "$@" >/dev/null 2>&1

@@ -300,7 +300,7 @@ exec --no-startup-id udiskie -t &
 exec --no-startup-id xautolock -time 10 -locker $auto-lock
 exec --no-startup-id sleep 10 && dropbox start
 exec --no-startup-id seafile-applet
-exec --no-startup-id firefox
+exec --no-startup-id dex /usr/share/applications/firefox.desktop
 exec --no-startup-id pidof emacs || i3-msg workspace $workspace2
 exec --no-startup-id pidof emacs || emacs
 exec --no-startup-id ~/bin/battery-monitor

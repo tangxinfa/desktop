@@ -39,7 +39,7 @@ void get_file_extension(const char* file, char* extension, int extension_size) {
 
 const char* get_console_program(const char* extension) {
   if (strcasecmp(extension, "pdf") == 0) {
-    return "fbpdf-reader";
+    return "`which fbpdf-reader || which fbpdf2`";
   }
   if (strcasecmp(extension, "jpg") == 0 || strcasecmp(extension, "jpeg") == 0 ||
       strcasecmp(extension, "ppm") == 0 || strcasecmp(extension, "tiff") == 0 ||

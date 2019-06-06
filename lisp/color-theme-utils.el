@@ -25,25 +25,25 @@
 ;;; Code:
 
 
-;; Support hook after theme load and unload.
-(defvar after-load-theme-hook nil
-  "Hook run after a color theme is loaded using `load-theme'.")
-(defadvice load-theme (after run-after-load-theme-hook activate)
-  "Run `after-load-theme-hook'."
-  (run-hooks 'after-load-theme-hook))
+;; Support hook after theme enable and disable.
+(defvar after-enable-theme-hook nil
+  "Hook run after a color theme is enabled using `enable-theme'.")
+(defadvice enable-theme (after run-after-enable-theme-hook activate)
+  "Run `after-enable-theme-hook'."
+  (run-hooks 'after-enable-theme-hook))
 (defvar after-disable-theme-hook nil
   "Hook run after a color theme is disabled using `disable-theme'.")
 (defadvice disable-theme (after run-after-disable-theme-hook activate)
   "Run `after-disable-theme-hook'."
   (run-hooks 'after-disable-theme-hook))
 
-;; Disable any loaded themes before enabling a new theme.
-(defadvice load-theme (before disable-before-load)
-  "Disable any loaded themes before enabling a new theme.
+;; Disable any enabled themes before enabling a new theme.
+(defadvice enable-theme (before disable-before-enable)
+  "Disable any enabled themes before enabling a new theme.
 This prevents overlapping themes; something I would rarely want."
   (dolist (theme custom-enabled-themes)
     (disable-theme theme)))
-(ad-activate 'load-theme)
+(ad-activate 'enable-theme)
 
 ;; Export color theme definitions into files.
 (defvar color-theme-utils-xresources-file "~/.Xresources"
@@ -301,7 +301,7 @@ Emacs.Error.foreground:                %s\n"
   (color-theme-utils-rasi-save)
   (call-process-shell-command "i3-msg exec ~/bin/desktop-on-change"))
 
-(add-hook 'after-load-theme-hook #'color-theme-utils-export)
+(add-hook 'after-enable-theme-hook #'color-theme-utils-export)
 
 (provide 'color-theme-utils)
 ;;; color-theme-utils.el ends here

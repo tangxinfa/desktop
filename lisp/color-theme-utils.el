@@ -28,30 +28,35 @@
 ;; Support hook after theme enable and disable.
 (defvar after-enable-theme-hook nil
   "Hook run after a color theme is enabled using `enable-theme'.")
-(defadvice enable-theme (after run-after-enable-theme-hook activate)
-  "Run `after-enable-theme-hook'."
-  (run-hooks 'after-enable-theme-hook))
+(defun ad-enable-theme-run-after-hooks (theme)
+  "Run `after-enable-theme-hook' after enable THEME."
+  (unless (eq theme 'user)
+    (run-hooks 'after-enable-theme-hook)))
+(advice-add 'enable-theme :after #'ad-enable-theme-run-after-hooks)
 (defvar after-disable-theme-hook nil
   "Hook run after a color theme is disabled using `disable-theme'.")
-(defadvice disable-theme (after run-after-disable-theme-hook activate)
-  "Run `after-disable-theme-hook'."
-  (run-hooks 'after-disable-theme-hook))
+(defun ad-disable-theme-run-after-hooks (theme)
+  "Run `after-disable-theme-hook' after disable THEME."
+  (unless (eq theme 'user)
+    (run-hooks 'after-disable-theme-hook)))
+(advice-add 'disable-theme :after #'ad-disable-theme-run-after-hooks)
 
 ;; Disable any enabled themes before enabling a new theme.
-(defadvice enable-theme (before disable-before-enable)
-  "Disable any enabled themes before enabling a new theme.
+(defun ad-enable-theme-disable-all-enabled-themes (theme)
+  "Disable any enabled themes before enabling a new THEME.
 This prevents overlapping themes; something I would rarely want."
-  (dolist (theme custom-enabled-themes)
-    (disable-theme theme)))
-(ad-activate 'enable-theme)
+  (unless (eq theme 'user)
+    (mapcar #'disable-theme custom-enabled-themes)))
+(advice-add 'enable-theme :before #'ad-enable-theme-disable-all-enabled-themes)
 
 ;; Export color theme definitions into files.
 (defvar color-theme-utils-xresources-file "~/.Xresources"
-  "Xresources file to save emacs color theme definitions.")
+  "Xresources file to save Emacs color theme definitions.")
 (defvar color-theme-utils-rasi-file "~/.emacs.d/.rasi"
-  "Rasi file to save emacs color theme definitions.")
+  "Rasi file to save Emacs color theme definitions.")
 
 (defun color-theme-utils-xresources-save ()
+  "Export Emacs color theme to Xresources file."
   (let ((comments "! Generate by color-theme-utils.el"))
     (with-temp-buffer
       (insert-file-contents color-theme-utils-xresources-file)
@@ -176,6 +181,7 @@ Emacs.Error.foreground:                %s\n"
       (write-file color-theme-utils-xresources-file))))
 
 (defun color-theme-utils-rasi-save ()
+  "Export Emacs color theme to rasi file."
   (with-temp-file color-theme-utils-rasi-file
     (insert (format "* {\n\
     emacs-default-background:              %s;\n\

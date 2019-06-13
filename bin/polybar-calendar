@@ -16,7 +16,7 @@ for i in 1 2
 do
     WINDOW=$(xdotool search --class chinese-calendar | sort | head -1)
     if [ -z "$WINDOW" ]; then
-        dex /usr/share/applications/chinese-calendar.desktop
+        gtk-launch chinese-calendar
         sleep 1
     else
         xdotool click --repeat 2 --window $WINDOW 1

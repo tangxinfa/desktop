@@ -19,6 +19,15 @@ if [ -z "$XKEYSNAIL_MONITOR_LOCKED" ]; then
   exit $?
 fi
 
+release_modifier_keys() {
+    # xorg - How to force release of a keyboard modifiers - Unix & Linux Stack Exchange
+    # https://unix.stackexchange.com/questions/60007/how-to-force-release-of-a-keyboard-modifiers
+    if [ -z "$DISPLAY" ]; then
+        export DISPLAY=:0
+    fi
+    grep '^#define' /usr/include/X11/keysymdef.h | sed -r 's/^#define XK_(\S*?).*$/\1/;' | grep -E '_(L|R|Level.*)$' | xargs xdotool keyup >/dev/null 2>&1
+}
+
 while [ true ]; do
   if [ "$(~/bin/tty-ctl graphic)" = "$(~/bin/tty-ctl active)" ]; then
     # Startup xkeysnail instantly after switch to X desktop may freeze desktop,
@@ -33,8 +42,10 @@ while [ true ]; do
         echo -e "$(date)\tStart xkeysnail" >>${DEBUG}
         ~/bin/xkeysnail-ctl start
       fi
+      release_modifier_keys
     fi
   else
+    release_modifier_keys
     if ~/bin/xkeysnail-ctl status >/dev/null 2>&1; then
       echo -e "$(date)\tStop xkeysnail" >>${DEBUG}
       ~/bin/xkeysnail-ctl stop

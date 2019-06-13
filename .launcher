@@ -4,9 +4,9 @@ nohup ~/bin/xkeysnail-monitor >/dev/null 2>&1 &
 # Startup battery monitor.
 nohup ~/bin/battery-monitor >/dev/null 2>&1 &
 
-# Prompt to select desktop.
-if [ -z $LAUNCHER ]; then
-    LAUNCHER=$(dialog --clear --title "Select Desktop:" --no-lines\
+# Desktop launcher.
+if [ -z "$LAUNCHER" ]; then
+    LAUNCHER=$(dialog --clear --title "Desktop Launcher" \
                       --no-cancel \
                       --menu "" 10 79 8 \
                       emacs "GNU Emacs Editor"\
@@ -20,8 +20,9 @@ fi
 # Startup fcitx
 fcitx -d >/dev/null 2>&1
 
-case $LAUNCHER in
+case "$LAUNCHER" in
     emacs)
+        export FBTERM=1
         exec fbterm -i ${HOME}/bin/fcitx-fbterm-launcher -- emacs -nw --no-x-resources
         ;;
     i3)
@@ -32,13 +33,17 @@ case $LAUNCHER in
         QT_QPA_PLATFORM=wayland XDG_SESSION_TYPE=wayland exec dbus-run-session gnome-session
         ;;
     fbterm)
-        WALLPAPER="`cat ~/.config/variety/wallpaper/wallpaper.jpg.txt 2>/dev/null`"
-        echo -ne "\e[?25l" # hide cursor
-        fbv -ciuker "$WALLPAPER" << EOF
+        if [ "$FBTERM_WALLPAPER" = "1" ]; then
+            FBTERM_WALLPAPER="`cat ~/.config/variety/wallpaper/wallpaper.jpg.txt 2>/dev/null`"
+        fi
+        if [ -f "$FBTERM_WALLPAPER" ]; then
+            echo -ne "\e[?25l" # hide cursor
+            fbv -ciuker "$FBTERM_WALLPAPER" << EOF
 q
 EOF
-        shift
-        export FBTERM_BACKGROUND_IMAGE=1
+            shift
+        fi
+        export FBTERM=1
         exec fbterm -i ${HOME}/bin/fcitx-fbterm-launcher
         ;;
     *)

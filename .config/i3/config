@@ -55,8 +55,8 @@ focus_follows_mouse no
 bindsym $mod+Return exec gnome-terminal --role=gnome-terminal-popup --hide-menubar
 
 # move to other tty
-bindsym Control+Mod1+o exec --no-startup-id ~/bin/tty-ctl other
-bindsym Control+$mod+o exec --no-startup-id ~/bin/tty-ctl other
+bindsym Control+Mod1+o exec --no-startup-id ~/bin/tty-ctl other || ~/bin/i3-ctl other
+bindsym Control+$mod+o exec --no-startup-id ~/bin/tty-ctl other || ~/bin/i3-ctl other
 
 # kill focused window
 bindsym $mod+Shift+q kill
@@ -259,6 +259,7 @@ assign [class="vlc"] $workspace5
 assign [class="Totem"] $workspace5
 assign [class="Steam"] $workspace5
 assign [title="Steam"] $workspace5
+assign [class="hl_linux"] $workspace5
 for_window [class="keepassxc" window_type="normal"] floating enable, move scratchpad, resize set 640 360
 for_window [class="Zeal" window_type="normal"] floating enable, resize set 800 600, move absolute position center, focus
 for_window [class="Conky"] floating enable, resize set 400 400, move absolute position center
@@ -300,15 +301,15 @@ exec --no-startup-id udiskie -t &
 exec --no-startup-id xautolock -time 10 -locker $auto-lock
 exec --no-startup-id sleep 10 && dropbox start
 exec --no-startup-id seafile-applet
-exec --no-startup-id dex /usr/share/applications/firefox.desktop
+exec --no-startup-id gtk-launch firefox
 exec --no-startup-id pidof emacs || i3-msg workspace $workspace2
 exec --no-startup-id pidof emacs || emacs
 exec --no-startup-id ~/bin/battery-monitor
-exec --no-startup-id dex /etc/xdg/autostart/geoclue-demo-agent.desktop
-exec --no-startup-id dex /usr/share/applications/redshift-gtk.desktop
-exec --no-startup-id dex /etc/xdg/autostart/solaar.desktop
-exec --no-startup-id dex /usr/share/applications/variety.desktop
-exec --no-startup-id dex /usr/share/applications/org.keepassxc.KeePassXC.desktop
+exec --no-startup-id gtk-launch geoclue-demo-agent
+exec --no-startup-id gtk-launch redshift-gtk
+exec --no-startup-id gtk-launch solaar
+exec --no-startup-id gtk-launch variety
+exec --no-startup-id gtk-launch org.keepassxc.KeePassXC
 exec_always --no-startup-id polybar-msg cmd restart || polybar top
 exec --no-startup-id compton -cCGb\
      -t 0\

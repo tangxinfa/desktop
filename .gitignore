@@ -36,3 +36,6 @@ bin/file-open
 
 # Secrets
 .config/polybar/weather.env
+
+# Temporaries
+.dialogrc

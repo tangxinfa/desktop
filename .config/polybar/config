@@ -55,6 +55,7 @@ font-0 = "YaHei Consolas Hybrid:size=12:antialias=true:style=Normal;0"
 font-1 = "Material Icons:size=13:style=Regular;1"
 font-2 = "FontAwesome:size=12;1"
 font-3 = "Weather Icons:size=12;1"
+font-4 = "FontAwesome:size=15;1"
 
 modules-left = power i3 xwindow
 modules-center =
@@ -147,10 +148,12 @@ label-focused-foreground = ${colors.foreground-alt}
 label-focused-background = ${colors.background-alt}
 label-focused-underline = ${colors.underline}
 label-focused-padding = 2
+label-focused-font = 5
 
 ; unfocused = Inactive workspace on any monitor
 label-unfocused = %icon%
 label-unfocused-padding = 2
+label-unfocused-font = 5
 
 ; visible = Active workspace on unfocused monitor
 label-visible = %icon%
@@ -251,7 +254,7 @@ label = "%{A5:~/bin/polybar-calendar on:}%{A4:~/bin/polybar-calendar off:}%da
 [module/pulseaudio]
 type = internal/pulseaudio
 
-format-volume = %{A1:dex /usr/share/applications/mate-volume-control.desktop:}<ramp-volume><label-volume>%{A}
+format-volume = %{A1:gtk-launch mate-volume-control:}<ramp-volume><label-volume>%{A}
 label-volume = %percentage%
 ramp-volume-0 = 
 ramp-volume-1 = 
@@ -260,7 +263,7 @@ ramp-volume-3 = 
 ramp-volume-4 = 
 ramp-volume-4-foreground = ${colors.warning}
 
-format-muted = %{A1:dex /usr/share/applications/mate-volume-control.desktop:}<label-muted>%{A}
+format-muted = %{A1:gtk-launch mate-volume-control:}<label-muted>%{A}
 label-muted = 
 
 
@@ -323,13 +326,14 @@ type = custom/script
 format = <label>
 exec = echo "%{A5:~/bin/rofi-power-menu:}   %{A}"
 click-left = ~/bin/desktop-lock
+label-font = 5
 
 
 [module/weather]
 type = custom/script
 exec = ~/bin/polybar-weather
 interval = 1800
-click-left = dex /usr/share/applications/org.gnome.Weather.Application.desktop
+click-left = dex /usr/share/applications/org.gnome.Weather.desktop
 
 
 [settings]

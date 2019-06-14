@@ -78,14 +78,21 @@ int main(int argc, char *argv[]) {
 
   char command[255] = {'\0'};
   if (strcmp(argv[1], "capslockoff") == 0) {
+    // Non-X environments.
     system(
         "setleds -caps < /dev/tty`cat /sys/class/tty/tty0/active | awk -Ftty "
         "'{print $2}'`");
     const char *display = getenv("DISPLAY");
-    if (display != NULL && display[0] != '\0') {
-      // setcapslock will crash with core in Non-X environments, avoid it.
-      system("setcapslock off");
+    if (display == NULL || display[0] == '\0') {
+      display = ":0";
     }
+    // X environments.
+    // setcapslock will crash with core in Non-X environments(no DISPLAY environment variable),
+    // setcapslock sometimes not work, must use xdotool to let Caps_Lock key up first.
+    snprintf(command, sizeof(command),
+             "export DISPLAY=%s; xdotool key Caps_Lock; setcapslock off",
+             display);
+    system(command);
     return EXIT_SUCCESS;
   }
 

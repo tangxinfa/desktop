@@ -56,6 +56,7 @@ font-1 = "Material Icons:size=13:style=Regular;1"
 font-2 = "FontAwesome:size=12;1"
 font-3 = "Weather Icons:size=12;1"
 font-4 = "FontAwesome:size=15;1"
+font-5 = "file\-icons:size=12;1"
 
 modules-left = power i3 xwindow
 modules-center =
@@ -159,12 +160,13 @@ label-unfocused-font = 5
 label-visible = %icon%
 label-visible-background = ${colors.background}
 label-visible-padding = 2
+label-visible-font = 5
 
 ; urgent = Workspace with urgency hint set
 label-urgent = %icon%
-;label-urgent-underline = ${colors.alert}
 label-urgent-foreground = ${colors.warning}
 label-urgent-padding = 2
+label-urgent-font = 5
 
 ; Separator in between workspaces
 ; label-separator = |
@@ -208,12 +210,13 @@ type = internal/memory
 interval = 2
 label = %percentage_used%
 format = %{A1:gnome-system-monitor -p&:}<ramp-used><label>%{A}
-ramp-used-0 = 
-ramp-used-1 = 
-ramp-used-2 = 
-ramp-used-3 = 
-ramp-used-4 = 
+ramp-used-0 = 
+ramp-used-1 = 
+ramp-used-2 = 
+ramp-used-3 = 
+ramp-used-4 = 
 ramp-used-4-foreground = ${colors.warning}
+ramp-used-font = 6
 
 [module/network-wireless]
 type = internal/network
@@ -221,8 +224,8 @@ interface = wlp4s0
 interval = 3.0
 
 format-connected = %{A5:gnome-system-monitor -r&:}%{A1:nmcli d wifi >/dev/null 2>&1 && networkmanager_dmenu:}%{A6:~/bin/network-editor wifi &:}<ramp-signal><label-connected>%{A}%{A}%{A}
-label-connected = %essid%
-format-disconnected = %{A5:gnome-system-monitor -r&:}%{A1:nmcli d wifi >/dev/null 2>&1 && networkmanager_dmenu:}%{A}%{A}
+label-connected =
+format-disconnected = %{A5:gnome-system-monitor -r&:}%{A1:nmcli d wifi >/dev/null 2>&1 && networkmanager_dmenu:}%{A}%{A}
 
 ramp-signal-0 = 
 ramp-signal-0-foreground = ${colors.alert}
@@ -237,7 +240,7 @@ interface = enp0s25
 interval = 3.0
 
 format-connected = %{A5:gnome-system-monitor -r&:}%{A1:~/bin/network-menu &:}%{A6:~/bin/network-editor ethernet &:}<label-connected>%{A}%{A}%{A}
-label-connected = %local_ip%
+label-connected =
 format-disconnected = %{A5:gnome-system-monitor -r&:}%{A1:~/bin/network-menu &:}%{A6:~/bin/network-editor ethernet &:}%{A}%{A}%{A}
 
 [module/date]
@@ -260,11 +263,12 @@ ramp-volume-0 = 
 ramp-volume-1 = 
 ramp-volume-2 = 
 ramp-volume-3 = 
+ramp-volume-3-foreground = ${colors.warning}
 ramp-volume-4 = 
 ramp-volume-4-foreground = ${colors.warning}
 
 format-muted = %{A1:gtk-launch mate-volume-control:}<label-muted>%{A}
-label-muted = 
+label-muted = 0
 
 
 [module/battery]

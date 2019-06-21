@@ -1,0 +1,27 @@
+#!/bin/bash
+
+case "${1}" in
+    other)
+        ACTIVE_WORKSPACE_NUMBER=$(i3-msg -t get_workspaces | jq '.[] | select(.focused==true).name' | cut -d"\"" -f2 | cut -d":" -f 1)
+        PREFER_WORKSPACE_NUMBER=2
+        PREFER_WORKSPACE_NAME=$(i3-msg -t get_workspaces | jq ".[] | select(.num==${PREFER_WORKSPACE_NUMBER}).name" | cut -d"\"" -f2)
+        if [ "${ACTIVE_WORKSPACE_NUMBER}" != "${PREFER_WORKSPACE_NUMBER}" ]; then
+            i3-msg workspace "${PREFER_WORKSPACE_NAME}" >/dev/null
+        else
+            i3-msg workspace back_and_forth >/dev/null
+        fi
+        ;;
+    active)
+        ACTIVE_WORKSPACE_NUMBER=$(i3-msg -t get_workspaces | jq '.[] | select(.focused==true).name' | cut -d"\"" -f2 | cut -d":" -f 1)
+        echo ${ACTIVE_WORKSPACE_NUMBER}
+        ;;
+    [1-9])
+        PREFER_WORKSPACE_NUMBER=${1}
+        PREFER_WORKSPACE_NAME=$(i3-msg -t get_workspaces | jq ".[] | select(.num==${PREFER_WORKSPACE_NUMBER}).name" | cut -d"\"" -f2)
+        i3-msg workspace "${PREFER_WORKSPACE_NAME}" >/dev/null
+        ;;
+    *)
+        echo -e "usage: ${0} <other|active|N>\n\n\tother\tSwitch to prefer workspace.\n\tactive\tActive workspace number.\n\tN     \tSwitch to workspace N, N must in [1-9]." >/dev/stderr;
+        exit 1
+        ;;
+esac

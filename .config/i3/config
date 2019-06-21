@@ -236,13 +236,14 @@ popup_during_fullscreen leave_fullscreen
 # workspace arrangement
 assign [class="Emacs"] $workspace2
 assign [class="Gnome-terminal" window_role="gnome-terminal-window.*"] $workspace1
-for_window [class="Gnome-terminal" window_role="gnome-terminal-popup.*"] floating enable
+for_window [class="Gnome-terminal" window_role="gnome-terminal-popup.*"] floating enable, move absolute position center, resize set 800 600
 for_window [class="Xdialog"] floating enable
 assign [class="Firefox"] $workspace1
 assign [class="Chromium"] $workspace1
 assign [class="Google-chrome"] $workspace1
 assign [class="Dia"] $workspace3
 assign [class="Pencil"] $workspace3
+assign [class="Gimp.*"] $workspace3
 assign [class="XMind"] $workspace3
 assign [class="libreoffice"] $workspace3
 for_window [title="LibreOffice"] move container to workspace $workspace3
@@ -267,6 +268,7 @@ for_window [class="Wine" title="迅雷网络" window_type="dialog"] floating dis
 assign [class="Seafile*"] $workspace1
 for_window [class="Solaar"] floating enable
 for_window [class="chinese-calendar"] floating enable
+for_window [class="Gnome-system-monitor"] floating enable, resize set 800 600, move absolute position center
 
 #i3-gaps
 gaps inner 10

@@ -37,7 +37,8 @@ define_keymap(re.compile("Firefox"), {
         K("b"): {
             K("u"): [K("F5")]
         },
-        K("C-c"): [launch(["left-click"])],
+        K("C-c"): [K("C-enter")],
+        K("enter"): [launch(["left-click"])],
     },
 }, "Firefox")
 

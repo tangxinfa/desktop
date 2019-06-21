@@ -10,7 +10,7 @@ if [ -n "$EMACS_PID" ]; then
         fi
     fi
     if [ "${REASON}" != "exit" ]; then
-        emacsclient --eval '(progn (ignore-errors (desktop-save desktop-dirname)) (save-buffers-kill-terminal))'
+        emacsclient --eval '(save-buffers-kill-terminal)'
     fi
 fi
 exit 0

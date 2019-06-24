@@ -1,21 +1,22 @@
+# Desktop launcher.
+if [ -z "$LAUNCHER" ]; then
+    LAUNCHER=$(dialog --clear --title "Desktop Launcher" \
+                      --no-cancel \
+                      --menu "" 11 79 8 \
+                      emacs "GNU Emacs Editor"\
+                      i3 "Tiling Window Manager"\
+                      gnome3 "GNOME 3 Desktop"\
+                      fbterm "Frame Buffer Terminal"\
+                      mlterm "Multi Lingual Terminal"\
+                      2>&1 >/dev/tty)
+    clear
+fi
+
 # Startup xkeysnail-monitor
 nohup ~/bin/xkeysnail-monitor >/dev/null 2>&1 &
 
 # Startup battery monitor.
 nohup ~/bin/battery-monitor >/dev/null 2>&1 &
-
-# Desktop launcher.
-if [ -z "$LAUNCHER" ]; then
-    LAUNCHER=$(dialog --clear --title "Desktop Launcher" \
-                      --no-cancel \
-                      --menu "" 10 79 8 \
-                      emacs "GNU Emacs Editor"\
-                      i3 "Tiling Window Manager"\
-                      gnome3 "GNOME 3 Desktop"\
-                      fbterm "Frame Buffer Terminal"\
-                      2>&1 >/dev/tty)
-    clear
-fi
 
 # Startup fcitx
 fcitx -d >/dev/null 2>&1
@@ -45,6 +46,9 @@ EOF
         fi
         export FBTERM=1
         exec fbterm -i ${HOME}/bin/fcitx-fbterm-launcher
+        ;;
+    mlterm)
+        exec mlterm-fb
         ;;
     *)
         ;;

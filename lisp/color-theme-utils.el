@@ -62,9 +62,12 @@ This prevents overlapping themes; something I would rarely want."
 
 (defun color-theme-utils-xresources-save ()
   "Export Emacs color theme to Xresources file."
-  (let ((comments "! Generate by color-theme-utils.el"))
+  (let ((comments "! Generate by color-theme-utils.el")
+        (old-contents ""))
     (with-temp-buffer
-      (insert-file-contents color-theme-utils-xresources-file)
+      (ignore-errors
+        (insert-file-contents color-theme-utils-xresources-file)
+        (setq old-contents (buffer-string)))
       (flush-lines "^ *Emacs\\.")
       (flush-lines comments)
       (goto-char (point-max))
@@ -183,8 +186,10 @@ Emacs.Error.foreground:                %s\n"
                       (apply #'color-rgb-to-hex (nconc (color-name-to-rgb
                                                         (or (face-foreground 'error nil t) (face-foreground 'default nil t)))
                                                        (list 2)))))
-      (let (message-log-max)
-        (write-file color-theme-utils-xresources-file)))))
+      (unless (string= old-contents (buffer-string))
+        (let (message-log-max)
+          (write-file color-theme-utils-xresources-file)
+          t)))))
 
 (defun color-theme-utils-basic-color-name (color)
   "Basic color name of COLOR."
@@ -196,163 +201,175 @@ Emacs.Error.foreground:                %s\n"
 
 (defun color-theme-utils-dialog-save ()
   "Export Emacs color theme to dialog file."
-  (with-temp-buffer
-    (insert-file-contents color-theme-utils-dialog-file-template)
-    (let ((emacs-colors
-           `((emacs-default-background . ,(color-theme-utils-basic-color-name
-                                           (apply #'color-rgb-to-hex
-                                                  (nconc (color-name-to-rgb
-                                                          (face-background 'default nil t))
-                                                         (list 2)))))
-             (emacs-default-foreground . ,(color-theme-utils-basic-color-name
-                                           (apply #'color-rgb-to-hex
-                                                  (nconc (color-name-to-rgb
-                                                          (face-foreground 'default nil t))
-                                                         (list 2)))))
-             (emacs-modeline-background . ,(color-theme-utils-basic-color-name
-                                            (apply #'color-rgb-to-hex
-                                                   (nconc (color-name-to-rgb
-                                                           (or (face-background 'mode-line nil t) (face-background 'default  nil t)))
-                                                          (list 2)))))
-             (emacs-modeline-foreground . ,(color-theme-utils-basic-color-name
-                                            (apply #'color-rgb-to-hex
-                                                   (nconc (color-name-to-rgb
-                                                           (or (face-foreground 'mode-line nil t) (face-foreground 'default nil t)))
-                                                          (list 2)))))
-             (emacs-modeline-underline . ,(color-theme-utils-basic-color-name
-                                           (apply #'color-rgb-to-hex
-                                                  (nconc (color-name-to-rgb
-                                                          (or (face-attribute-specified-or (face-attribute 'mode-line :underline nil t) nil) (face-background 'default nil t)))
-                                                         (list 2)))))
-             (emacs-modeline-highlight-foreground . ,(color-theme-utils-basic-color-name
-                                                      (apply #'color-rgb-to-hex
-                                                             (nconc (color-name-to-rgb
-                                                                     (or (face-foreground 'mode-line-highlight nil t) (face-foreground 'default nil t)))
-                                                                    (list 2)))))
-             (emacs-modeline-inactive-background . ,(color-theme-utils-basic-color-name
-                                                     (apply #'color-rgb-to-hex
-                                                            (nconc (color-name-to-rgb
-                                                                    (or (face-background 'mode-line-inactive nil t) (face-background 'default  nil t)))
-                                                                   (list 2)))))
-             (emacs-modeline-inactive-foreground . ,(color-theme-utils-basic-color-name
-                                                     (apply #'color-rgb-to-hex
-                                                            (nconc (color-name-to-rgb
-                                                                    (or (face-foreground 'mode-line-inactive nil t) (face-foreground 'default nil t)))
-                                                                   (list 2)))))
-             (emacs-modeline-inactive-underline . ,(color-theme-utils-basic-color-name
-                                                    (apply #'color-rgb-to-hex
-                                                           (nconc (color-name-to-rgb
-                                                                   (or (face-attribute-specified-or (face-attribute 'mode-line-inactive :underline nil t) nil) (face-background 'default nil t)))
-                                                                  (list 2)))))
-             (emacs-region-background . ,(color-theme-utils-basic-color-name
-                                          (apply #'color-rgb-to-hex
-                                                 (nconc (color-name-to-rgb
-                                                         (or (face-background 'region nil t) (face-background 'default  nil t)))
-                                                        (list 2)))))
-             (emacs-region-foreground . ,(color-theme-utils-basic-color-name
-                                          (apply #'color-rgb-to-hex
-                                                 (nconc (color-name-to-rgb
-                                                         (or (face-foreground 'region nil t) (face-foreground 'default  nil t)))
-                                                        (list 2)))))
-             (emacs-fringe-background . ,(color-theme-utils-basic-color-name
-                                          (apply #'color-rgb-to-hex
-                                                 (nconc (color-name-to-rgb
-                                                         (or (face-background 'fringe nil t) (face-background 'default  nil t)))
-                                                        (list 2)))))
-             (emacs-fringe-foreground . ,(color-theme-utils-basic-color-name
-                                          (apply #'color-rgb-to-hex
-                                                 (nconc (color-name-to-rgb
-                                                         (or (face-foreground 'fringe nil t) (face-foreground 'default  nil t)))
-                                                        (list 2)))))
-             (emacs-vertical-border-background . ,(color-theme-utils-basic-color-name
-                                                   (apply #'color-rgb-to-hex
-                                                          (nconc (color-name-to-rgb
-                                                                  (or (face-background 'vertical-border nil t) (face-background 'default  nil t)))
-                                                                 (list 2)))))
-             (emacs-vertical-border-foreground . ,(color-theme-utils-basic-color-name
-                                                   (apply #'color-rgb-to-hex
-                                                          (nconc (color-name-to-rgb
-                                                                  (or (face-foreground 'vertical-border nil t) (face-foreground 'default  nil t)))
-                                                                 (list 2)))))
-             (emacs-menu-background . ,(color-theme-utils-basic-color-name
-                                        (apply #'color-rgb-to-hex
-                                               (nconc (color-name-to-rgb
-                                                       (or (face-background 'menu nil t) (face-background 'default  nil t)))
-                                                      (list 2)))))
-             (emacs-menu-foreground . ,(color-theme-utils-basic-color-name
-                                        (apply #'color-rgb-to-hex
-                                               (nconc (color-name-to-rgb
-                                                       (or (face-foreground 'menu nil t) (face-foreground 'default  nil t)))
-                                                      (list 2)))))
-             (emacs-tooltip-background . ,(color-theme-utils-basic-color-name
-                                           (apply #'color-rgb-to-hex
-                                                  (nconc (color-name-to-rgb
-                                                          (or (face-background 'tooltip nil t) (face-background 'default  nil t)))
-                                                         (list 2)))))
-             (emacs-tooltip-foreground . ,(color-theme-utils-basic-color-name
-                                           (apply #'color-rgb-to-hex
-                                                  (nconc (color-name-to-rgb
-                                                          (or (face-foreground 'tooltip nil t) (face-foreground 'default  nil t)))
-                                                         (list 2)))))
-             (emacs-isearch-background . ,(color-theme-utils-basic-color-name
-                                           (apply #'color-rgb-to-hex
-                                                  (nconc (color-name-to-rgb
-                                                          (or (face-background 'isearch nil t) (face-background 'default  nil t)))
-                                                         (list 2)))))
-             (emacs-isearch-foreground . ,(color-theme-utils-basic-color-name
-                                           (apply #'color-rgb-to-hex
-                                                  (nconc (color-name-to-rgb
-                                                          (or (face-foreground 'isearch nil t) (face-foreground 'default  nil t)))
-                                                         (list 2)))))
-             (emacs-highlight-background . ,(color-theme-utils-basic-color-name
+  (let ((old-contents ""))
+    (with-temp-buffer
+      (ignore-errors
+        (insert-file-contents color-theme-utils-dialog-file)
+        (setq old-contents (buffer-string))))
+    (with-temp-buffer
+      (insert-file-contents color-theme-utils-dialog-file-template)
+      (let ((emacs-colors
+             `((emacs-default-background . ,(color-theme-utils-basic-color-name
                                              (apply #'color-rgb-to-hex
                                                     (nconc (color-name-to-rgb
-                                                            (or (face-background 'highlight nil t) (face-background 'default nil t)))
+                                                            (face-background 'default nil t))
                                                            (list 2)))))
-             (emacs-shadow-foreground . ,(color-theme-utils-basic-color-name
+               (emacs-default-foreground . ,(color-theme-utils-basic-color-name
+                                             (apply #'color-rgb-to-hex
+                                                    (nconc (color-name-to-rgb
+                                                            (face-foreground 'default nil t))
+                                                           (list 2)))))
+               (emacs-modeline-background . ,(color-theme-utils-basic-color-name
+                                              (apply #'color-rgb-to-hex
+                                                     (nconc (color-name-to-rgb
+                                                             (or (face-background 'mode-line nil t) (face-background 'default  nil t)))
+                                                            (list 2)))))
+               (emacs-modeline-foreground . ,(color-theme-utils-basic-color-name
+                                              (apply #'color-rgb-to-hex
+                                                     (nconc (color-name-to-rgb
+                                                             (or (face-foreground 'mode-line nil t) (face-foreground 'default nil t)))
+                                                            (list 2)))))
+               (emacs-modeline-underline . ,(color-theme-utils-basic-color-name
+                                             (apply #'color-rgb-to-hex
+                                                    (nconc (color-name-to-rgb
+                                                            (or (face-attribute-specified-or (face-attribute 'mode-line :underline nil t) nil) (face-background 'default nil t)))
+                                                           (list 2)))))
+               (emacs-modeline-highlight-foreground . ,(color-theme-utils-basic-color-name
+                                                        (apply #'color-rgb-to-hex
+                                                               (nconc (color-name-to-rgb
+                                                                       (or (face-foreground 'mode-line-highlight nil t) (face-foreground 'default nil t)))
+                                                                      (list 2)))))
+               (emacs-modeline-inactive-background . ,(color-theme-utils-basic-color-name
+                                                       (apply #'color-rgb-to-hex
+                                                              (nconc (color-name-to-rgb
+                                                                      (or (face-background 'mode-line-inactive nil t) (face-background 'default  nil t)))
+                                                                     (list 2)))))
+               (emacs-modeline-inactive-foreground . ,(color-theme-utils-basic-color-name
+                                                       (apply #'color-rgb-to-hex
+                                                              (nconc (color-name-to-rgb
+                                                                      (or (face-foreground 'mode-line-inactive nil t) (face-foreground 'default nil t)))
+                                                                     (list 2)))))
+               (emacs-modeline-inactive-underline . ,(color-theme-utils-basic-color-name
+                                                      (apply #'color-rgb-to-hex
+                                                             (nconc (color-name-to-rgb
+                                                                     (or (face-attribute-specified-or (face-attribute 'mode-line-inactive :underline nil t) nil) (face-background 'default nil t)))
+                                                                    (list 2)))))
+               (emacs-region-background . ,(color-theme-utils-basic-color-name
+                                            (apply #'color-rgb-to-hex
+                                                   (nconc (color-name-to-rgb
+                                                           (or (face-background 'region nil t) (face-background 'default  nil t)))
+                                                          (list 2)))))
+               (emacs-region-foreground . ,(color-theme-utils-basic-color-name
+                                            (apply #'color-rgb-to-hex
+                                                   (nconc (color-name-to-rgb
+                                                           (or (face-foreground 'region nil t) (face-foreground 'default  nil t)))
+                                                          (list 2)))))
+               (emacs-fringe-background . ,(color-theme-utils-basic-color-name
+                                            (apply #'color-rgb-to-hex
+                                                   (nconc (color-name-to-rgb
+                                                           (or (face-background 'fringe nil t) (face-background 'default  nil t)))
+                                                          (list 2)))))
+               (emacs-fringe-foreground . ,(color-theme-utils-basic-color-name
+                                            (apply #'color-rgb-to-hex
+                                                   (nconc (color-name-to-rgb
+                                                           (or (face-foreground 'fringe nil t) (face-foreground 'default  nil t)))
+                                                          (list 2)))))
+               (emacs-vertical-border-background . ,(color-theme-utils-basic-color-name
+                                                     (apply #'color-rgb-to-hex
+                                                            (nconc (color-name-to-rgb
+                                                                    (or (face-background 'vertical-border nil t) (face-background 'default  nil t)))
+                                                                   (list 2)))))
+               (emacs-vertical-border-foreground . ,(color-theme-utils-basic-color-name
+                                                     (apply #'color-rgb-to-hex
+                                                            (nconc (color-name-to-rgb
+                                                                    (or (face-foreground 'vertical-border nil t) (face-foreground 'default  nil t)))
+                                                                   (list 2)))))
+               (emacs-menu-background . ,(color-theme-utils-basic-color-name
                                           (apply #'color-rgb-to-hex
                                                  (nconc (color-name-to-rgb
-                                                         (or (face-foreground 'shadow nil t) (face-foreground 'default nil t)))
+                                                         (or (face-background 'menu nil t) (face-background 'default  nil t)))
                                                         (list 2)))))
-             (emacs-cursor-background . ,(color-theme-utils-basic-color-name
+               (emacs-menu-foreground . ,(color-theme-utils-basic-color-name
                                           (apply #'color-rgb-to-hex
                                                  (nconc (color-name-to-rgb
-                                                         (or (face-background 'cursor nil t) (face-background 'default nil t)))
+                                                         (or (face-foreground 'menu nil t) (face-foreground 'default  nil t)))
                                                         (list 2)))))
-             (emacs-cursor-foreground . ,(color-theme-utils-basic-color-name
-                                          (apply #'color-rgb-to-hex
-                                                 (nconc (color-name-to-rgb
-                                                         (or (face-foreground 'cursor nil t) (face-background 'default nil t)))
-                                                        (list 2)))))
-             (emacs-keyword-foreground . ,(color-theme-utils-basic-color-name
+               (emacs-tooltip-background . ,(color-theme-utils-basic-color-name
+                                             (apply #'color-rgb-to-hex
+                                                    (nconc (color-name-to-rgb
+                                                            (or (face-background 'tooltip nil t) (face-background 'default  nil t)))
+                                                           (list 2)))))
+               (emacs-tooltip-foreground . ,(color-theme-utils-basic-color-name
+                                             (apply #'color-rgb-to-hex
+                                                    (nconc (color-name-to-rgb
+                                                            (or (face-foreground 'tooltip nil t) (face-foreground 'default  nil t)))
+                                                           (list 2)))))
+               (emacs-isearch-background . ,(color-theme-utils-basic-color-name
+                                             (apply #'color-rgb-to-hex
+                                                    (nconc (color-name-to-rgb
+                                                            (or (face-background 'isearch nil t) (face-background 'default  nil t)))
+                                                           (list 2)))))
+               (emacs-isearch-foreground . ,(color-theme-utils-basic-color-name
+                                             (apply #'color-rgb-to-hex
+                                                    (nconc (color-name-to-rgb
+                                                            (or (face-foreground 'isearch nil t) (face-foreground 'default  nil t)))
+                                                           (list 2)))))
+               (emacs-highlight-background . ,(color-theme-utils-basic-color-name
+                                               (apply #'color-rgb-to-hex
+                                                      (nconc (color-name-to-rgb
+                                                              (or (face-background 'highlight nil t) (face-background 'default nil t)))
+                                                             (list 2)))))
+               (emacs-shadow-foreground . ,(color-theme-utils-basic-color-name
+                                            (apply #'color-rgb-to-hex
+                                                   (nconc (color-name-to-rgb
+                                                           (or (face-foreground 'shadow nil t) (face-foreground 'default nil t)))
+                                                          (list 2)))))
+               (emacs-cursor-background . ,(color-theme-utils-basic-color-name
+                                            (apply #'color-rgb-to-hex
+                                                   (nconc (color-name-to-rgb
+                                                           (or (face-background 'cursor nil t) (face-background 'default nil t)))
+                                                          (list 2)))))
+               (emacs-cursor-foreground . ,(color-theme-utils-basic-color-name
+                                            (apply #'color-rgb-to-hex
+                                                   (nconc (color-name-to-rgb
+                                                           (or (face-foreground 'cursor nil t) (face-background 'default nil t)))
+                                                          (list 2)))))
+               (emacs-keyword-foreground . ,(color-theme-utils-basic-color-name
+                                             (apply #'color-rgb-to-hex
+                                                    (nconc (color-name-to-rgb
+                                                            (or (face-foreground 'font-lock-keyword-face nil t) (face-foreground 'default nil t)))
+                                                           (list 2)))))
+               (emacs-warning-foreground . ,(color-theme-utils-basic-color-name
+                                             (apply #'color-rgb-to-hex
+                                                    (nconc (color-name-to-rgb
+                                                            (or (face-foreground 'warning nil t) (face-foreground 'default nil t)))
+                                                           (list 2)))))
+               (emacs-error-foreground . ,(color-theme-utils-basic-color-name
                                            (apply #'color-rgb-to-hex
                                                   (nconc (color-name-to-rgb
-                                                          (or (face-foreground 'font-lock-keyword-face nil t) (face-foreground 'default nil t)))
-                                                         (list 2)))))
-             (emacs-warning-foreground . ,(color-theme-utils-basic-color-name
-                                           (apply #'color-rgb-to-hex
-                                                  (nconc (color-name-to-rgb
-                                                          (or (face-foreground 'warning nil t) (face-foreground 'default nil t)))
-                                                         (list 2)))))
-             (emacs-error-foreground . ,(color-theme-utils-basic-color-name
-                                         (apply #'color-rgb-to-hex
-                                                (nconc (color-name-to-rgb
-                                                        (or (face-foreground 'error nil t) (face-foreground 'default nil t)))
-                                                       (list 2))))))))
-          (mapc (lambda (element)
-                    (let ((key (car element))
-                          (value (cdr element)))
-                      (goto-char (point-min))
-                      (while (re-search-forward (format "{%s}" key) nil t)
-                        (replace-match value))))
-                  emacs-colors)
+                                                          (or (face-foreground 'error nil t) (face-foreground 'default nil t)))
+                                                         (list 2))))))))
+        (mapc (lambda (element)
+                (let ((key (car element))
+                      (value (cdr element)))
+                  (goto-char (point-min))
+                  (while (re-search-forward (format "{%s}" key) nil t)
+                    (replace-match value))))
+              emacs-colors)
+        (unless (string= old-contents (buffer-string))
           (let (message-log-max)
-            (write-file color-theme-utils-dialog-file)))))
+            (write-file color-theme-utils-dialog-file)
+            t))))))
 
 (defun color-theme-utils-rasi-save ()
   "Export Emacs color theme to rasi file."
-  (with-temp-file color-theme-utils-rasi-file
-    (insert (format "* {\n\
+  (let ((old-contents ""))
+    (with-temp-buffer
+      (ignore-errors
+        (insert-file-contents color-theme-utils-rasi-file)
+        (setq old-contents (buffer-string))))
+    (with-temp-buffer
+      (insert (format "* {\n\
     emacs-default-background:              %s;\n\
     emacs-default-foreground:              %s;\n\
     emacs-modeline-background:             %s;\n\
@@ -382,103 +399,112 @@ Emacs.Error.foreground:                %s\n"
     emacs-warning-foreground:              %s;\n\
     emacs-error-foreground:                %s;\n\
 }"
-                    (apply #'color-rgb-to-hex (nconc (color-name-to-rgb
-                                                      (face-background 'default nil t))
-                                                     (list 2)))
-                    (apply #'color-rgb-to-hex (nconc (color-name-to-rgb
-                                                      (face-foreground 'default nil t))
-                                                     (list 2)))
-                    (apply #'color-rgb-to-hex (nconc (color-name-to-rgb
-                                                      (or (face-background 'mode-line nil t) (face-background 'default  nil t)))
-                                                     (list 2)))
-                    (apply #'color-rgb-to-hex (nconc (color-name-to-rgb
-                                                      (or (face-foreground 'mode-line nil t) (face-foreground 'default nil t)))
-                                                     (list 2)))
-                    (apply #'color-rgb-to-hex (nconc (color-name-to-rgb
-                                                      (or (face-attribute-specified-or (face-attribute 'mode-line :underline nil t) nil) (face-background 'default nil t)))
-                                                     (list 2)))
-                    (apply #'color-rgb-to-hex (nconc (color-name-to-rgb
-                                                      (or (face-foreground 'mode-line-highlight nil t) (face-foreground 'default nil t)))
-                                                     (list 2)))
-                    (apply #'color-rgb-to-hex (nconc (color-name-to-rgb
-                                                      (or (face-background 'mode-line-inactive nil t) (face-background 'default  nil t)))
-                                                     (list 2)))
-                    (apply #'color-rgb-to-hex (nconc (color-name-to-rgb
-                                                      (or (face-foreground 'mode-line-inactive nil t) (face-foreground 'default nil t)))
-                                                     (list 2)))
-                    (apply #'color-rgb-to-hex (nconc (color-name-to-rgb
-                                                      (or (face-attribute-specified-or (face-attribute 'mode-line-inactive :underline nil t) nil) (face-background 'default nil t)))
-                                                     (list 2)))
-                    (apply #'color-rgb-to-hex (nconc (color-name-to-rgb
-                                                      (or (face-background 'region nil t) (face-background 'default  nil t)))
-                                                     (list 2)))
-                    (apply #'color-rgb-to-hex (nconc (color-name-to-rgb
-                                                      (or (face-foreground 'region nil t) (face-foreground 'default  nil t)))
-                                                     (list 2)))
-                    (apply #'color-rgb-to-hex (nconc (color-name-to-rgb
-                                                      (or (face-background 'fringe nil t) (face-background 'default  nil t)))
-                                                     (list 2)))
-                    (apply #'color-rgb-to-hex (nconc (color-name-to-rgb
-                                                      (or (face-foreground 'fringe nil t) (face-foreground 'default  nil t)))
-                                                     (list 2)))
-                    (apply #'color-rgb-to-hex (nconc (color-name-to-rgb
-                                                      (or (face-background 'vertical-border nil t) (face-background 'default  nil t)))
-                                                     (list 2)))
-                    (apply #'color-rgb-to-hex (nconc (color-name-to-rgb
-                                                      (or (face-foreground 'vertical-border nil t) (face-foreground 'default  nil t)))
-                                                     (list 2)))
-                    (apply #'color-rgb-to-hex (nconc (color-name-to-rgb
-                                                      (or (face-background 'menu nil t) (face-background 'default  nil t)))
-                                                     (list 2)))
-                    (apply #'color-rgb-to-hex (nconc (color-name-to-rgb
-                                                      (or (face-foreground 'menu nil t) (face-foreground 'default  nil t)))
-                                                     (list 2)))
-                    (apply #'color-rgb-to-hex (nconc (color-name-to-rgb
-                                                      (or (face-background 'tooltip nil t) (face-background 'default  nil t)))
-                                                     (list 2)))
-                    (apply #'color-rgb-to-hex (nconc (color-name-to-rgb
-                                                      (or (face-foreground 'tooltip nil t) (face-foreground 'default  nil t)))
-                                                     (list 2)))
-                    (apply #'color-rgb-to-hex (nconc (color-name-to-rgb
-                                                      (or (face-background 'isearch nil t) (face-background 'default  nil t)))
-                                                     (list 2)))
-                    (apply #'color-rgb-to-hex (nconc (color-name-to-rgb
-                                                      (or (face-foreground 'isearch nil t) (face-foreground 'default  nil t)))
-                                                     (list 2)))
-                    (apply #'color-rgb-to-hex (nconc (color-name-to-rgb
-                                                      (or (face-background 'highlight nil t) (face-background 'default nil t)))
-                                                     (list 2)))
-                    (apply #'color-rgb-to-hex (nconc (color-name-to-rgb
-                                                      (or (face-foreground 'shadow nil t) (face-foreground 'default nil t)))
-                                                     (list 2)))
-                    (apply #'color-rgb-to-hex (nconc (color-name-to-rgb
-                                                      (or (face-background 'cursor nil t) (face-background 'default nil t)))
-                                                     (list 2)))
-                    (apply #'color-rgb-to-hex (nconc (color-name-to-rgb
-                                                      (or (face-foreground 'cursor nil t) (face-background 'default nil t)))
-                                                     (list 2)))
-                    (apply #'color-rgb-to-hex (nconc (color-name-to-rgb
-                                                      (or (face-foreground 'font-lock-keyword-face nil t) (face-foreground 'default nil t)))
-                                                     (list 2)))
-                    (apply #'color-rgb-to-hex (nconc (color-name-to-rgb
-                                                      (or (face-foreground 'warning nil t) (face-foreground 'default nil t)))
-                                                     (list 2)))
-                    (apply #'color-rgb-to-hex (nconc (color-name-to-rgb
-                                                      (or (face-foreground 'error nil t) (face-foreground 'default nil t)))
-                                                     (list 2)))))))
+                      (apply #'color-rgb-to-hex (nconc (color-name-to-rgb
+                                                        (face-background 'default nil t))
+                                                       (list 2)))
+                      (apply #'color-rgb-to-hex (nconc (color-name-to-rgb
+                                                        (face-foreground 'default nil t))
+                                                       (list 2)))
+                      (apply #'color-rgb-to-hex (nconc (color-name-to-rgb
+                                                        (or (face-background 'mode-line nil t) (face-background 'default  nil t)))
+                                                       (list 2)))
+                      (apply #'color-rgb-to-hex (nconc (color-name-to-rgb
+                                                        (or (face-foreground 'mode-line nil t) (face-foreground 'default nil t)))
+                                                       (list 2)))
+                      (apply #'color-rgb-to-hex (nconc (color-name-to-rgb
+                                                        (or (face-attribute-specified-or (face-attribute 'mode-line :underline nil t) nil) (face-background 'default nil t)))
+                                                       (list 2)))
+                      (apply #'color-rgb-to-hex (nconc (color-name-to-rgb
+                                                        (or (face-foreground 'mode-line-highlight nil t) (face-foreground 'default nil t)))
+                                                       (list 2)))
+                      (apply #'color-rgb-to-hex (nconc (color-name-to-rgb
+                                                        (or (face-background 'mode-line-inactive nil t) (face-background 'default  nil t)))
+                                                       (list 2)))
+                      (apply #'color-rgb-to-hex (nconc (color-name-to-rgb
+                                                        (or (face-foreground 'mode-line-inactive nil t) (face-foreground 'default nil t)))
+                                                       (list 2)))
+                      (apply #'color-rgb-to-hex (nconc (color-name-to-rgb
+                                                        (or (face-attribute-specified-or (face-attribute 'mode-line-inactive :underline nil t) nil) (face-background 'default nil t)))
+                                                       (list 2)))
+                      (apply #'color-rgb-to-hex (nconc (color-name-to-rgb
+                                                        (or (face-background 'region nil t) (face-background 'default  nil t)))
+                                                       (list 2)))
+                      (apply #'color-rgb-to-hex (nconc (color-name-to-rgb
+                                                        (or (face-foreground 'region nil t) (face-foreground 'default  nil t)))
+                                                       (list 2)))
+                      (apply #'color-rgb-to-hex (nconc (color-name-to-rgb
+                                                        (or (face-background 'fringe nil t) (face-background 'default  nil t)))
+                                                       (list 2)))
+                      (apply #'color-rgb-to-hex (nconc (color-name-to-rgb
+                                                        (or (face-foreground 'fringe nil t) (face-foreground 'default  nil t)))
+                                                       (list 2)))
+                      (apply #'color-rgb-to-hex (nconc (color-name-to-rgb
+                                                        (or (face-background 'vertical-border nil t) (face-background 'default  nil t)))
+                                                       (list 2)))
+                      (apply #'color-rgb-to-hex (nconc (color-name-to-rgb
+                                                        (or (face-foreground 'vertical-border nil t) (face-foreground 'default  nil t)))
+                                                       (list 2)))
+                      (apply #'color-rgb-to-hex (nconc (color-name-to-rgb
+                                                        (or (face-background 'menu nil t) (face-background 'default  nil t)))
+                                                       (list 2)))
+                      (apply #'color-rgb-to-hex (nconc (color-name-to-rgb
+                                                        (or (face-foreground 'menu nil t) (face-foreground 'default  nil t)))
+                                                       (list 2)))
+                      (apply #'color-rgb-to-hex (nconc (color-name-to-rgb
+                                                        (or (face-background 'tooltip nil t) (face-background 'default  nil t)))
+                                                       (list 2)))
+                      (apply #'color-rgb-to-hex (nconc (color-name-to-rgb
+                                                        (or (face-foreground 'tooltip nil t) (face-foreground 'default  nil t)))
+                                                       (list 2)))
+                      (apply #'color-rgb-to-hex (nconc (color-name-to-rgb
+                                                        (or (face-background 'isearch nil t) (face-background 'default  nil t)))
+                                                       (list 2)))
+                      (apply #'color-rgb-to-hex (nconc (color-name-to-rgb
+                                                        (or (face-foreground 'isearch nil t) (face-foreground 'default  nil t)))
+                                                       (list 2)))
+                      (apply #'color-rgb-to-hex (nconc (color-name-to-rgb
+                                                        (or (face-background 'highlight nil t) (face-background 'default nil t)))
+                                                       (list 2)))
+                      (apply #'color-rgb-to-hex (nconc (color-name-to-rgb
+                                                        (or (face-foreground 'shadow nil t) (face-foreground 'default nil t)))
+                                                       (list 2)))
+                      (apply #'color-rgb-to-hex (nconc (color-name-to-rgb
+                                                        (or (face-background 'cursor nil t) (face-background 'default nil t)))
+                                                       (list 2)))
+                      (apply #'color-rgb-to-hex (nconc (color-name-to-rgb
+                                                        (or (face-foreground 'cursor nil t) (face-background 'default nil t)))
+                                                       (list 2)))
+                      (apply #'color-rgb-to-hex (nconc (color-name-to-rgb
+                                                        (or (face-foreground 'font-lock-keyword-face nil t) (face-foreground 'default nil t)))
+                                                       (list 2)))
+                      (apply #'color-rgb-to-hex (nconc (color-name-to-rgb
+                                                        (or (face-foreground 'warning nil t) (face-foreground 'default nil t)))
+                                                       (list 2)))
+                      (apply #'color-rgb-to-hex (nconc (color-name-to-rgb
+                                                        (or (face-foreground 'error nil t) (face-foreground 'default nil t)))
+                                                       (list 2)))))
+      (unless (string= old-contents (buffer-string))
+        (let (message-log-max)
+          (write-file color-theme-utils-rasi-file)
+          t)))))
 
 (defun color-theme-utils-export ()
   "Export currrent color theme definitions."
   (interactive)
   (message "Emacs color theme %s"
            (propertize (symbol-name (or (car custom-enabled-themes) 'default-theme)) 'face 'font-lock-variable-name-face))
-  (unless (eq nil color-theme-utils-xresources-file)
-    (color-theme-utils-xresources-save))
-  (unless (eq nil color-theme-utils-rasi-file)
-    (color-theme-utils-rasi-save))
-  (unless (eq nil color-theme-utils-dialog-file)
-    (color-theme-utils-dialog-save))
-  (call-process-shell-command "i3-msg exec ~/bin/desktop-on-change"))
+  (let ((changed nil))
+    (unless (eq nil color-theme-utils-xresources-file)
+      (if (color-theme-utils-xresources-save)
+          (setq changed t)))
+    (unless (eq nil color-theme-utils-rasi-file)
+      (if (color-theme-utils-rasi-save)
+          (setq changed t)))
+    (unless (eq nil color-theme-utils-dialog-file)
+      (if (color-theme-utils-dialog-save)
+          (setq changed t)))
+    (if changed
+        (call-process-shell-command "i3-msg exec ~/bin/desktop-on-change"))))
 
 (add-hook 'after-enable-theme-hook #'color-theme-utils-export)
 

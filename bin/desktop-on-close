@@ -6,6 +6,7 @@ EMACS_PID="`pidof emacs | awk '{print $1}'`"
 if [ -n "$EMACS_PID" ]; then
     if grep -a -E "XDG_VTNR=${XDG_VTNR}[^\\d]" /proc/${EMACS_PID}/environ >/dev/null 2>&1; then
         if [ "${REASON}" = "exit" ]; then
+            # Emacs is running on desktop, must gracefully exit with desktop.
             REASON=kill
         fi
     fi

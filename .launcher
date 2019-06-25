@@ -1,15 +1,15 @@
 # Desktop launcher.
 if [ -z "$LAUNCHER" ]; then
-    LAUNCHER=$(dialog --clear --title "Desktop Launcher" \
-                      --no-cancel \
-                      --menu "" 11 79 8 \
-                      emacs "GNU Emacs Editor"\
-                      i3 "Tiling Window Manager"\
-                      gnome3 "GNOME 3 Desktop"\
-                      fbterm "Frame Buffer Terminal"\
-                      mlterm "Multi Lingual Terminal"\
-                      2>&1 >/dev/tty)
-    clear
+  LAUNCHER=$(dialog --clear --title "Desktop Launcher" \
+    --no-cancel \
+    --menu "" 11 79 8 \
+    emacs "GNU Emacs Editor" \
+    i3 "Tiling Window Manager" \
+    gnome3 "GNOME 3 Desktop" \
+    fbterm "Frame Buffer Terminal" \
+    mlterm "Multi Lingual Terminal" \
+    2>&1 >/dev/tty)
+  clear
 fi
 
 # Startup xkeysnail-monitor
@@ -22,34 +22,43 @@ nohup ~/bin/battery-monitor >/dev/null 2>&1 &
 fcitx -d >/dev/null 2>&1
 
 case "$LAUNCHER" in
-    emacs)
-        export FBTERM=1
-        exec fbterm -i ${HOME}/bin/fcitx-fbterm-launcher -- emacs -nw --no-x-resources
-        ;;
-    i3)
-        XDG_CURRENT_DESKTOP=i3 exec startx
-        ;;
-    gnome3)
-        source ~/.xprofile
-        QT_QPA_PLATFORM=wayland XDG_SESSION_TYPE=wayland exec dbus-run-session gnome-session
-        ;;
-    fbterm)
-        if [ "$FBTERM_WALLPAPER" = "1" ]; then
-            FBTERM_WALLPAPER="`cat ~/.config/variety/wallpaper/wallpaper.jpg.txt 2>/dev/null`"
-        fi
-        if [ -f "$FBTERM_WALLPAPER" ]; then
-            echo -ne "\e[?25l" # hide cursor
-            fbv -ciuker "$FBTERM_WALLPAPER" << EOF
+  emacs)
+    if [ -x "$(which fbterm)" ]; then
+      export FBTERM="$(fbterm --version | awk '{printf $NF}')"
+      TERMINAL="fbterm -i ${HOME}/bin/fcitx-fbterm-launcher --"
+    else
+      # Use HHKB keyboard if present, even if hot-plug is not support by mlterm.
+      export KBD_INPUT_NUM=$(ls -la /dev/input/by-id | grep HHKB | awk -F'/event' '{printf $NF}')
+      TERMINAL="mlterm-fb --term=xterm-24bits -e"
+    fi
+    exec $TERMINAL emacs -nw --no-x-resources
+    ;;
+  i3)
+    XDG_CURRENT_DESKTOP=i3 exec startx
+    ;;
+  gnome3)
+    source ~/.xprofile
+    QT_QPA_PLATFORM=wayland XDG_SESSION_TYPE=wayland exec dbus-run-session gnome-session
+    ;;
+  fbterm)
+    if [ "$FBTERM_WALLPAPER" = "1" ]; then
+      FBTERM_WALLPAPER="$(cat ~/.config/variety/wallpaper/wallpaper.jpg.txt 2>/dev/null)"
+    fi
+    if [ -f "$FBTERM_WALLPAPER" ]; then
+      echo -ne "\e[?25l" # hide cursor
+      fbv -ciuker "$FBTERM_WALLPAPER" <<EOF
 q
 EOF
-            shift
-        fi
-        export FBTERM=1
-        exec fbterm -i ${HOME}/bin/fcitx-fbterm-launcher
-        ;;
-    mlterm)
-        exec mlterm-fb
-        ;;
-    *)
-        ;;
+      shift
+    fi
+    export FBTERM="$(fbterm --version | awk '{printf $NF}')"
+    exec fbterm -i ${HOME}/bin/fcitx-fbterm-launcher
+    ;;
+  mlterm)
+    # Use HHKB keyboard if present, even if hot-plug is not support by mlterm.
+    export KBD_INPUT_NUM=$(ls -la /dev/input/by-id | grep HHKB | awk -F'/event' '{printf $NF}')
+    exec mlterm-fb --term=xterm-24bits
+    ;;
+  *) ;;
+
 esac

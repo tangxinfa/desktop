@@ -181,6 +181,7 @@ scrollbar_mode = none
 # hide_underline = false
 
 # underline_offset = 0
+underline_offset = 2
 
 # baseline_offset = 0
 
@@ -195,6 +196,7 @@ scrollbar_mode = none
 # gamma = 100
 
 # line_space = 0
+line_space = 1
 
 # letter_space = 0
 
@@ -223,11 +225,11 @@ tabsize = 4
 
 # (none,mod1,mod2,mod3,mod4,meta,alt,super,hyper)
 # mod_meta_key = none
-mod_meta_key=alt
+mod_meta_key = alt
 
 # (none,esc,8bit)
 # mod_meta_mode = none
-mod_meta_mode=esc
+mod_meta_mode = esc
 
 # (none,sound,visual,sound|visual)
 # bel_mode = sound

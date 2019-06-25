@@ -26,21 +26,36 @@
 (require 'color)
 (require 'color-theme-approximate)
 
-;; Support hook after theme enable and disable.
+;; Support hook before/after theme enable and disable.
+(defvar before-enable-theme-hook nil
+  "Hook run before a color theme is enabled using `enable-theme'.")
 (defvar after-enable-theme-hook nil
   "Hook run after a color theme is enabled using `enable-theme'.")
-(defun ad-enable-theme-run-after-hooks (theme)
-  "Run `after-enable-theme-hook' after enable THEME."
-  (unless (eq theme 'user)
-    (run-hooks 'after-enable-theme-hook)))
-(advice-add 'enable-theme :after #'ad-enable-theme-run-after-hooks)
+(defun ad-enable-theme-run-hooks (orig-fun theme)
+  "Run `before-enable-theme-hook' and `after-enable-theme-hook' before/after enable THEME."
+  (let ((result nil))
+    (unless (eq theme 'user)
+      (run-hooks 'before-enable-theme-hook))
+    (setq result (funcall orig-fun theme))
+    (unless (eq theme 'user)
+      (run-hooks 'after-enable-theme-hook))
+    result))
+(advice-add 'enable-theme :around #'ad-enable-theme-run-hooks)
+
+(defvar before-disable-theme-hook nil
+  "Hook run before a color theme is disabled using `disable-theme'.")
 (defvar after-disable-theme-hook nil
   "Hook run after a color theme is disabled using `disable-theme'.")
-(defun ad-disable-theme-run-after-hooks (theme)
-  "Run `after-disable-theme-hook' after disable THEME."
-  (unless (eq theme 'user)
-    (run-hooks 'after-disable-theme-hook)))
-(advice-add 'disable-theme :after #'ad-disable-theme-run-after-hooks)
+(defun ad-disable-theme-run-hooks (orig-fun theme)
+  "Run `before-disable-theme-hook' `after-disable-theme-hook' before/after disable THEME."
+  (let ((result nil))
+    (unless (eq theme 'user)
+      (run-hooks 'before-disable-theme-hook))
+    (setq result (funcall orig-fun theme))
+    (unless (eq theme 'user)
+      (run-hooks 'after-disable-theme-hook))
+    result))
+(advice-add 'disable-theme :around #'ad-disable-theme-run-hooks)
 
 ;; Disable any enabled themes before enabling a new theme.
 (defun ad-enable-theme-disable-all-enabled-themes (theme)

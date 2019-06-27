@@ -7,17 +7,7 @@ else
 fi
 
 if [[ "${TEXT}" != "" ]]; then
-  if [ -n "$DISPLAY" ]; then
-    ID=${RANDOM}
-    TIMEOUT=30000
-    TITLE="有道翻译"
-    BODY="正在翻译 <u>${TEXT}</u> ..."
-    dunstify -r ${ID} -t ${TIMEOUT} -i youdao-dict "${TITLE}" "${BODY}"
-  fi
   ydcv -f "${TEXT}"
-  if [ -n "$DISPLAY" ]; then
-    dunstify -C ${ID}
-  fi
   exit 0
 fi
 

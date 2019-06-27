@@ -45,7 +45,7 @@ border-right-color = ${colors.background}
 border-color = ${colors.border}
 
 padding-left = 0
-padding-right = 2
+padding-right = 0
 
 module-margin-left = 1
 module-margin-right = 0
@@ -58,9 +58,9 @@ font-3 = "Weather Icons:size=12;1"
 font-4 = "FontAwesome:size=15;1"
 font-5 = "file\-icons:size=12;1"
 
-modules-left = power i3 xwindow
+modules-left = i3 xwindow
 modules-center =
-modules-right = xkeysnail dual-screen filesystem xbacklight pulseaudio memory cpu temperature battery lid-monitor network-wired network-wireless weather date
+modules-right = xkeysnail dual-screen filesystem xbacklight pulseaudio memory cpu temperature battery lid-monitor network-wired network-wireless weather date power
 
 tray-position = center
 tray-padding = 0
@@ -245,7 +245,7 @@ format-disconnected = %{A5:gnome-system-monitor -r&:}%{A1:~/bin/network-menu &:}
 
 [module/date]
 type = internal/date
-interval = 5
+interval = 1
 
 date =
 date-alt = "%a %Y-%m-%d "
@@ -328,7 +328,7 @@ ramp-2-foreground = ${colors.warning}
 [module/power]
 type = custom/script
 format = <label>
-exec = echo "%{A5:~/bin/rofi-power-menu:}   %{A}"
+exec = echo "%{A5:~/bin/rofi-power-menu:}   %{A}"
 click-left = ~/bin/desktop-lock
 label-font = 5
 

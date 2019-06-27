@@ -74,7 +74,7 @@ bindsym Control+$mod+p exec ~/bin/rofi-power-menu
 ##  depends: yaourt -S rofi
 bindsym $mod+r exec --no-startup-id "killall rofi; rofi -p '' -show run"
 bindsym $mod+d exec --no-startup-id "killall rofi; rofi -p '' -show drun"
-bindsym $mod+t exec --no-startup-id "killall rofi; rofi -p '' -show  -modi :~/bin/rofi-ydcv -no-sidebar-mode -lines 14"
+bindsym $mod+t exec --no-startup-id "killall rofi; rofi -p '' -show  -modi :~/bin/rofi-ydcv -no-sidebar-mode -lines 14 -theme-str '#element { padding: 0.1em; }'"
 bindsym $mod+w exec --no-startup-id "killall rofi; rofi -p '' -show window"
 
 # change focus

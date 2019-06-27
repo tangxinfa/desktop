@@ -30,6 +30,9 @@ define_keymap(re.compile("Firefox"), {
         K("r"): {
             K("b"): [K("C-Shift-o")]
         },
+        K("j"): {
+            K("r"): [K("C-h")]
+        },
         K("C-n"): K("C-TAB"),
         K("C-p"): K("C-Shift-TAB"),
         K("C-b"): K("M-left"),

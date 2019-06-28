@@ -85,7 +85,7 @@ cursor-scroll = ns-resize
 
 [module/xwindow]
 type = internal/xwindow
-label = %title:0:40:...%
+label =  %title:0:40:...%
 label-padding = 2
 
 [module/xkeysnail]

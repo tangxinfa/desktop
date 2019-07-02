@@ -75,6 +75,12 @@ This prevents overlapping themes; something I would rarely want."
 (defvar color-theme-utils-dialog-file-template "~/.dialogrc.template"
   "Dialog file template for generate dialog file.")
 
+(defun color-theme-utils--underline-face-color (face)
+  "Get underline color of FACE."
+  (let ((underline (face-attribute face :underline nil t)))
+    (when (listp underline)
+      (alist-get :color underline nil))))
+
 (defun color-theme-utils-xresources-save ()
   "Export Emacs color theme to Xresources file."
   (let ((comments "! Generate by color-theme-utils.el")
@@ -130,7 +136,7 @@ Emacs.Error.foreground:                %s\n"
                                                         (or (face-foreground 'mode-line nil t) (face-foreground 'default nil t)))
                                                        (list 2)))
                       (apply #'color-rgb-to-hex (nconc (color-name-to-rgb
-                                                        (or (face-attribute-specified-or (face-attribute 'mode-line :underline nil t) nil) (face-background 'default nil t)))
+                                                        (or (color-theme-utils--underline-face-color 'mode-line) (face-background 'default nil t)))
                                                        (list 2)))
                       (apply #'color-rgb-to-hex (nconc (color-name-to-rgb
                                                         (or (face-foreground 'mode-line-highlight nil t) (face-foreground 'default nil t)))
@@ -142,7 +148,7 @@ Emacs.Error.foreground:                %s\n"
                                                         (or (face-foreground 'mode-line-inactive nil t) (face-foreground 'default nil t)))
                                                        (list 2)))
                       (apply #'color-rgb-to-hex (nconc (color-name-to-rgb
-                                                        (or (face-attribute-specified-or (face-attribute 'mode-line-inactive :underline nil t) nil) (face-background 'default nil t)))
+                                                        (or (color-theme-utils--underline-face-color 'mode-line-inactive) (face-background 'default nil t)))
                                                        (list 2)))
                       (apply #'color-rgb-to-hex (nconc (color-name-to-rgb
                                                         (or (face-background 'region nil t) (face-background 'default  nil t)))
@@ -203,7 +209,7 @@ Emacs.Error.foreground:                %s\n"
                                                        (list 2)))))
       (unless (string= old-contents (buffer-string))
         (let (message-log-max)
-          (write-file color-theme-utils-xresources-file)
+          (write-region (point-min) (point-max) color-theme-utils-xresources-file)
           t)))))
 
 (defun color-theme-utils-basic-color-name (color)
@@ -247,7 +253,7 @@ Emacs.Error.foreground:                %s\n"
                (emacs-modeline-underline . ,(color-theme-utils-basic-color-name
                                              (apply #'color-rgb-to-hex
                                                     (nconc (color-name-to-rgb
-                                                            (or (face-attribute-specified-or (face-attribute 'mode-line :underline nil t) nil) (face-background 'default nil t)))
+                                                            (or (color-theme-utils--underline-face-color 'mode-line) (face-background 'default nil t)))
                                                            (list 2)))))
                (emacs-modeline-highlight-foreground . ,(color-theme-utils-basic-color-name
                                                         (apply #'color-rgb-to-hex
@@ -267,7 +273,7 @@ Emacs.Error.foreground:                %s\n"
                (emacs-modeline-inactive-underline . ,(color-theme-utils-basic-color-name
                                                       (apply #'color-rgb-to-hex
                                                              (nconc (color-name-to-rgb
-                                                                     (or (face-attribute-specified-or (face-attribute 'mode-line-inactive :underline nil t) nil) (face-background 'default nil t)))
+                                                                     (or (color-theme-utils--underline-face-color 'mode-line-inactive) (face-background 'default nil t)))
                                                                     (list 2)))))
                (emacs-region-background . ,(color-theme-utils-basic-color-name
                                             (apply #'color-rgb-to-hex
@@ -373,7 +379,7 @@ Emacs.Error.foreground:                %s\n"
               emacs-colors)
         (unless (string= old-contents (buffer-string))
           (let (message-log-max)
-            (write-file color-theme-utils-dialog-file)
+            (write-region (point-min) (point-max) color-theme-utils-dialog-file)
             t))))))
 
 (defun color-theme-utils-rasi-save ()
@@ -427,7 +433,7 @@ Emacs.Error.foreground:                %s\n"
                                                         (or (face-foreground 'mode-line nil t) (face-foreground 'default nil t)))
                                                        (list 2)))
                       (apply #'color-rgb-to-hex (nconc (color-name-to-rgb
-                                                        (or (face-attribute-specified-or (face-attribute 'mode-line :underline nil t) nil) (face-background 'default nil t)))
+                                                        (or (color-theme-utils--underline-face-color 'mode-line) (face-background 'default nil t)))
                                                        (list 2)))
                       (apply #'color-rgb-to-hex (nconc (color-name-to-rgb
                                                         (or (face-foreground 'mode-line-highlight nil t) (face-foreground 'default nil t)))
@@ -439,7 +445,7 @@ Emacs.Error.foreground:                %s\n"
                                                         (or (face-foreground 'mode-line-inactive nil t) (face-foreground 'default nil t)))
                                                        (list 2)))
                       (apply #'color-rgb-to-hex (nconc (color-name-to-rgb
-                                                        (or (face-attribute-specified-or (face-attribute 'mode-line-inactive :underline nil t) nil) (face-background 'default nil t)))
+                                                        (or (color-theme-utils--underline-face-color 'mode-line-inactive) (face-background 'default nil t)))
                                                        (list 2)))
                       (apply #'color-rgb-to-hex (nconc (color-name-to-rgb
                                                         (or (face-background 'region nil t) (face-background 'default  nil t)))
@@ -500,7 +506,7 @@ Emacs.Error.foreground:                %s\n"
                                                        (list 2)))))
       (unless (string= old-contents (buffer-string))
         (let (message-log-max)
-          (write-file color-theme-utils-rasi-file)
+          (write-region (point-min) (point-max) color-theme-utils-rasi-file)
           t)))))
 
 (defun color-theme-utils-export ()

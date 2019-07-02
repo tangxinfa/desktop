@@ -15,8 +15,6 @@ set $manual-lock ~/bin/desktop-lock
 
 ipc-socket /tmp/i3-ipc.sock
 
-exec --no-startup-id ~/bin/dual-screen-detect
-
 set_from_resource $dual-screen-primary DualScreen.Primary HDMI-0
 set_from_resource $dual-screen-secondary DualScreen.Secondary HDMI-1
 
@@ -274,7 +272,7 @@ for_window [class="Gnome-system-monitor"] floating enable, resize set 800 600, m
 gaps inner 10
 gaps outer 0
 # fix graphics glitch
-smart_gaps on
+# smart_gaps on
 smart_borders on
 # border
 new_window none

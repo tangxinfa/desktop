@@ -9,7 +9,7 @@ install: build
 	sudo chown root:root ${CURDIR}/bin/tty-ctl && sudo chmod gu+s ${CURDIR}/bin/tty-ctl
 	sudo chown root:root ${CURDIR}/bin/file-open && sudo chmod gu+s ${CURDIR}/bin/file-open
 	@echo "Install by create symbol links ..."
-	-cp -rs ${CURDIR}/{bin,.config,.xinitrc,.xprofile,.fbtermrc,.launcher,.mlterm} ~/
+	-cp -rs ${CURDIR}/{bin,.config,.xinitrc,.nvidia-xinitrc,.xprofile,.fbtermrc,.launcher,.mlterm} ~/
 
 $(CURDIR)/bin/keymap-ctl: $(CURDIR)/src/keymap-ctl.c
 	gcc -g -O0 ${CURDIR}/src/keymap-ctl.c -lm -o ${CURDIR}/bin/keymap-ctl

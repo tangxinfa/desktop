@@ -30,19 +30,20 @@ alert = #bd2c40
 monitor = ${xrdb:DualScreen.Primary:HDMI-1}
 width = 100%
 height = 40
-;offset-x = 1%
-;offset-y = 1%
-;radius = 6.0
-;fixed-center = false
 
 background = ${colors.background}
 foreground = ${colors.foreground}
 
 line-size = 3
-border-bottom-size = 1
-border-left-color = ${colors.background}
-border-right-color = ${colors.background}
-border-color = ${colors.border}
+
+;; Float bar.
+border-size = 10
+border-bottom-size = 0
+radius = 6.0
+
+;; Fixed bar.
+;border-bottom-size = 1
+;border-bottom-color = ${colors.border}
 
 padding-left = 0
 padding-right = 0
@@ -70,7 +71,6 @@ tray-maxsize = 26
 ;tray-transparent = true
 ;tray-background = ${root.background}
 ;tray-scale = 1.0
-tray-offset-x = -240
 
 ;wm-restack = i3
 ;override-redirect = true
@@ -252,7 +252,7 @@ date-alt = "%a %Y-%m-%d "
 time = "%a %H:%M"
 time-alt = "%H:%M:%S"
 format = <label>
-label = "%{A5:~/bin/polybar-calendar on:}%{A4:~/bin/polybar-calendar off:}%date%%time%%{A}%{A}%{A}"
+label = "%{A5:~/bin/polybar-calendar on:}%{A4:~/bin/polybar-calendar off:}%{A1:~/bin/polybar-calendar on:}%date%%time%%{A}%{A}%{A}"
 
 [module/pulseaudio]
 type = internal/pulseaudio
@@ -328,7 +328,7 @@ ramp-2-foreground = ${colors.warning}
 [module/power]
 type = custom/script
 format = <label>
-exec = echo "%{A5:~/bin/rofi-power-menu:}   %{A}"
+exec = echo "%{A5:~/bin/rofi-power-menu:}      %{A}"
 click-left = ~/bin/desktop-lock
 label-font = 5
 

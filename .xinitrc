@@ -1,6 +1,15 @@
+if [ -d /etc/X11/xinit/xinitrc.d ] ; then
+ for f in /etc/X11/xinit/xinitrc.d/?*.sh ; do
+  [ -x "$f" ] && . "$f"
+ done
+ unset f
+fi
+
 [ -f /etc/xprofile ] && source /etc/xprofile
 [ -f ~/.xprofile ] && source ~/.xprofile
 
 if [ "graphical.target" != "`systemctl get-default`" ]; then
-    exec dbus-launch i3
+    ~/bin/dual-screen-detect
+    eval $(dbus-launch --sh-syntax)
+    exec i3
 fi

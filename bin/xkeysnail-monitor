@@ -7,7 +7,7 @@ fi
 SCRIPT_NAME=$(basename "${SCRIPT_PATH}")
 LOCK_FILE="/tmp/${SCRIPT_NAME}.lock"
 DEBUG="/dev/null"
-if [ ${XKEYSNAIL_DEBUG} ]; then
+if [ -n "${XKEYSNAIL_DEBUG}" ]; then
     DEBUG="/dev/stderr"
 fi
 

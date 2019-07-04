@@ -15,6 +15,9 @@ case "${1}" in
         ACTIVE_WORKSPACE_NUMBER=$(i3-msg -t get_workspaces | jq '.[] | select(.focused==true).name' | cut -d"\"" -f2 | cut -d":" -f 1)
         echo ${ACTIVE_WORKSPACE_NUMBER}
         ;;
+    tty)
+        readlink /proc/`pidof i3 i3-with-shmlog -s`/fd/0 2>/dev/null | awk -F/dev/tty '{print $2}'
+        ;;
     [1-9])
         PREFER_WORKSPACE_NUMBER=${1}
         PREFER_WORKSPACE_NAME=$(i3-msg -t get_workspaces | jq ".[] | select(.num==${PREFER_WORKSPACE_NUMBER}).name" | cut -d"\"" -f2)

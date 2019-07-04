@@ -22,20 +22,15 @@ int main(int argc, char* argv[]) {
 
   int status = EXIT_FAILURE;
   const char* display = getenv("DISPLAY");
-  const char* debug =
-      getenv("XKEYSNAIL_DEBUG") ? "/dev/stderr" : "/dev/null";
 
   if (strcmp(argv[1], "start") == 0) {
     if (display == NULL || display[0] == '\0') {
       setenv("DISPLAY", ":0", 1);
     }
-    char command[4096] = {'\0'};
-    snprintf(command, sizeof(command),
-             "xhost +SI:localuser:root >>%s 2>&1; "
-             "xkeysnail ~/.config/xkeysnail/config.py --quiet --watch >>%s "
-             "2>&1 &",
-             debug, debug);
-    status = system(command);
+    status = system(
+        "xhost +SI:localuser:root >/dev/null 2>>/tmp/xkeysnail.log; "
+        "xkeysnail ~/.config/xkeysnail/config.py --quiet --watch "
+        ">/dev/null 2>>/tmp/xkeysnail.log &");
     status = ((status == -1 || !WIFEXITED(status)) ? EXIT_FAILURE
                                                    : WEXITSTATUS(status));
     // Wait until xkeysnail startup.

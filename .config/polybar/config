@@ -90,8 +90,7 @@ label-padding = 2
 
 [module/xkeysnail]
 type = custom/ipc
-hook-0 = ~/bin/xkeysnail-ctl status >/dev/null && echo  || echo ""
-click-left = Xdialog --under-mouse --yesno " Stop Xkeysnail?" 10 10 && ~/bin/xkeysnail-ctl stop && sleep 0.5 && polybar-msg hook xkeysnail 1
+hook-0 = ~/bin/xkeysnail-ctl status >/dev/null && echo  || echo %{F#bd2c40}%{F-}
 initial = 1
 
 [module/dual-screen]

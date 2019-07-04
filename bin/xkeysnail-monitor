@@ -6,27 +6,25 @@ if [ -z "$SCRIPT_PATH" ]; then
 fi
 SCRIPT_NAME=$(basename "${SCRIPT_PATH}")
 LOCK_FILE="/tmp/${SCRIPT_NAME}.lock"
-DEBUG="/dev/null"
-if [ -n "${XKEYSNAIL_DEBUG}" ]; then
-    DEBUG="/dev/stderr"
-fi
 
 if [ -z "$XKEYSNAIL_MONITOR_LOCKED" ]; then
   # Modify LOCK_FILE for wakeup xkeysnail-monitor
-  echo -e "$(date)\tWakeup xkeysnail-monitor" | tee ${LOCK_FILE} >>${DEBUG}
+  echo -e "$(date)\tWakeup xkeysnail-monitor" | tee -a ${LOCK_FILE} >>/tmp/${SCRIPT_NAME}.log
   export XKEYSNAIL_MONITOR_LOCKED="${LOCK_FILE}"
   exec flock -x -n -o "${LOCK_FILE}" -c "${SCRIPT_PATH}"
   exit $?
 fi
 
 release_modifier_keys() {
-    # xorg - How to force release of a keyboard modifiers - Unix & Linux Stack Exchange
-    # https://unix.stackexchange.com/questions/60007/how-to-force-release-of-a-keyboard-modifiers
-    if [ -z "$DISPLAY" ]; then
-        export DISPLAY=:0
-    fi
-    grep '^#define' /usr/include/X11/keysymdef.h | sed -r 's/^#define XK_(\S*?).*$/\1/;' | grep -E '_(L|R|Level.*)$' | xargs xdotool keyup >/dev/null 2>&1
+  # xorg - How to force release of a keyboard modifiers - Unix & Linux Stack Exchange
+  # https://unix.stackexchange.com/questions/60007/how-to-force-release-of-a-keyboard-modifiers
+  if [ -z "$DISPLAY" ]; then
+    export DISPLAY=:0
+  fi
+  grep '^#define' /usr/include/X11/keysymdef.h | sed -r 's/^#define XK_(\S*?).*$/\1/;' | grep -E '_(L|R|Level.*)$' | xargs xdotool keyup >/dev/null 2>&1
 }
+
+echo -e "$(date)\t${SCRIPT_NAME} startup" >/tmp/${SCRIPT_NAME}.log
 
 while [ true ]; do
   if [ "$(~/bin/tty-ctl graphic)" = "$(~/bin/tty-ctl active)" ]; then
@@ -36,10 +34,10 @@ while [ true ]; do
     if [ "$(~/bin/tty-ctl graphic)" = "$(~/bin/tty-ctl active)" ]; then
       if ~/bin/keymap-ctl status >/dev/null 2>&1; then
         ~/bin/keymap-ctl stop
-        echo -e "$(date)\tStop keymap" >>${DEBUG}
+        echo -e "$(date)\tStop keymap" >>/tmp/${SCRIPT_NAME}.log
       fi
       if ! ~/bin/xkeysnail-ctl status >/dev/null 2>&1; then
-        echo -e "$(date)\tStart xkeysnail" >>${DEBUG}
+        echo -e "$(date)\tStart xkeysnail" >>/tmp/${SCRIPT_NAME}.log
         ~/bin/xkeysnail-ctl start
       fi
       release_modifier_keys
@@ -47,26 +45,29 @@ while [ true ]; do
   else
     release_modifier_keys
     if ~/bin/xkeysnail-ctl status >/dev/null 2>&1; then
-      echo -e "$(date)\tStop xkeysnail" >>${DEBUG}
+      echo -e "$(date)\tStop xkeysnail" >>/tmp/${SCRIPT_NAME}.log
       ~/bin/xkeysnail-ctl stop
     fi
     if ! ~/bin/keymap-ctl status >/dev/null 2>&1; then
-      echo -e "$(date)\tStart keymap" >>${DEBUG}
+      echo -e "$(date)\tStart keymap" >>/tmp/${SCRIPT_NAME}.log
       ~/bin/keymap-ctl start
     fi
   fi
 
   polybar-msg hook xkeysnail 1
   ~/bin/tty-ctl capslockoff
-  echo -e "$(date)\tCapsLock off" >>${DEBUG}
+  echo -e "$(date)\tCapsLock off" >>/tmp/${SCRIPT_NAME}.log
 
   TTY_ACTIVE_CURRENT=$(cat /sys/class/tty/tty0/active)
   if [ "${TTY_ACTIVE_PREVIOUS}" = "${TTY_ACTIVE_CURRENT}" ]; then
-    if ! inotifywait -q -e modify /sys/class/tty/tty0/active "${LOCK_FILE}" >/dev/null 2>&1; then
-      echo -e "$(date)\tinotifywait failed: $?" >>${DEBUG}
+    if ! inotifywait -q -e modify -e close_write /sys/class/tty/tty0/active /tmp/xkeysnail.log "${LOCK_FILE}" >>/tmp/${SCRIPT_NAME}.log 2>&1; then
+      polybar-msg hook xkeysnail 1
+      echo -e "$(date)\tinotifywait failed: $?" >>/tmp/${SCRIPT_NAME}.log
       sleep 10
+    else
+      polybar-msg hook xkeysnail 1
     fi
   fi
   TTY_ACTIVE_PREVIOUS=${TTY_ACTIVE_CURRENT}
-  echo -e "$(date)\tinotifywait successed" >>${DEBUG}
+  echo -e "$(date)\tinotifywait successed" >>/tmp/${SCRIPT_NAME}.log
 done

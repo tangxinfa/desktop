@@ -116,7 +116,7 @@ int main(int argc, char *argv[]) {
 
   if (strcmp(argv[1], "graphic") == 0) {
     status = system(
-        "(readlink /proc/`pgrep -x 'Xorg|Xwayland' | head -1`/fd/0 | awk "
+        "(readlink /proc/`pidof Xorg Xwayland -s`/fd/0 | awk "
         "-F/dev/tty '{print $2}') 2>/dev/null");
     status = ((status == -1 || !WIFEXITED(status)) ? EXIT_FAILURE
                                                    : WEXITSTATUS(status));

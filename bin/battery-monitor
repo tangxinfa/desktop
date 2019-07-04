@@ -70,12 +70,12 @@ while [ true ]; do
             let LOW_TIMES+=1
             EMPTY_TIMES=0
             OK_TIMES=0
-            DELAY_SECONDS=60
+            DELAY_SECONDS=180
             ALERT_LEVEL="critical"
             ALERT_TITLE="Battery Low"
             ALERT_DESCRIPTION="please charging ..."
             ALERT_ICON="battery-low-symbolic.symbolic"
-            ALERT_TIMEOUT=5000
+            ALERT_TIMEOUT=10000
             ;;
         *)
             let OK_TIMES+=1
@@ -87,9 +87,10 @@ while [ true ]; do
     esac
     if [ -n "$ALERT_LEVEL" ]; then
         echo "${ALERT_TITLE}, ${ALERT_DESCRIPTION}" | wall
-        if pgrep -x i3 >/dev/null 2>&1; then
-            i3-msg exec "dunstify -r ${ALERT_ID} -u ${ALERT_LEVEL} -t ${ALERT_TIMEOUT} -i ${ALERT_ICON} '${ALERT_TITLE}' '${ALERT_DESCRIPTION}'"
-        fi
+        NOTIFY_COMMAND="dunstify -r ${ALERT_ID} -u ${ALERT_LEVEL} -t ${ALERT_TIMEOUT} -i ${ALERT_ICON} '${ALERT_TITLE}' '${ALERT_DESCRIPTION}'"
+    else
+        NOTIFY_COMMAND="dunstify -C ${ALERT_ID}"
     fi
+    i3-msg exec "${NOTIFY_COMMAND}"
     sleep $DELAY_SECONDS
 done

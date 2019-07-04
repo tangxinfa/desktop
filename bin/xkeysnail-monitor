@@ -31,17 +31,17 @@ while [ true ]; do
     # Startup xkeysnail instantly after switch to X desktop may freeze desktop,
     # delay startup xkeysnail for rescue.
     sleep 0.2
-    if [ "$(~/bin/tty-ctl graphic)" = "$(~/bin/tty-ctl active)" ]; then
-      if ~/bin/keymap-ctl status >/dev/null 2>&1; then
-        ~/bin/keymap-ctl stop
-        echo -e "$(date)\tStop keymap" >>/tmp/${SCRIPT_NAME}.log
-      fi
-      if ! ~/bin/xkeysnail-ctl status >/dev/null 2>&1; then
-        echo -e "$(date)\tStart xkeysnail" >>/tmp/${SCRIPT_NAME}.log
-        ~/bin/xkeysnail-ctl start
-      fi
-      release_modifier_keys
+  fi
+  if [ "$(~/bin/tty-ctl graphic)" = "$(~/bin/tty-ctl active)" ]; then
+    if ~/bin/keymap-ctl status >/dev/null 2>&1; then
+      ~/bin/keymap-ctl stop
+      echo -e "$(date)\tStop keymap" >>/tmp/${SCRIPT_NAME}.log
     fi
+    if ! ~/bin/xkeysnail-ctl status >/dev/null 2>&1; then
+      echo -e "$(date)\tStart xkeysnail" >>/tmp/${SCRIPT_NAME}.log
+      ~/bin/xkeysnail-ctl start
+    fi
+    release_modifier_keys
   else
     release_modifier_keys
     if ~/bin/xkeysnail-ctl status >/dev/null 2>&1; then

@@ -76,6 +76,7 @@ int main(int argc, char *argv[]) {
     return EXIT_SUCCESS;
   }
 
+  int status = EXIT_FAILURE;
   char command[255] = {'\0'};
   if (strcmp(argv[1], "capslockoff") == 0) {
     // Non-X environments.
@@ -86,18 +87,25 @@ int main(int argc, char *argv[]) {
     if (display == NULL || display[0] == '\0') {
       display = ":0";
     }
+
     // X environments.
-    // setcapslock will crash with core in Non-X environments(no DISPLAY
-    // environment variable), setcapslock sometimes not work, must use xdotool
-    // to let Caps_Lock key up first.
-    snprintf(command, sizeof(command),
-             "export DISPLAY=%s; xdotool key Caps_Lock; setcapslock off",
-             display);
-    system(command);
+    // setcapslock will crash with core in Non-X environments, setcapslock
+    // sometimes not work, must use xdotool to let Caps_Lock key up first.
+    snprintf(command, sizeof(command), "xdpyinfo -display '%s'>/dev/null 2>&1", display);
+    status = system(command);
+    status = ((status == -1 || !WIFEXITED(status)) ? EXIT_FAILURE
+                                                   : WEXITSTATUS(status));
+    if (0 == status) {
+      snprintf(command, sizeof(command),
+               "export DISPLAY=%s; xdotool key Caps_Lock; "
+               "setcapslock off",
+               display);
+      system(command);
+    }
+
     return EXIT_SUCCESS;
   }
 
-  int status = EXIT_FAILURE;
   if (to_tty != 0) {
     snprintf(command, sizeof(command), "chvt %d", to_tty);
     status = system(command);

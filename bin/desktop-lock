@@ -2,20 +2,7 @@
 
 REASON="$1"
 
-# Use i3lock of i3.
-if [ "$XDG_CURRENT_DESKTOP" = "i3" ]; then
-    if [ "$REASON" = "auto" ]; then
-       EMACS_PID="`pidof emacs | awk '{print $1}'`"
-       if [ -n "$EMACS_PID" ]; then
-           if ! grep -a -E "XDG_VTNR=${XDG_VTNR}[^\\d]" /proc/${EMACS_PID}/environ >/dev/null 2>&1; then
-               if [ "${XDG_VTNR}" != "`~/bin/tty-ctl active`" ]; then
-                   # Disable i3 auto lock, emacs running on other tty will did this for us.
-                   exit 1
-               fi
-           fi
-       fi
-    fi
-
+i3_lock() {
     revert() {
         xset dpms 0 0 0
     }
@@ -31,9 +18,21 @@ if [ "$XDG_CURRENT_DESKTOP" = "i3" ]; then
 
     i3lock-fancy -n -f Source-Code-Pro -t '' -gp
     revert
-    exit 0
-fi
+}
 
-# Use tty lock otherwise.
-~/bin/tty-ctl lock
-exit 0
+tty_lock() {
+    ~/bin/tty-ctl lock
+}
+
+# Use i3lock if i3 is active, tty lock otherwise.
+TTY_I3=$(~/bin/i3-ctl tty)
+TTY_ACTIVE=$(~/bin/tty-ctl active)
+if [ "${TTY_I3}" = "${TTY_ACTIVE}" ]; then
+    if [ "${XDG_VTNR}" != "${TTY_I3}" ]; then
+        i3-msg exec ~/bin/desktop-lock $REASON
+    else
+        i3_lock
+    fi
+else
+    tty_lock
+fi

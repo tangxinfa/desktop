@@ -40,16 +40,31 @@ while [ true ]; do
             LOW_TIMES=0
             OK_TIMES=0
             DELAY_SECONDS=1
-            EMPTY_MAX_TIMES=30
-            if [ $EMPTY_TIMES -ge ${EMPTY_MAX_TIMES} ]; then
-                ~/bin/tty-ctl lock &
-                systemctl hibernate
-            fi
+            ALERT_TIMEOUT=1500
             ALERT_LEVEL="critical"
             ALERT_TITLE="Battery Empty"
-            ALERT_DESCRIPTION="hibernate after $(( $EMPTY_MAX_TIMES - $EMPTY_TIMES )) seconds ..."
             ALERT_ICON="battery-empty-symbolic.symbolic"
-            ALERT_TIMEOUT=1500
+            HIBERNATE_COUNTDOWN_TIMES=$(( $EMPTY_MAX_TIMES - $EMPTY_TIMES ))
+            if [ $HIBERNATE_COUNTDOWN_TIMES -eq 0 ]; then
+                ~/bin/desktop-lock hibernate &
+                HIBERNATE_BEGIN=$(date -u +"%s")
+                systemctl hibernate &
+                ALERT_DESCRIPTION="hibernate ..."
+            elif [ $HIBERNATE_COUNTDOWN_TIMES -lt 0 ]; then
+                HIBERNATE_END=$(date -u +"%s")
+                HIBERNATE_ELAPSED=$(( $HIBERNATE_END - $HIBERNATE_BEGIN ))
+                TIME_JUMPED=$(( $HIBERNATE_ELAPSED - -$HIBERNATE_COUNTDOWN_TIMES ))
+                if [ $TIME_JUMPED -ge 3 ]; then
+                    # Hibernate succeed if time jumped more than 3 seconds.
+                    EMPTY_TIMES=0
+                    ALERT_LEVEL=
+                else
+                    # Hibernate in progress.
+                    ALERT_DESCRIPTION="hibernate takes ${HIBERNATE_ELAPSED} seconds"
+                fi
+            else
+                ALERT_DESCRIPTION="hibernate after ${HIBERNATE_COUNTDOWN_TIMES} seconds ..."
+            fi
             ;;
         LOW)
             let LOW_TIMES+=1
@@ -66,7 +81,7 @@ while [ true ]; do
             let OK_TIMES+=1
             EMPTY_TIMES=0
             LOW_TIMES=0
-            DELAY_SECONDS=300
+            DELAY_SECONDS=60
             ALERT_LEVEL=
             ;;
     esac

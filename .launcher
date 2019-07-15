@@ -12,8 +12,8 @@ if [ -z "$LAUNCHER" ]; then
   clear
 fi
 
-# Startup xkeysnail-monitor
-nohup ~/bin/xkeysnail-monitor >/dev/null 2>&1 &
+# Startup xkeysnail monitor
+nohup ~/bin/xkeysnail-ctl monitor >/dev/null 2>&1 &
 
 # Startup battery monitor.
 nohup ~/bin/battery-monitor >/dev/null 2>&1 &

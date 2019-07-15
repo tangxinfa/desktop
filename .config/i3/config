@@ -10,7 +10,7 @@
 # Please see http://i3wm.org/docs/userguide.html for a complete reference!
 
 set $mod Mod4
-set $auto-lock ~/bin/desktop-lock\ auto
+set $auto-lock ~/bin/desktop-lock\ i3-auto-lock
 set $manual-lock ~/bin/desktop-lock
 
 ipc-socket /tmp/i3-ipc.sock
@@ -72,7 +72,7 @@ bindsym Control+$mod+p exec ~/bin/rofi-power-menu
 ##  depends: yaourt -S rofi
 bindsym $mod+r exec --no-startup-id "killall rofi; rofi -p '' -show run"
 bindsym $mod+d exec --no-startup-id "killall rofi; rofi -p '' -show drun"
-bindsym $mod+t exec --no-startup-id "killall rofi; rofi -p '' -show  -modi :~/bin/rofi-ydcv -no-sidebar-mode -lines 14 -yoffset 0 -location 5 -theme-str '#element { padding: 0.1em; }'"
+bindsym $mod+t exec --no-startup-id "killall rofi; rofi -p '' -show  -modi :~/bin/rofi-ydcv -no-sidebar-mode -fixed-num-lines -lines 14 -yoffset 0 -location 5 -theme-str '#element { padding: 0.1em; }'"
 bindsym $mod+w exec --no-startup-id "killall rofi; rofi -p '' -show window"
 
 # change focus
@@ -289,7 +289,7 @@ client.focused_inactive $inactive-border-color  $background-color      $inactive
 client.urgent           $urgent-border-color    $background-color      $text-color              $indicator-color
 
 # autostart
-exec --no-startup-id ~/bin/xkeysnail-monitor
+exec --no-startup-id ~/bin/xkeysnail-ctl monitor
 #exec --no-startup-id /usr/lib/gsd-xsettings
 #exec --no-startup-id /usr/lib/notify-osd/notify-osd
 exec --no-startup-id fcitx -d

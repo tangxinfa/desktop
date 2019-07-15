@@ -24,9 +24,26 @@ tty_lock() {
     ~/bin/tty-ctl lock
 }
 
-# Use i3lock if i3 is active, tty lock otherwise.
 TTY_I3=$(~/bin/i3-ctl tty)
 TTY_ACTIVE=$(~/bin/tty-ctl active)
+TTY_EMACS=$(readlink /proc/`pidof emacs -s`/fd/0 2>/dev/null | awk -F/dev/tty '{print $2}')
+
+# Ignore i3 auto lock if i3 is inactive and a emacs running on console,
+# emacs will responsible for auto lock desktop.
+if [ "$REASON" = "i3-auto-lock" ]; then
+    if [ "${TTY_I3}" != "${TTY_ACTIVE}" ] && [ "${TTY_EMACS}" != "${TTY_I3}" ]; then
+        exit 1
+    fi
+fi
+
+# Ignore emacs auto lock if i3 is active, i3 will responsible for auto lock desktop.
+if [ "$REASON" = "emacs-auto-lock" ]; then
+    if [ "${TTY_I3}" = "${TTY_ACTIVE}" ]; then
+        exit 1
+    fi
+fi
+
+# Use i3lock if i3 is active, tty lock otherwise.
 if [ "${TTY_I3}" = "${TTY_ACTIVE}" ]; then
     if [ "${XDG_VTNR}" != "${TTY_I3}" ]; then
         i3-msg exec ~/bin/desktop-lock $REASON

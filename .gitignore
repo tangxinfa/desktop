@@ -40,3 +40,4 @@ bin/file-open
 
 # Temporaries
 .dialogrc
+.config/dunst/dunstrc

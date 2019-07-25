@@ -1,5 +1,5 @@
 @import "Arc"
-@import "/home/tangxinfa/.emacs.d/.rasi"
+@import "emacs-color-theme.rasi"
 
 * {
     selected-normal-foreground:  @emacs-region-foreground;

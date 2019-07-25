@@ -1,0 +1,8 @@
+! Font Config
+#include "xresources.d/font-config"
+
+!Emacs Color Theme
+#include "xresources.d/emacs-color-theme"
+
+!Dual Screen
+#include "xresources.d/dual-screen"

@@ -66,9 +66,9 @@ This prevents overlapping themes; something I would rarely want."
 (advice-add 'enable-theme :before #'ad-enable-theme-disable-all-enabled-themes)
 
 ;; Export color theme definitions into files.
-(defvar color-theme-utils-xresources-file "~/.Xresources"
+(defvar color-theme-utils-xresources-file "~/.config/X11/xresources.d/emacs-color-theme"
   "Xresources file to save Emacs color theme definitions.")
-(defvar color-theme-utils-rasi-file "~/.emacs.d/.rasi"
+(defvar color-theme-utils-rasi-file "~/.config/rofi/themes/emacs-color-theme.rasi"
   "Rasi file to save Emacs color theme definitions.")
 (defvar color-theme-utils-dialog-file "~/.dialogrc"
   "Dialog file to save Emacs color theme definitions.")

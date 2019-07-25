@@ -165,7 +165,7 @@
     max_icon_size = 32
 
     # Paths to default icons.
-    icon_path = /usr/share/icons/Adwaita/16x16/status/:/usr/share/icons/Adwaita/16x16/devices/:/usr/share/icons/Adwaita/16x16/apps/:/usr/share/icons/hicolor/scalable/apps/
+    icon_path = /usr/share/icons/Adwaita/24x24/status/:/usr/share/icons/Adwaita/24x24/devices/:/usr/share/icons/Adwaita/24x24/apps/:/usr/share/icons/hicolor/scalable/apps/
 
     ### History ###
 
@@ -336,6 +336,10 @@
     # Mouse powered on
     summary = "*Mouse*"
     body = "powered on"
+    format = ""
+
+[bluetooth-ignore]
+    summary = "*Bluetooth*"
     format = ""
 
 #[espeak]

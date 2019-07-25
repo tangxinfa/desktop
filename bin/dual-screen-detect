@@ -1,7 +1,7 @@
 #!/bin/bash
 
-PRIMARY_OLD="$(grep -E '^DualScreen.Primary:' ~/.Xresources | awk '{print $2}')"
-SECONDARY_OLD="$(grep -E '^DualScreen.Secondary:' ~/.Xresources | awk '{print $2}')"
+PRIMARY_OLD="$(grep -E '^DualScreen.Primary:' ~/.config/X11/xresources.d/dual-screen | awk '{print $2}')"
+SECONDARY_OLD="$(grep -E '^DualScreen.Secondary:' ~/.config/X11/xresources.d/dual-screen | awk '{print $2}')"
 if [ -z "${SECONDARY_OLD}" ]; then
   SECONDARY_OLD=${PRIMARY_OLD}
 fi
@@ -19,10 +19,10 @@ if [ "$PRIMARY_OLD" == "$PRIMARY_NEW" ] && [ "$SECONDARY_OLD" == "$SECONDARY_NEW
   exit 1
 fi
 
-sed -i -e '/^DualScreen\./d' ~/.Xresources
+sed -i -e '/^DualScreen\./d' ~/.config/X11/xresources.d/dual-screen
 if [ -n "${PRIMARY_NEW}" ]; then
-  sed -i -e "/^! Generate by $(basename $0)/d" ~/.Xresources
-  echo "! Generate by $(basename $0)" >>~/.Xresources
-  echo "DualScreen.Primary:   ${PRIMARY_NEW}" >>~/.Xresources
-  echo "DualScreen.Secondary: ${SECONDARY_NEW}" >>~/.Xresources
+  sed -i -e "/^! Generate by $(basename $0)/d" ~/.config/X11/xresources.d/dual-screen
+  echo "! Generate by $(basename $0)" >>~/.config/X11/xresources.d/dual-screen
+  echo "DualScreen.Primary:   ${PRIMARY_NEW}" >>~/.config/X11/xresources.d/dual-screen
+  echo "DualScreen.Secondary: ${SECONDARY_NEW}" >>~/.config/X11/xresources.d/dual-screen
 fi

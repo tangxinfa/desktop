@@ -1,6 +1,6 @@
 #!/bin/bash
 
-xrdb -merge -I$HOME ~/.Xresources
+xrdb -merge -I$HOME/.config/X11 ${HOME}/.config/X11/xresources
 ~/bin/dunstrc-update
 killall dunst
 polybar-msg cmd restart

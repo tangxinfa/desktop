@@ -6,8 +6,7 @@ if [ -d /etc/X11/xinit/xinitrc.d ] ; then
 fi
 
 [[ -f /etc/X11/xinit/.Xresources ]] && xrdb -merge /etc/X11/xinit/.Xresources
-[[ -f ~/.Xresources ]] && xrdb -merge -I$HOME ~/.Xresources
-[[ -f ~/.config/xresources ]] && xrdb -merge -I$HOME -f ~/.config/xresources
+[[ -f ~/.config/X11/xresources ]] && xrdb -merge -f ~/.config/X11/xresources
 
 [ -f /etc/xprofile ] && source /etc/xprofile
 [ -f ~/.xprofile ] && source ~/.xprofile

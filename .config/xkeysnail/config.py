@@ -14,13 +14,13 @@ define_conditional_modmap(lambda wm_class, device_name: device_name != "Topre Co
 })
 
 # Keybindings for Firefox/Chrome
-define_keymap(re.compile("Firefox|Google-chrome|Chromium"), {
+define_keymap(re.compile("firefox|Google-chrome|Chromium"), {
     # Type C-j to focus to the content
     K("C-j"): K("C-f6"),
 }, "Firefox and Chrome")
 
 # Keybindings for Firefox
-define_keymap(re.compile("Firefox"), {
+define_keymap(re.compile("firefox"), {
     # Ctrl+C+o+l to store link by firefox addon:
     #     https://addons.mozilla.org/en-US/firefox/addon/titleurlcopy/?src=userprofile
     K("C-c"): {

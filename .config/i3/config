@@ -236,7 +236,7 @@ assign [class="Emacs"] $workspace2
 assign [class="Gnome-terminal" window_role="gnome-terminal-window.*"] $workspace1
 for_window [class="Gnome-terminal" window_role="gnome-terminal-popup.*"] floating enable, move absolute position center, resize set 800 600
 for_window [class="Xdialog"] floating enable
-assign [class="Firefox"] $workspace1
+assign [class="firefox"] $workspace1
 assign [class="Chromium"] $workspace1
 assign [class="Google-chrome"] $workspace1
 assign [class="Dia"] $workspace3

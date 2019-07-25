@@ -7,6 +7,8 @@ else
 fi
 
 if [[ "${TEXT}" != "" ]]; then
+  # Avoid use ydcv's "-r" option for read, which is a blocking call.
+  (echo "${TEXT}" | festival --tts >/dev/null 2>&1 &)
   ydcv -f "${TEXT}"
   exit 0
 fi

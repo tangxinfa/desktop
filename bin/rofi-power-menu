@@ -12,13 +12,11 @@ if [ ${#option} -gt 0 ]; then
       ~/bin/desktop-lock
       ;;
     Suspend)
-      ~/bin/tty-ctl lock &
-      sleep 1
+      ~/bin/desktop-lock &
       systemctl suspend
       ;;
     Hibernate)
-      ~/bin/tty-ctl lock &
-      sleep 1
+      ~/bin/desktop-lock &
       systemctl hibernate
       ;;
     Exit)

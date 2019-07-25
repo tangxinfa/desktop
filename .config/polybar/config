@@ -102,8 +102,11 @@ exec = echo 
 [module/filesystem]
 type = internal/fs
 interval = 25
+fixed-values = true
+spacing = 1
 
 mount-0 = /
+mount-1 = /tmp
 format-mounted = %{A1:gnome-system-monitor -f&:}%{A3:gnome-terminal --role=gnome-terminal-popup -- sudo iotop:}<ramp-capacity><label-mounted>%{A}%{A}
 label-mounted = %percentage_used%
 label-unmounted =

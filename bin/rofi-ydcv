@@ -6,10 +6,13 @@ else
   TEXT=$(xclip -o 2>/dev/null)
 fi
 
+TEXT="${TEXT//[\'\"]/}"
+
 if [[ "${TEXT}" != "" ]]; then
   # Avoid use ydcv's "-r" option for read, which is a blocking call.
   (echo "${TEXT}" | festival --tts >/dev/null 2>&1 &)
-  ydcv -f "${TEXT}"
+  killall rofi
+  rofi -p '' -show '' -modi ":ydcv -f '${TEXT}'" -no-sidebar-mode -fixed-num-lines -lines 14 -yoffset 0 -location 5 -theme-str '#element { padding: 0.1em; }'
   exit 0
 fi
 

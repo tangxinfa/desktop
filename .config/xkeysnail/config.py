@@ -25,7 +25,7 @@ define_keymap(re.compile("firefox"), {
     #     https://addons.mozilla.org/en-US/firefox/addon/titleurlcopy/?src=userprofile
     K("C-c"): {
         K("o"): {
-            K("l"): [K("F3"), K("esc"), K("C-c")]
+            K("l"): [K("C-k"), K("C-f6"), K("C-c")]
         },
         K("r"): {
             K("b"): [K("C-Shift-o")]

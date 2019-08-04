@@ -66,14 +66,14 @@ bindsym $mod+minus scratchpad show
 
 # power management
 bindsym Control+$mod+l exec $manual-lock
-bindsym Control+$mod+p exec ~/bin/rofi-power-menu
+bindsym Control+$mod+p exec --no-startup-id ~/bin/rofi-power-menu
 
 # program launcher: rofi
 ##  depends: yaourt -S rofi
-bindsym $mod+r exec --no-startup-id "killall rofi; rofi -p '' -show run"
-bindsym $mod+d exec --no-startup-id "killall rofi; rofi -p '' -show drun"
-bindsym $mod+t exec --no-startup-id "killall rofi; rofi -p '' -show  -modi :~/bin/rofi-ydcv -no-sidebar-mode -fixed-num-lines -lines 14 -yoffset 0 -location 5 -theme-str '#element { padding: 0.1em; }'"
-bindsym $mod+w exec --no-startup-id "killall rofi; rofi -p '' -show window"
+bindsym $mod+r exec --no-startup-id killall rofi && true || rofi -p '' -show run
+bindsym $mod+d exec --no-startup-id killall rofi && true || rofi -p '' -show drun
+bindsym $mod+t exec --no-startup-id ~/bin/rofi-ydcv
+bindsym $mod+w exec --no-startup-id killall rofi && true || rofi -p '' -show window
 
 # change focus
 bindsym $mod+j focus left
@@ -254,6 +254,7 @@ assign [class="Wine"] $workspace4
 assign [class="VirtualBox"] $workspace6
 for_window [class="VirtualBoxVM"] floating enable
 assign [class="netease-cloud-music"] $workspace5
+for_window [class="netease-cloud-music"] floating enable, move absolute position center, resize set 720 480
 assign [class="vlc"] $workspace5
 assign [class="Totem"] $workspace5
 assign [class="Steam"] $workspace5
@@ -299,7 +300,7 @@ exec --no-startup-id blueman-applet
 exec --no-startup-id ~/bin/nm-applet-monitor
 exec --no-startup-id udiskie -t &
 exec --no-startup-id xautolock -time 10 -locker $auto-lock
-exec --no-startup-id sleep 10 && dropbox start
+exec --no-startup-id sleep 20 && dropbox start
 exec --no-startup-id seafile-applet
 exec --no-startup-id gtk-launch firefox
 exec --no-startup-id pidof emacs || i3-msg workspace $workspace2

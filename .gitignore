@@ -29,6 +29,7 @@
 *.hex
 bin/*-ctl
 !bin/i3-ctl
+!bin/bluetooth-headset-ctl
 bin/file-open
 
 # Debug files

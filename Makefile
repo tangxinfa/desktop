@@ -8,6 +8,9 @@ install: build
 	sudo chown root:root ${CURDIR}/bin/xkeysnail-ctl && sudo chmod gu+s ${CURDIR}/bin/xkeysnail-ctl
 	sudo chown root:root ${CURDIR}/bin/tty-ctl && sudo chmod gu+s ${CURDIR}/bin/tty-ctl
 	sudo chown root:root ${CURDIR}/bin/file-open && sudo chmod gu+s ${CURDIR}/bin/file-open
+	sudo cp ${CURDIR}/service/desktop-lock@.service /etc/systemd/system/
+	sudo systemctl daemon-reload
+	sudo systemctl enable desktop-lock@${USER}.service
 	@echo "Install by create symbol links ..."
 	-cp -rs ${CURDIR}/{bin,.config,.local,.xinitrc,.nvidia-xinitrc,.xprofile,.fbtermrc,.launcher,.mlterm} ~/
 

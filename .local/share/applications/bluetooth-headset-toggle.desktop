@@ -1,6 +1,6 @@
 [Desktop Entry]
-Name=Bluetooth headset
-GenericName=Bluetooth headset toggle
+Name=Bluetooth Headset
+GenericName=Bluetooth Headset Toggle
 Exec=/bin/bash -c "~/bin/bluetooth-headset-ctl toggle"
 Type=Application
 Terminal=false

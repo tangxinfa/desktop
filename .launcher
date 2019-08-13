@@ -1,3 +1,12 @@
+# Startup xkeysnail monitor
+nohup ~/bin/xkeysnail-ctl monitor >/dev/null 2>&1 &
+
+# Startup battery monitor.
+nohup ~/bin/battery-monitor >/dev/null 2>&1 &
+
+# Startup lid monitor.
+nohup ~/bin/lid-monitor >/dev/null 2>&1 &
+
 # Desktop launcher.
 if [ -z "$LAUNCHER" ]; then
   LAUNCHER=$(dialog --clear --title "Desktop Launcher" \
@@ -11,12 +20,6 @@ if [ -z "$LAUNCHER" ]; then
     2>&1 >/dev/tty)
   clear
 fi
-
-# Startup xkeysnail monitor
-nohup ~/bin/xkeysnail-ctl monitor >/dev/null 2>&1 &
-
-# Startup battery monitor.
-nohup ~/bin/battery-monitor >/dev/null 2>&1 &
 
 # Startup fcitx
 fcitx -d >/dev/null 2>&1

@@ -31,6 +31,7 @@ bin/*-ctl
 !bin/i3-ctl
 !bin/bluetooth-headset-ctl
 bin/file-open
+bin/lid-monitor
 
 # Debug files
 *.dSYM/

@@ -61,7 +61,7 @@ font-5 = "file\-icons:size=12;1"
 
 modules-left = i3 xwindow
 modules-center =
-modules-right = xkeysnail dual-screen filesystem xbacklight pulseaudio memory cpu temperature battery lid-monitor network-wired network-wireless weather date power
+modules-right = xkeysnail dual-screen filesystem xbacklight pulseaudio memory cpu temperature battery network-wired network-wireless weather date power
 
 tray-position = center
 tray-padding = 0
@@ -306,12 +306,6 @@ animation-charging-2 = 
 animation-charging-3 = 
 animation-charging-4 = 
 animation-charging-framerate = 750
-
-[module/lid-monitor]
-type = custom/script
-exec = ~/bin/lid-monitor
-interval = 180
-format =
 
 [module/temperature]
 type = internal/temperature

@@ -20,7 +20,7 @@ if [ ${#option} -gt 0 ]; then
       systemctl hibernate
       ;;
     Exit)
-      ~/bin/desktop-on-close exit && i3-msg exit
+      ~/bin/desktop-on-close exit && i3-msg '[class=".*"] kill' && i3-msg exit
       ;;
     Reboot)
       ~/bin/desktop-on-close reboot && (i3-msg exit || systemctl reboot)

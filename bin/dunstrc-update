@@ -10,14 +10,17 @@ set -e
 
 declare -A theme_attr_dict=(
     ["global-frame_color"]="\"$(grep Emacs.VerticalBorder.foreground ~/.config/X11/xresources.d/emacs-color-theme | awk '{print $2}')\""
-    ["urgency_low-background"]="\"$(grep Emacs.ModeLineInactive.background ~/.config/X11/xresources.d/emacs-color-theme | awk '{print $2}')\""
-    ["urgency_low-foreground"]="\"$(grep Emacs.ModeLineInactive.foreground ~/.config/X11/xresources.d/emacs-color-theme | awk '{print $2}')\""
+    ["urgency_low-background"]="\"$(grep Emacs.Default.foreground ~/.config/X11/xresources.d/emacs-color-theme | awk '{print $2}')\""
+    ["urgency_low-foreground"]="\"$(grep Emacs.Default.background ~/.config/X11/xresources.d/emacs-color-theme | awk '{print $2}')\""
+    ["urgency_low-frame_color"]="\"$(grep Emacs.Default.background ~/.config/X11/xresources.d/emacs-color-theme | awk '{print $2}')\""
 
-    ["urgency_normal-background"]="\"$(grep Emacs.ModeLine.background ~/.config/X11/xresources.d/emacs-color-theme | awk '{print $2}')\""
-    ["urgency_normal-foreground"]="\"$(grep Emacs.ModeLine.foreground ~/.config/X11/xresources.d/emacs-color-theme | awk '{print $2}')\""
+    ["urgency_normal-background"]="\"$(grep Emacs.Default.foreground ~/.config/X11/xresources.d/emacs-color-theme | awk '{print $2}')\""
+    ["urgency_normal-foreground"]="\"$(grep Emacs.Default.background ~/.config/X11/xresources.d/emacs-color-theme | awk '{print $2}')\""
+    ["urgency_normal-frame_color"]="\"$(grep Emacs.Warning.foreground ~/.config/X11/xresources.d/emacs-color-theme | awk '{print $2}')\""
 
-    ["urgency_critical-background"]="\"$(grep Emacs.Tooltip.background ~/.config/X11/xresources.d/emacs-color-theme | awk '{print $2}')\""
-    ["urgency_critical-foreground"]="\"$(grep Emacs.Tooltip.foreground ~/.config/X11/xresources.d/emacs-color-theme | awk '{print $2}')\""
+    ["urgency_critical-background"]="\"$(grep Emacs.Default.foreground ~/.config/X11/xresources.d/emacs-color-theme | awk '{print $2}')\""
+    ["urgency_critical-foreground"]="\"$(grep Emacs.Default.background ~/.config/X11/xresources.d/emacs-color-theme | awk '{print $2}')\""
+    ["urgency_critical-frame_color"]="\"$(grep Emacs.Error.foreground ~/.config/X11/xresources.d/emacs-color-theme | awk '{print $2}')\""
 )
 
 # Attributes dictionary keys.

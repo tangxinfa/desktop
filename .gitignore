@@ -30,6 +30,8 @@
 bin/*-ctl
 !bin/i3-ctl
 !bin/bluetooth-headset-ctl
+!bin/netease-cloud-music-ctl
+!bin/mouse-left-click
 bin/file-open
 bin/lid-monitor
 

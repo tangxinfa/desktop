@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+if [ -z "$DISPLAY" ]; then
+    export DISPLAY=:0
+fi
+
+xdotool click 1

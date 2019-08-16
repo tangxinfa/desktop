@@ -1,0 +1,67 @@
+#!/usr/bin/env bash
+
+if [ -z "$DISPLAY" ]; then
+  export DISPLAY=:0
+fi
+
+state() {
+  output=$(pacmd list-sink-inputs | grep -E 'state: |application.id = "netease-cloud-music"' | sed -e 's/[[:space:]]//' | tr '\n' ',')
+  if [[ $output == *RUNNING*netease-cloud-music* ]]; then
+    echo "running"
+    return 0
+  elif [[ $output == *CORKED*netease-cloud-music* ]]; then
+    echo "paused"
+    return 1
+  else
+    echo "unknown"
+    return -1
+  fi
+}
+
+notification() {
+  state
+  if [ "$?" = "0" ]; then
+    dunstify -u normal -t 3000 -i netease-cloud-music '✔ Netease Cloud Music Playing'
+  elif [ "$?" = "1" ]; then
+    dunstify -u normal -t 3000 -i netease-cloud-music '✘ Netease Cloud Music Paused'
+  fi
+}
+
+toggle() {
+  if ! pidof netease-cloud-music >/dev/null; then
+    dex /usr/share/applications/netease-cloud-music.desktop
+    sleep 5
+  fi
+  # netease-cloud-music's default key binding is ctrl+alt+p,
+  # but i want to use it in Emacs, so change to ctrl+alt+shift+p.
+  xdotool key ctrl+alt+shift+p
+}
+
+case "${1}" in
+  status)
+    state
+    ;;
+  resume)
+    if [ $(state) != "running" ]; then
+      toggle
+      sleep 1
+    fi
+    notification
+    ;;
+  pause)
+    if [ $(state) = "running" ]; then
+      toggle
+      sleep 1
+    fi
+    notification
+    ;;
+  toggle)
+    toggle
+    sleep 1
+    notification
+    ;;
+  *)
+    echo -e "usage: ${0} <status|pause|resume|toggle>\n\n\tstatus      Show play status.\n\tpause       Pause play.\n\tresume      Resume play.\n\ttoggle      Toggle play." >/dev/stderr
+    exit 1
+    ;;
+esac

@@ -75,6 +75,9 @@ bindsym $mod+d exec --no-startup-id killall rofi && true || rofi -p '' -show dru
 bindsym $mod+t exec --no-startup-id ~/bin/rofi-ydcv
 bindsym $mod+w exec --no-startup-id killall rofi && true || rofi -p '' -show window
 
+# mouse left click
+bindsym Control+$mod+Return exec --no-startup-id ~/bin/mouse-left-click
+
 # change focus
 bindsym $mod+j focus left
 bindsym $mod+k focus down
@@ -172,7 +175,7 @@ bindsym $mod+Shift+r restart
 bindsym $mod+m exec gnome-system-monitor
 
 # resize window (you can also use the mouse for that)
-set $resize [f]  [b]  [n]  [p]
+set $resize 　 [f]  [b]  [n]  [p]
 mode "$resize" {
         bindsym f resize grow width 10 px or 10 ppt
         bindsym b resize shrink width 10 px or 10 ppt
@@ -196,7 +199,7 @@ bindsym $mod+Shift+s mode "$resize"
 bindsym XF86MonBrightnessDown exec --no-startup-id xbacklight - 5
 bindsym XF86MonBrightnessUp exec --no-startup-id xbacklight + 5
 # Screen brightness mode
-set $brightness_management U[p]    Dow[n]
+set $brightness_management 　 [p]  [n]
 mode "$brightness_management" {
      bindsym p exec --no-startup-id xbacklight + 5
      bindsym n exec --no-startup-id xbacklight - 5
@@ -214,11 +217,11 @@ bindsym XF86AudioRaiseVolume exec amixer set Master playback 1000+
 bindsym XF86AudioLowerVolume exec amixer set Master playback 1000-
 bindsym XF86AudioMute exec amixer set Master toggle
 
-set $volume U[p]    Dow[n]    Mut[e]
+set $volume 　 [p]  [n]  [t]
 mode "$volume" {
         bindsym p exec amixer set Master playback 1000+
         bindsym n exec amixer set Master playback 1000-
-        bindsym e exec amixer set Master toggle, mode "default"
+        bindsym t exec amixer set Master toggle, mode "default"
 
         # back to normal: Enter or Escape or q
         bindsym Return mode "default"

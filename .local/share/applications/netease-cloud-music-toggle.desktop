@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=Netease Cloud Music Toggle
+Exec=/bin/bash -c "~/bin/netease-cloud-music-ctl toggle"
+Type=Application
+Terminal=false
+Icon=netease-cloud-music

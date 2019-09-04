@@ -8,15 +8,16 @@ i3_lock() {
     }
     trap revert HUP INT TERM
 
-    if false; then
-        # screen delay close
-        xset +dpms dpms 5 5 5
-    else
-        # fallback if screen delay close not works
+    # If trun off screen with delay not works, you should:
+    #    export DPMS_FORCE_TURN_OFF_SCREEN=true
+    # Which fallback to force turn off screen.
+    if [ "$DPMS_FORCE_TURN_OFF_SCREEN" = true ]; then
         (sleep 1; xset dpms force off) &
+    else
+        xset +dpms dpms 5 5 5
     fi
 
-    i3lock-fancy -n -f Source-Code-Pro -t '' -gp
+    i3lock-fancy -n -f Helvetica-Normal -g
     revert
 }
 

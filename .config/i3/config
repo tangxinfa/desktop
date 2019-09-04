@@ -217,8 +217,18 @@ bindsym XF86AudioRaiseVolume exec amixer set Master playback 1000+
 bindsym XF86AudioLowerVolume exec amixer set Master playback 1000-
 bindsym XF86AudioMute exec amixer set Master toggle
 
-set $volume 　 [p]  [n]  [t]
+set $volume 　 [p]  [n]  [t]  [0-9]
 mode "$volume" {
+        bindsym 0 exec amixer set Master playback 0%
+        bindsym 1 exec amixer set Master playback 10%
+        bindsym 2 exec amixer set Master playback 20%
+        bindsym 3 exec amixer set Master playback 30%
+        bindsym 4 exec amixer set Master playback 40%
+        bindsym 5 exec amixer set Master playback 50%
+        bindsym 6 exec amixer set Master playback 60%
+        bindsym 7 exec amixer set Master playback 70%
+        bindsym 8 exec amixer set Master playback 80%
+        bindsym 9 exec amixer set Master playback 90%
         bindsym p exec amixer set Master playback 1000+
         bindsym n exec amixer set Master playback 1000-
         bindsym t exec amixer set Master toggle, mode "default"
@@ -231,6 +241,11 @@ mode "$volume" {
 }
 bindsym $mod+Shift+v mode "$volume"
 
+# Media player controls
+bindsym XF86AudioPlay exec playerctl play
+bindsym XF86AudioPause exec playerctl pause
+bindsym XF86AudioNext exec playerctl next
+bindsym XF86AudioPrev exec playerctl previous
 
 popup_during_fullscreen leave_fullscreen
 
@@ -239,7 +254,9 @@ assign [class="Emacs"] $workspace2
 assign [class="Gnome-terminal" window_role="gnome-terminal-window.*"] $workspace1
 for_window [class="Gnome-terminal" window_role="gnome-terminal-popup.*"] floating enable, move absolute position center, resize set 800 600
 for_window [class="Xdialog"] floating enable
-assign [class="firefox"] $workspace1
+for_window [title=".*DingTalk.*" window_type="dialog"] floating disable, move container to workspace $workspace4
+for_window [title=".*WeChat.*" window_type="dialog"] floating disable, move container to workspace $workspace4
+assign [class="firefox" window_type="normal"] $workspace1
 assign [class="Chromium"] $workspace1
 assign [class="Google-chrome"] $workspace1
 assign [class="Dia"] $workspace3

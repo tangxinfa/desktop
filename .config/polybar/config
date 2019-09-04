@@ -270,7 +270,7 @@ ramp-volume-4 = 
 ramp-volume-4-foreground = ${colors.warning}
 
 format-muted = %{A1:gtk-launch mate-volume-control:}<label-muted>%{A}
-label-muted = 0
+label-muted = -
 
 
 [module/battery]

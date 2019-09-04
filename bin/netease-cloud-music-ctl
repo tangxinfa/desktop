@@ -6,24 +6,38 @@ fi
 
 state() {
   output=$(pacmd list-sink-inputs | grep -E 'state: |application.id = "netease-cloud-music"' | sed -e 's/[[:space:]]//' | tr '\n' ',')
-  if [[ $output == *RUNNING*netease-cloud-music* ]]; then
-    echo "running"
-    return 0
-  elif [[ $output == *CORKED*netease-cloud-music* ]]; then
+  if [[ $output == *CORKED*netease-cloud-music* ]]; then
     echo "paused"
     return 1
+  elif [[ $output == *RUNNING*netease-cloud-music* ]]; then
+    echo "running"
+    return 0
   else
     echo "unknown"
     return -1
   fi
 }
 
+volume_set() {
+  volume_default=40
+  volume_left=$(amixer sget Master | grep 'Left:' | awk -F'[][]' '{ print $2 }' | awk -F% '{print $1}')
+  volume_right=$(amixer sget Master | grep 'Right:' | awk -F'[][]' '{ print $2 }' | awk -F% '{print $1}')
+  status_left=$(amixer sget Master | grep -E 'Left:.*\[on\]$' >/dev/null && echo on || echo off)
+  status_right=$(amixer sget Master | grep -E 'Right:.*\[on\]$' >/dev/null && echo on || echo off)
+  echo "Volume left ${volume_left} ${status_left} right ${volume_right} ${status_right}, restore to default volume ${volume_default}" >>/dev/stderr
+  amixer --quiet set Master "${volume_default}%"
+  if [ "${status_left}" = "off" ] && [ "${status_right}" = "off" ]; then
+      dunstify -u normal -t 5000 -i audio-volume-muted-symbolic.symbolic '🛈 Please Unmute Audio Volume' >/dev/stderr
+  fi
+}
+
 notification() {
   state
   if [ "$?" = "0" ]; then
-    dunstify -u normal -t 3000 -i netease-cloud-music '✔ Netease Cloud Music Playing'
+    volume_set
+    dunstify -u normal -t 3000 -i netease-cloud-music '✔ Netease Cloud Music Playing' >/dev/stderr
   elif [ "$?" = "1" ]; then
-    dunstify -u normal -t 3000 -i netease-cloud-music '✘ Netease Cloud Music Paused'
+    dunstify -u normal -t 3000 -i netease-cloud-music '✘ Netease Cloud Music Paused' >/dev/stderr
   fi
 }
 

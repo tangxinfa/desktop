@@ -106,6 +106,9 @@ define_keymap(lambda wm_class: wm_class not in ("Emacs", "URxvt", "Rofi", "Gnome
     # Forward/Backward word
     K("M-b"): with_mark(K("C-left")),
     K("M-f"): with_mark(K("C-right")),
+    # Focus next/previous
+    K("M-n"): with_mark(K("TAB")),
+    K("M-p"): with_mark(K("Shift-TAB")),
     # Beginning/End of line
     K("C-a"): with_mark(K("home")),
     K("C-e"): with_mark(K("end")),

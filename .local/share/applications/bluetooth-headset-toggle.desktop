@@ -3,4 +3,4 @@ Name=Bluetooth Headset Toggle
 Exec=/bin/bash -c "~/bin/bluetooth-headset-ctl toggle"
 Type=Application
 Terminal=false
-Icon=audio-headset-symbolic.symbolic
+Icon=audio-headset

@@ -269,6 +269,7 @@ assign [class="Java" title="XMind"] $workspace3
 for_window [class="Dia" window_role="toolbox_window"] floating enable
 assign [title="Electronic WeChat"] $workspace4
 assign [class="dingtalk"] $workspace4
+assign [class="TelegramDesktop"] $workspace4
 for_window [class="Blueman-manager"] floating enable, move absolute position center, resize set 720 480
 assign [class="Wine"] $workspace4
 assign [class="VirtualBox"] $workspace6

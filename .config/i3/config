@@ -70,10 +70,10 @@ bindsym Control+$mod+p exec --no-startup-id ~/bin/rofi-power-menu
 
 # program launcher: rofi
 ##  depends: yaourt -S rofi
-bindsym $mod+r exec --no-startup-id killall rofi && true || rofi -p '' -show run
-bindsym $mod+d exec --no-startup-id killall rofi && true || rofi -p '' -show drun
-bindsym $mod+t exec --no-startup-id ~/bin/rofi-ydcv
-bindsym $mod+w exec --no-startup-id killall rofi && true || rofi -p '' -show window
+bindsym $mod+r exec --no-startup-id "killall rofi && true || rofi -p '' -show run"
+bindsym $mod+d exec --no-startup-id "killall rofi && true || rofi -p '' -show drun"
+bindsym $mod+t exec --no-startup-id "killall rofi && true || rofi -p '' -show '' -modi ':~/bin/rofi-ydcv' -no-sidebar-mode -fixed-num-lines -lines 14 -yoffset 0 -location 5 -theme-str '#element { padding: 0.1em; }'"
+bindsym $mod+w exec --no-startup-id "killall rofi && true || rofi -p '' -show window"
 
 # mouse left click
 bindsym Control+$mod+Return exec --no-startup-id ~/bin/mouse-left-click

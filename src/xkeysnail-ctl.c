@@ -125,7 +125,7 @@ void xkeysnail_status_maintain() {
 
   // Update polybar xkeysnail icon and set CapsLock off.
   command_output(
-      "polybar-msg hook xkeysnail >/dev/null 2>&1; ~/bin/tty-ctl capslockoff",
+      "polybar-msg hook xkeysnail 1 >/dev/null 2>&1; ~/bin/tty-ctl capslockoff",
       NULL, 0);
 }
 

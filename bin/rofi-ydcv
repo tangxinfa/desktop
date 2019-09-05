@@ -11,8 +11,7 @@ TEXT="${TEXT//[\'\"]/}"
 if [[ "${TEXT}" != "" ]]; then
   # Avoid use ydcv's "-r" option for read, which is a blocking call.
   (echo "${TEXT}" | festival --tts >/dev/null 2>&1 &)
-  killall rofi
-  rofi -p '' -show '' -modi ":ydcv -f '${TEXT}'" -no-sidebar-mode -fixed-num-lines -lines 14 -yoffset 0 -location 5 -theme-str '#element { padding: 0.1em; }'
+  ydcv -f "${TEXT}"
   exit 0
 fi
 

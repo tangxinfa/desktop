@@ -1,0 +1,12 @@
+#!/bin/bash
+
+EMACS_PID="`pidof emacs | awk '{print $1}'`"
+if [ -z "$EMACS_PID" ]; then
+    exit 0
+fi
+
+REPRESENT=`timeout 2 emacsclient --eval "(ignore-errors (when (fboundp 'my/org-pomodoro-represent) (my/org-pomodoro-represent)))" 2>/dev/null`
+if [ "$REPRESENT" = "nil" ]; then
+    REPRESENT=""
+fi
+echo $REPRESENT

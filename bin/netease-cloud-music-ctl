@@ -6,10 +6,10 @@ fi
 
 state() {
   output=$(pacmd list-sink-inputs | grep -E 'state: |application.id = "netease-cloud-music"' | sed -e 's/[[:space:]]//' | tr '\n' ',')
-  if [[ $output == *CORKED*netease-cloud-music* ]]; then
+  if [[ $output =~ .*state:[[:space:]]*CORKED\,[[:space:]]*application\.id[[:space:]]*\=[[:space:]]*\"netease-cloud-music\".* ]]; then
     echo "paused"
     return 1
-  elif [[ $output == *RUNNING*netease-cloud-music* ]]; then
+  elif [[ $output =~ .*state:[[:space:]]*RUNNING\,[[:space:]]*application\.id[[:space:]]*\=[[:space:]]*\"netease-cloud-music\".* ]]; then
     echo "running"
     return 0
   else
@@ -27,7 +27,7 @@ volume_set() {
   echo "Volume left ${volume_left} ${status_left} right ${volume_right} ${status_right}, restore to default volume ${volume_default}" >>/dev/stderr
   amixer --quiet set Master "${volume_default}%"
   if [ "${status_left}" = "off" ] && [ "${status_right}" = "off" ]; then
-      dunstify -u normal -t 5000 -i audio-volume-muted-symbolic.symbolic '🛈 Please Unmute Audio Volume' >/dev/stderr
+    dunstify -u normal -t 5000 -i audio-volume-muted-symbolic.symbolic '🛈 Please Unmute Audio Volume' >/dev/stderr
   fi
 }
 

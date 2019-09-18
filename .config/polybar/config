@@ -58,10 +58,12 @@ font-2 = "FontAwesome:size=12;1"
 font-3 = "Weather Icons:size=12;1"
 font-4 = "FontAwesome:size=15;1"
 font-5 = "file\-icons:size=12;1"
+font-6 = "Source Han Sans CN:size=18;1"
+font-7 = "DejaVu Sans:size=18;1"
 
 modules-left = i3 xwindow
 modules-center =
-modules-right = xkeysnail dual-screen filesystem xbacklight pulseaudio memory cpu temperature battery network-wired network-wireless weather date power
+modules-right = pomodoro xkeysnail dual-screen filesystem xbacklight pulseaudio memory cpu temperature battery network-wired network-wireless weather date power
 
 tray-position = center
 tray-padding = 0
@@ -255,6 +257,15 @@ time = "%a %H:%M"
 time-alt = "%H:%M:%S"
 format = <label>
 label = "%{A5:~/bin/polybar-calendar on:}%{A4:~/bin/polybar-calendar off:}%{A1:~/bin/polybar-calendar on:}%date%%time%%{A}%{A}%{A}"
+
+[module/pomodoro]
+type = custom/script
+format = <label>
+exec = ~/bin/pomodoro-indicator
+label-foreground = ${colors.warning}
+label-underline = ${colors.warning}
+label-font = 7
+interval = 2
 
 [module/pulseaudio]
 type = internal/pulseaudio

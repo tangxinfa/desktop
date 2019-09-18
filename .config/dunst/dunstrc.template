@@ -72,7 +72,7 @@
     #  * foreground: use the same color as the foreground;
     #  * frame: use the same color as the frame;
     #  * anything else will be interpreted as a X color.
-    separator_color = frame
+    separator_color = auto
 
     # Sort messages by urgency.
     sort = yes
@@ -125,7 +125,7 @@
     #   %n  progress value if set without any extra characters
     #   %%  Literal %
     # Markup is allowed
-    format = "<b>%s</b>\n%b"
+    format = "<b>%s</b>   %b"
 
     # Alignment of message text.
     # Possible values are "left", "center" and "right".
@@ -165,7 +165,7 @@
     max_icon_size = 48
 
     # Paths to default icons.
-    icon_path = /usr/share/icons/Adwaita/48x48/status/:/usr/share/icons/Adwaita/48x48/devices/:/usr/share/icons/Adwaita/48x48/apps/:/usr/share/icons/hicolor/scalable/apps/
+    icon_path = /usr/share/icons/Adwaita/48x48/status/:/usr/share/icons/Adwaita/48x48/devices/:/usr/share/icons/Adwaita/48x48/apps/:/usr/share/icons/hicolor/scalable/apps/:/usr/share/icons/Adwaita/24x24/status/:/usr/share/icons/Adwaita/24x24/devices/:/usr/share/icons/Adwaita/24x24/apps/:/usr/share/icons/Adwaita/24x24/legacy/
 
     ### History ###
 

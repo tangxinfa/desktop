@@ -40,37 +40,44 @@
     spacing: 0;
     border-radius: 5px;
     transparency: "screenshot";
-    background-color: @transparent;
+    background-color: @background;
+    padding: 1em 2em 1.5em 2em;
 }
 
 #inputbar {
-    children:   [ prompt, entry, sidebar ];
-    padding: 0.5em 1em;
-    border:  0 0.5em;
-    border-color: @lightbg;
+    children: [ sidebar, entry, prompt ];
+    padding: 0;
 }
 
 #prompt {
-    padding: 0.35em 0.25em 0.25em 0.25em;
+    padding: 0.25em 0.5em;
+    margin: 0;
+    border: 1 1 1 0;
+    border-radius: 0 1em 1em 0;
+    font: "Awasome 15";
 }
 
 #entry {
-    padding: 0.25em 0;
+    padding: 0.25em 0.5em;
+    margin: 0;
+    border: 1 0 1 1;
+    border-radius: 1em 0 0 1em;
 }
 
 #listview {
-    border: 0;
+    margin: 0.75em 0;
+    border-color: @background;
     spacing: 0;
     padding: 0;
     scrollbar: false;
-    background-color: @lightbg;
-    border: 1px 0 0 0;
 }
 
 #element {
-    padding: 0.5em 1em;
-    border: 0 0.5em;
-    border-color: @lightbg;
+    padding: 0.25em;
+    border: 1;
+    border-radius: 5px;
+    margin: 0.125em 0em;
+    border-color: @background;
 }
 
 #element.selected {
@@ -94,6 +101,5 @@
 
 #sidebar {
     padding: 0;
-    width: 5em;
     border: 0;
 }

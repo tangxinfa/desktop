@@ -30,22 +30,22 @@ use_shadow = ON
 use_colors = ON
 
 # Screen color
-screen_color = ({emacs-default-foreground},{emacs-default-background},ON)
+screen_color = ({{BasicEmacsDefaultForeground}},{{BasicEmacsDefaultBackground}},ON)
 
 # Shadow color
-shadow_color = ({emacs-modeline-underline},{emacs-modeline-underline},ON)
+shadow_color = ({{BasicEmacsModeLineUnderline}},{{BasicEmacsModeLineUnderline}},ON)
 
 # Dialog box color
-dialog_color = ({emacs-tooltip-foreground},{emacs-tooltip-background},OFF)
+dialog_color = ({{BasicEmacsTooltipForeground}},{{BasicEmacsTooltipBackground}},OFF)
 
 # Dialog box title color
-title_color = ({emacs-tooltip-foreground},{emacs-tooltip-background},ON)
+title_color = ({{BasicEmacsTooltipForeground}},{{BasicEmacsTooltipBackground}},ON)
 
 # Dialog box border color
-border_color = ({emacs-tooltip-background},{emacs-tooltip-background},ON)
+border_color = ({{BasicEmacsTooltipBackground}},{{BasicEmacsTooltipBackground}},ON)
 
 # Active button color
-button_active_color = ({emacs-tooltip-background},{emacs-tooltip-foreground},ON)
+button_active_color = ({{BasicEmacsTooltipBackground}},{{BasicEmacsTooltipForeground}},ON)
 
 # Inactive button color
 button_inactive_color = dialog_color
@@ -54,13 +54,13 @@ button_inactive_color = dialog_color
 button_key_active_color = button_active_color
 
 # Inactive button key color
-button_key_inactive_color = ({emacs-tooltip-foreground},{emacs-tooltip-background},OFF)
+button_key_inactive_color = ({{BasicEmacsTooltipForeground}},{{BasicEmacsTooltipBackground}},OFF)
 
 # Active button label color
 button_label_active_color = button_active_color
 
 # Inactive button label color
-button_label_inactive_color = ({emacs-tooltip-foreground},{emacs-tooltip-background},ON)
+button_label_inactive_color = ({{BasicEmacsTooltipForeground}},{{BasicEmacsTooltipBackground}},ON)
 
 # Input box color
 inputbox_color = dialog_color
@@ -111,22 +111,22 @@ check_color = dialog_color
 check_selected_color = button_active_color
 
 # Up arrow color
-uarrow_color = ({emacs-tooltip-foreground},{emacs-tooltip-background},ON)
+uarrow_color = ({{BasicEmacsTooltipForeground}},{{BasicEmacsTooltipBackground}},ON)
 
 # Down arrow color
 darrow_color = uarrow_color
 
 # Item help-text color
-itemhelp_color = ({emacs-tooltip-foreground},{emacs-tooltip-background},OFF)
+itemhelp_color = ({{BasicEmacsTooltipForeground}},{{BasicEmacsTooltipBackground}},OFF)
 
 # Active form text color
 form_active_text_color = button_active_color
 
 # Form text color
-form_text_color = ({emacs-tooltip-foreground},{emacs-tooltip-background},ON)
+form_text_color = ({{BasicEmacsTooltipForeground}},{{BasicEmacsTooltipBackground}},ON)
 
 # Readonly form item color
-form_item_readonly_color = ({emacs-tooltip-foreground},{emacs-tooltip-background},ON)
+form_item_readonly_color = ({{BasicEmacsTooltipForeground}},{{BasicEmacsTooltipBackground}},ON)
 
 # Dialog box gauge color
 gauge_color = title_color

@@ -101,7 +101,7 @@ rofi.tokenize:                       false
 ! "Indicate how it match by underlining it." Set from: Commandline
 rofi.show-match:                       false
 ! "New style theme file" Set from: Commandline
-rofi.theme:                            ~/.config/rofi/themes/rofi.rasi
+rofi.theme:                            ~/.config/rofi/theme.rasi
 ! "Color scheme for normal row" Set from: Default
 ! rofi.color-normal:
 ! "Color scheme for urgent row" Set from: Default

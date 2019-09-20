@@ -17,12 +17,12 @@
 ;==========================================================
 
 [colors]
-background = ${xrdb:Emacs.ModeLineInactive.background}
-background-alt = ${xrdb:Emacs.ModeLine.background}
-foreground = ${xrdb:Emacs.ModeLineInactive.foreground}
-foreground-alt = ${xrdb:Emacs.ModeLine.foreground}
-border = ${xrdb:Emacs.VerticalBorder.foreground}
-underline = ${xrdb:Emacs.Cursor.background}
+background = #{{EmacsModeLineInactiveBackground}}
+background-alt = #{{EmacsModeLineBackground}}
+foreground = #{{EmacsModeLineInactiveForeground}}
+foreground-alt = #{{EmacsModeLineForeground}}
+border = #{{EmacsVerticalBorderForeground}}
+underline = #{{EmacsCursorBackground}}
 warning = #ffb52a
 alert = #bd2c40
 

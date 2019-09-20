@@ -1,6 +1,10 @@
 #!/bin/bash
 
 xrdb -merge -I$HOME/.config/X11 ${HOME}/.config/X11/xresources
-~/bin/dunstrc-update
+
+mustache ~/.config/emacs.theme ~/.config/dunst/dunstrc.template > ~/.config/dunst/dunstrc
 killall dunst
+mustache ~/.config/emacs.theme ~/.config/polybar/config.template > ~/.config/polybar/config
+mustache ~/.config/emacs.theme ~/.config/rofi/theme.rasi.template > ~/.config/rofi/theme.rasi
+mustache ~/.config/emacs.theme ~/.dialogrc.template > ~/.dialogrc
 polybar-msg cmd restart

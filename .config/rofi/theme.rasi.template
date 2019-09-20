@@ -1,0 +1,64 @@
+* {
+    background-color:            #{{EmacsModeLineInactiveBackground}};
+    text-color:                  #{{EmacsModeLineInactiveForeground}};
+    selected-background-color:   #{{EmacsRegionBackground}};
+    selected-text-color:         #{{EmacsRegionForeground}};
+    border-color:                #{{EmacsRegionBackground}};
+    underline-color:             #{{EmacsCursorBackground}};
+    transparent:                 #{{EmacsPopupMenuBackground}}cc;
+}
+
+#window {
+    children: [ inputbar, listview ];
+    padding: 0;
+    spacing: 0;
+    border: 1;
+    border-color: @border-color;
+    transparency: "real";
+    padding: 1em 2em 1.5em 2em;
+}
+
+#inputbar {
+    children: [ entry, prompt ];
+    padding: 0;
+    border-radius: 1em;
+    margin: 0 0 0 14em;
+}
+
+#prompt {
+    padding: 0.25em 0.5em;
+    margin: 0;
+    text-color: @selected-text-color;
+    background-color: @selected-background-color;
+    font: "Awasome 15";
+}
+
+#entry {
+    text-color: @selected-text-color;
+    background-color: @selected-background-color;
+    padding: 0.25em 0.5em;
+    margin: 0;
+}
+
+#listview {
+    margin: 0.75em 0;
+    border-color: @background-color;
+    spacing: 0;
+    padding: 0;
+    scrollbar: false;
+}
+
+#element {
+    padding: 0.25em 0.5em;
+    border: 1;
+    border-color: @background-color;
+    border-radius: 0;
+    margin: 0.125em 0em;
+}
+
+#element.selected {
+    border-color: @underline-color;
+    text-color: @selected-foreground-color;
+    background-color: @selected-background-color;
+    border-radius: 1em;
+}

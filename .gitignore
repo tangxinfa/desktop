@@ -45,3 +45,4 @@ bin/lid-monitor
 # Temporaries
 .dialogrc
 .config/dunst/dunstrc
+.config/polybar/config

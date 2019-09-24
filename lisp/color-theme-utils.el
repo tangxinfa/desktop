@@ -173,7 +173,10 @@ This prevents overlapping themes; something I would rarely want."
                                                                                    (list 2))))
     (EmacsErrorForeground . ,(apply #'color-theme-utils--color-rgb-to-hex (nconc (color-name-to-rgb
                                                                                   (or (face-foreground 'error nil t) (face-foreground 'default nil t)))
-                                                                                 (list 2))))))
+                                                                                 (list 2))))
+    (EmacsSuccessForeground . ,(apply #'color-theme-utils--color-rgb-to-hex (nconc (color-name-to-rgb
+                                                                                    (or (face-foreground 'success nil t) (face-foreground 'default nil t)))
+                                                                                   (list 2))))))
 
 (defun color-theme-utils-basic-color-name (color)
   "Basic color name of COLOR."

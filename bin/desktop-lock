@@ -2,6 +2,10 @@
 
 REASON="$1"
 
+desktop_locked() {
+    pidof i3lock vlock >/dev/null 2>&1
+}
+
 i3_lock() {
     revert() {
         xset dpms 0 0 0
@@ -17,17 +21,19 @@ i3_lock() {
         xset +dpms dpms 5 5 5
     fi
 
-    i3lock-fancy -n -f Helvetica-Normal -g
+    $(desktop_locked) || i3lock-fancy -n -f Helvetica-Normal -g
     revert
 }
 
 tty_lock() {
-    ~/bin/tty-ctl lock
+    $(desktop_locked) || ~/bin/tty-ctl lock
 }
 
 TTY_I3=$(~/bin/i3-ctl tty)
 TTY_ACTIVE=$(~/bin/tty-ctl active)
 TTY_EMACS=$(readlink /proc/`pidof emacs -s`/fd/0 2>/dev/null | awk -F/dev/tty '{print $2}')
+I3_UID=$(stat -c "%u" /proc/`pidof i3 i3-with-shmlog -s` 2>/dev/null)
+CURRENT_UID=$(id -u)
 
 # Ignore i3 auto lock if i3 is inactive and a emacs running on console,
 # emacs will responsible for auto lock desktop.
@@ -46,7 +52,7 @@ fi
 
 # Use i3lock if i3 is active, tty lock otherwise.
 if [ "${TTY_I3}" = "${TTY_ACTIVE}" ]; then
-    if [ "${XDG_VTNR}" != "${TTY_I3}" ]; then
+    if [ "${XDG_VTNR}" != "${TTY_I3}" ] || [ "${I3_UID}" != "${CURRENT_UID}" ]; then
         i3-msg exec ~/bin/desktop-lock $REASON
     else
         i3_lock

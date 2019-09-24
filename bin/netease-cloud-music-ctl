@@ -42,13 +42,25 @@ notification() {
 }
 
 toggle() {
+  state_old=$(state)
   if ! pidof netease-cloud-music >/dev/null; then
     dex /usr/share/applications/netease-cloud-music.desktop
-    sleep 5
+    for ((i = 1; i <= 10; i++)); do
+      sleep 1
+      if pidof netease-cloud-music >/dev/null; then
+        break
+      fi
+    done
   fi
-  # netease-cloud-music's default key binding is ctrl+alt+p,
-  # but i want to use it in Emacs, so change to ctrl+alt+shift+p.
-  xdotool key ctrl+alt+shift+p
+  for ((i = 1; i <= 10; i++)); do
+    # netease-cloud-music's default key binding is ctrl+alt+p,
+    # but i want to use it in Emacs, so change to ctrl+alt+shift+p.
+    xdotool key ctrl+alt+shift+p
+    sleep 1
+    if [ $(state) != "$state_old" ]; then
+      break
+    fi
+  done
 }
 
 case "${1}" in
@@ -58,20 +70,17 @@ case "${1}" in
   resume)
     if [ $(state) != "running" ]; then
       toggle
-      sleep 1
     fi
     notification
     ;;
   pause)
     if [ $(state) = "running" ]; then
       toggle
-      sleep 1
     fi
     notification
     ;;
   toggle)
     toggle
-    sleep 1
     notification
     ;;
   *)

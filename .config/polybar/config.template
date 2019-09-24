@@ -23,8 +23,9 @@ foreground = #{{EmacsModeLineInactiveForeground}}
 foreground-alt = #{{EmacsModeLineForeground}}
 border = #{{EmacsVerticalBorderForeground}}
 underline = #{{EmacsCursorBackground}}
-warning = #ffb52a
-alert = #bd2c40
+warning = #{{EmacsWarningForeground}}
+error = #{{EmacsErrorForeground}}
+success = #{{EmacsSuccessForeground}}
 
 [bar/top]
 monitor = ${xrdb:DualScreen.Primary:HDMI-1}
@@ -63,7 +64,7 @@ font-7 = "DejaVu Sans:size=18;1"
 
 modules-left = i3 xwindow
 modules-center =
-modules-right = pomodoro xkeysnail dual-screen filesystem xbacklight pulseaudio memory cpu temperature battery network-wired network-wireless weather date power
+modules-right = pomodoro xkeysnail dual-screen filesystem xbacklight pulseaudio memory cpu temperature battery network-wired network-wireless weather date power-with-bluetooth-mobile power-without-bluetooth-mobile
 
 tray-position = center
 tray-padding = 0
@@ -112,9 +113,9 @@ mount-1 = /tmp
 format-mounted = %{A1:gnome-system-monitor -f&:}%{A3:gnome-terminal --role=gnome-terminal-popup -- sudo iotop:}<ramp-capacity><label-mounted>%{A}%{A}
 label-mounted = %percentage_used%
 label-unmounted =
-label-unmounted-foreground = ${colors.alert}
+label-unmounted-foreground = ${colors.error}
 ramp-capacity-0 = 
-ramp-capacity-0-foreground = ${colors.alert}
+ramp-capacity-0-foreground = ${colors.error}
 ramp-capacity-1 = 
 ramp-capacity-1-foreground = ${colors.warning}
 ramp-capacity-2 = 
@@ -232,7 +233,7 @@ label-connected =
 format-disconnected = %{A5:gnome-system-monitor -r&:}%{A1:nmcli d wifi >/dev/null 2>&1 && networkmanager_dmenu:}%{A}%{A}
 
 ramp-signal-0 = 
-ramp-signal-0-foreground = ${colors.alert}
+ramp-signal-0-foreground = ${colors.error}
 ramp-signal-1 = 
 ramp-signal-2 = 
 ramp-signal-3 = 
@@ -299,7 +300,7 @@ format-charging = <animation-charging><label-charging>
 format-discharging = <ramp-capacity><label-discharging>
 
 ramp-capacity-0 = 
-ramp-capacity-0-foreground = ${colors.alert}
+ramp-capacity-0-foreground = ${colors.error}
 ramp-capacity-1 = 
 ramp-capacity-1-foreground = ${colors.warning}
 ramp-capacity-2 = 
@@ -332,12 +333,25 @@ ramp-2 = 
 ramp-2-foreground = ${colors.warning}
 
 
-[module/power]
+[module/power-with-bluetooth-mobile]
 type = custom/script
+exec-if = [ $(~/bin/bluetooth-mobile-ctl status) = "on" ]
 format = <label>
 exec = echo "%{A5:~/bin/rofi-power-menu:}      %{A}"
 click-left = ~/bin/desktop-lock
 label-font = 5
+label-foreground = ${colors.success}
+interval = 2
+
+
+[module/power-without-bluetooth-mobile]
+type = custom/script
+exec-if = [ $(~/bin/bluetooth-mobile-ctl status) = "off" ]
+format = <label>
+exec = echo "%{A5:~/bin/rofi-power-menu:}      %{A}"
+click-left = ~/bin/desktop-lock
+label-font = 5
+interval = 2
 
 
 [module/weather]

@@ -28,7 +28,7 @@ headset_device() {
 
 headset_connect() {
   notification_id=${RANDOM}
-  dunstify -r ${notification_id} -u normal -t 30000 -i audio-headset '▢ Headset Connecting'
+  dunstify -r ${notification_id} -u normal -t 60000 -i audio-headset '○ Headset Connecting'
   delay=0
   if bluetooth | grep 'bluetooth = off' >/dev/null; then
     delay=3

@@ -87,6 +87,9 @@ This prevents overlapping themes; something I would rarely want."
     (EmacsDefaultForeground . ,(apply #'color-theme-utils--color-rgb-to-hex (nconc (color-name-to-rgb
                                                                                     (face-foreground 'default nil t))
                                                                                    (list 2))))
+    (EmacsHlLineBackground . ,(apply #'color-theme-utils--color-rgb-to-hex (nconc (color-name-to-rgb
+                                                                                   (or (face-background 'hl-line nil t) (face-background 'default  nil t)))
+                                                                                  (list 2))))
     (EmacsModeLineBackground . ,(apply #'color-theme-utils--color-rgb-to-hex (nconc (color-name-to-rgb
                                                                                      (or (face-background 'mode-line nil t) (face-background 'default  nil t)))
                                                                                     (list 2))))

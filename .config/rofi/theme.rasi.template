@@ -1,11 +1,7 @@
 * {
-    background-color:            #{{EmacsPopupMenuBackground}};
-    text-color:                  #{{EmacsPopupMenuForeground}};
-    selected-background-color:   #{{EmacsPopupMenuSelectionBackground}};
-    selected-text-color:         #{{EmacsPopupMenuSelectionForeground}};
-    border-color:                #{{EmacsRegionBackground}};
-    underline-color:             #{{EmacsCursorBackground}};
-    transparent:                 #{{EmacsPopupMenuBackground}}cc;
+    background-color:            #{{EmacsDefaultBackground}};
+    text-color:                  #{{EmacsDefaultForeground}};
+    highlight-background-color:  #{{EmacsHlLineBackground}};
 }
 
 #window {
@@ -13,7 +9,8 @@
     padding: 0;
     spacing: 0;
     border: 1;
-    border-color: @border-color;
+    border-color: @highlight-background-color;
+    border-radius: 5px;
     transparency: "real";
     padding: 1em 2em 1.5em 2em;
 }
@@ -21,16 +18,20 @@
 #inputbar {
     children: [ entry, prompt ];
     padding: 0;
-    border-radius: 1em;
     border: 1;
-    border-color: @selected-background-color;
+    border-color: @highlight-background-color;
+    border-radius: 1em;
     margin: 0 0 0 14em;
 }
 
 #prompt {
-    padding: 0.25em 0.5em;
-    margin: 0;
+    padding: 0.20em 0.25em;
+    margin: 0.1em;
+    border: 1;
+    border-radius: 1em;
     font: "Awasome 15";
+    background-color: @text-color;
+    text-color: @highlight-background-color;
 }
 
 #entry {
@@ -51,6 +52,5 @@
 }
 
 #element.selected {
-    text-color: @selected-text-color;
-    background-color: @selected-background-color;
+    background-color: @highlight-background-color;
 }

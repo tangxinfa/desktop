@@ -283,14 +283,14 @@
 
 [urgency_normal]
     background = "#{{EmacsDefaultBackground}}"
-    foreground = "#{{EmacsWarningForeground}}"
+    foreground = "#{{EmacsSuccessForeground}}"
     timeout = 10
     # Icon for notifications with normal urgency, uncomment to enable
     #icon = /path/to/icon
 
 [urgency_critical]
     background = "#{{EmacsDefaultBackground}}"
-    foreground = "#{{EmacsErrorForeground}}"
+    foreground = "#{{EmacsWarningForeground}}"
     timeout = 0
     # Icon for notifications with critical urgency, uncomment to enable
     #icon = /path/to/icon

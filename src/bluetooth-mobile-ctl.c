@@ -46,52 +46,109 @@ FILE* logger() {
   return file;
 }
 
-bool bluetooth_mobile_detected(const char* device) {
+/**
+ * Check if mobile device is reachable.
+ *
+ * @param device Device to check.
+ *
+ * @return true if reachable, false otherwise.
+ */
+bool bluetooth_mobile_reachable(const char* device) {
   char command[PATH_MAX] = {'\0'};
-  snprintf(command, sizeof(command), "l2ping -c 1 '%s' >/dev/null 2>&1",
-           device);
+  snprintf(command, sizeof(command),
+           "timeout 4 l2ping -r -t 1 -c 1 '%s' >/dev/null 2>&1", device);
   int status = system(command);
   status = ((status == -1 || !WIFEXITED(status)) ? EXIT_FAILURE
                                                  : WEXITSTATUS(status));
   logging(stderr, "Bluetooth mobile device %s %s", device,
-          (status == EXIT_SUCCESS ? "detected" : "not detected"));
-  static int old_status = -1;
-  if (old_status != status) {
-    FILE* file = fopen(status_file, "w");
-    if (!file) {
-      logging(stderr, "Create status file %s failed: %d", status_file, errno);
-    } else {
-      fputs((status == EXIT_SUCCESS ? "on" : "off"), file);
-      fclose(file);
-    }
-    old_status = status;
-  }
+          (status == EXIT_SUCCESS ? "reachable" : "unreachable"));
   return (status == EXIT_SUCCESS);
 }
 
-bool bluetooth_mobile_wait(const char* device) {
-  logging(stderr, "Wait until bluetooth mobile device %s appear ...", device);
-  while (!bluetooth_mobile_detected(device)) {
-    sleep(1);
-  }
-
-  logging(stderr, "Wait until bluetooth mobile device %s disappear ...",
-          device);
+/**
+ * Keepalive with mobile device.
+ *
+ * @param device Device to keepalive.
+ */
+void bluetooth_mobile_keepalive(const char* device) {
+  logging(stderr, "Bluetooth mobile device %s keepalive ...", device);
   char command[PATH_MAX] = {'\0'};
-  snprintf(command, sizeof(command), "l2ping -d 2 '%s' >/dev/null 2>&1",
+  snprintf(command, sizeof(command), "l2ping -r -t 1 -d 2 '%s' >/dev/null 2>&1",
            device);
   system(command);
+  logging(stderr, "Bluetooth mobile device %s keepalive interrupted", device);
+}
 
-  time_t begin = time(NULL);
-  for (int i = 0; i < 3; ++i) {
-    if (bluetooth_mobile_detected(device)) {
+/**
+ * Check if mobile device is really faraway.
+ *
+ * @param device Device to check.
+ *
+ * @return true if really faraway, false otherwise.
+ */
+bool bluetooth_mobile_faraway(const char* device) {
+  const int rounds = 5;
+  const int round_min_interval = 2;
+  const int check_timeout = 10;
+
+  const time_t check_begin = time(NULL);
+  for (int i = 0; i < rounds; ++i) {
+    const time_t round_begin = time(NULL);
+    if (bluetooth_mobile_reachable(device)) {
       return false;
-    } else if (time(NULL) - begin > 7) {
+    }
+    const time_t round_end = time(NULL);
+    if (round_end - check_begin > check_timeout) {
       break;
+    } else if (round_end - round_begin < round_min_interval) {
+      sleep(round_min_interval);
     }
   }
 
   return true;
+}
+
+bool bluetooth_mobile_activate_desktop() {
+  static char old_desktop_lock_id[64] = {'\0'};
+
+  char new_desktop_lock_id[sizeof(old_desktop_lock_id)] = {'\0'};
+  FILE* fp = popen("pidof vlock i3lock", "r");
+  if (NULL == fp) {
+    perror("popen");
+    return false;
+  }
+  fgets(new_desktop_lock_id, sizeof(new_desktop_lock_id), fp);
+  pclose(fp);
+
+  // Activate the desktop if it running a new lock.
+  const bool new_lock = strcmp(new_desktop_lock_id, old_desktop_lock_id) != 0;
+  if (new_lock) {
+    system("~/bin/desktop-activate");
+  }
+
+  strcpy(old_desktop_lock_id, new_desktop_lock_id);
+
+  return new_lock;
+}
+
+bool bluetooth_mobile_status_file_write(bool faraway) {
+  static int old_value = -1;
+  if (old_value != faraway) {
+    FILE* file = fopen(status_file, "w");
+    if (!file) {
+      logging(stderr, "Create status file %s failed: %d", status_file, errno);
+    } else {
+      fputs(faraway ? "off" : "on", file);
+      fclose(file);
+    }
+    if (!faraway) {
+      bluetooth_mobile_activate_desktop();
+    }
+    old_value = faraway;
+    return true;
+  }
+
+  return false;
 }
 
 int bluetooth_mobile_monitor_lock() {
@@ -119,13 +176,22 @@ int bluetooth_mobile_monitor(const char* device) {
   if (error != 0) {
     return error;
   }
+
+  bool enable_lock_desktop = false;
+
   do {
-    if (bluetooth_mobile_wait(device)) {
-      logging(stderr, "Mobile far way, lock the desktop");
-      system("~/bin/desktop-lock mobile-far-away");
-    } else {
-      logging(stderr, "Wait bluetooth mobile device %s failed", device);
+    const bool faraway = bluetooth_mobile_faraway(device);
+    const bool status_changed = bluetooth_mobile_status_file_write(faraway);
+    if (faraway) {
+      if (status_changed && enable_lock_desktop) {
+        logging(stderr, "Bluetooth mobile device %s faraway, lock the desktop",
+                device);
+        system("~/bin/desktop-lock mobile-faraway");
+      }
+      continue;
     }
+    enable_lock_desktop = true;
+    bluetooth_mobile_keepalive(device);
   } while (true);
 
   return 0;
@@ -141,7 +207,7 @@ int main(int argc, char* argv[]) {
   const char* device = getenv("BLUETOOTH_MOBILE_DEVICE");
   if (!device) {
     logging(stderr,
-            "error: BLUETOOTH_HEADSET_NAME environment variable not set");
+            "error: BLUETOOTH_MOBILE_DEVICE environment variable not set");
     return EXIT_FAILURE;
   }
 

@@ -27,7 +27,7 @@ volume_set() {
   echo "Volume left ${volume_left} ${status_left} right ${volume_right} ${status_right}, restore to default volume ${volume_default}" >>/dev/stderr
   amixer --quiet set Master "${volume_default}%"
   if [ "${status_left}" = "off" ] && [ "${status_right}" = "off" ]; then
-    dunstify -u normal -t 5000 -i audio-volume-muted-symbolic.symbolic '🛈 Please Unmute Audio Volume' >/dev/stderr
+    dunstify -u critical -t 5000 -i audio-volume-muted-symbolic.symbolic '🛈 Please Unmute Audio Volume' >/dev/stderr
   fi
 }
 
@@ -37,7 +37,7 @@ notification() {
     volume_set
     dunstify -u normal -t 3000 -i netease-cloud-music '✔ Netease Cloud Music Playing' >/dev/stderr
   elif [ "$?" = "1" ]; then
-    dunstify -u normal -t 3000 -i netease-cloud-music '✘ Netease Cloud Music Paused' >/dev/stderr
+    dunstify -u critical -t 3000 -i netease-cloud-music '✘ Netease Cloud Music Paused' >/dev/stderr
   fi
 }
 

@@ -53,7 +53,7 @@ fi
 # Use i3lock if i3 is active, tty lock otherwise.
 if [ "${TTY_I3}" = "${TTY_ACTIVE}" ]; then
     if [ "${XDG_VTNR}" != "${TTY_I3}" ] || [ "${I3_UID}" != "${CURRENT_UID}" ]; then
-        i3-msg exec ~/bin/desktop-lock $REASON
+        i3-msg exec ~/bin/desktop-lock $REASON >/dev/null
     else
         i3_lock
     fi

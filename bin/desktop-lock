@@ -3,60 +3,68 @@
 REASON="$1"
 
 desktop_locked() {
-    pidof i3lock vlock >/dev/null 2>&1
+  pidof i3lock vlock >/dev/null 2>&1
 }
 
 i3_lock() {
-    revert() {
-        xset dpms 0 0 0
-    }
-    trap revert HUP INT TERM
+  revert() {
+    xset dpms 0 0 0
+  }
+  trap revert HUP INT TERM
 
-    # If trun off screen with delay not works, you should:
-    #    export DPMS_FORCE_TURN_OFF_SCREEN=true
-    # Which fallback to force turn off screen.
-    if [ "$DPMS_FORCE_TURN_OFF_SCREEN" = true ]; then
-        (sleep 1; xset dpms force off) &
-    else
-        xset +dpms dpms 5 5 5
-    fi
+  # If trun off screen with delay not works, you should:
+  #    export DPMS_FORCE_TURN_OFF_SCREEN=true
+  # Which fallback to force turn off screen.
+  if [ "$DPMS_FORCE_TURN_OFF_SCREEN" = true ]; then
+    (
+      sleep 1
+      xset dpms force off
+    ) &
+  else
+    xset +dpms dpms 5 5 5
+  fi
 
-    $(desktop_locked) || i3lock-fancy -n -f Helvetica-Normal -g
-    revert
+  background_color=$(grep -E '^EmacsDefaultBackground:' ~/.config/emacs.theme | awk -F'"' '{print $2}')
+  indicator_verification_color=$(grep -E '^EmacsWarningForeground:' ~/.config/emacs.theme | awk -F'"' '{print $2}')
+  indicator_error_color=$(grep -E '^EmacsErrorForeground:' ~/.config/emacs.theme | awk -F'"' '{print $2}')
+  indicator_default_color=$(grep -E '^EmacsSuccessForeground:' ~/.config/emacs.theme | awk -F'"' '{print $2}')
+  $(desktop_locked) || ${HOME}/bin/i3lock -n -c "#${background_color:-000000}" -o "#${indicator_verification_color:-191d0f}" -w "#${indicator_error_color:-572020}" -l "#${indicator_default_color:-ffffff}" -e
+
+  revert
 }
 
 tty_lock() {
-    $(desktop_locked) || ~/bin/tty-ctl lock
+  $(desktop_locked) || ~/bin/tty-ctl lock
 }
 
 TTY_I3=$(~/bin/i3-ctl tty)
 TTY_ACTIVE=$(~/bin/tty-ctl active)
-TTY_EMACS=$(readlink /proc/`pidof emacs -s`/fd/0 2>/dev/null | awk -F/dev/tty '{print $2}')
-I3_UID=$(stat -c "%u" /proc/`pidof i3 i3-with-shmlog -s` 2>/dev/null)
+TTY_EMACS=$(readlink /proc/$(pidof emacs -s)/fd/0 2>/dev/null | awk -F/dev/tty '{print $2}')
+I3_UID=$(stat -c "%u" /proc/$(pidof i3 i3-with-shmlog -s) 2>/dev/null)
 CURRENT_UID=$(id -u)
 
 # Ignore i3 auto lock if i3 is inactive and a emacs running on console,
 # emacs will responsible for auto lock desktop.
 if [ "$REASON" = "i3-auto-lock" ]; then
-    if [ "${TTY_I3}" != "${TTY_ACTIVE}" ] && [ "${TTY_EMACS}" != "${TTY_I3}" ]; then
-        exit 1
-    fi
+  if [ "${TTY_I3}" != "${TTY_ACTIVE}" ] && [ "${TTY_EMACS}" != "${TTY_I3}" ]; then
+    exit 1
+  fi
 fi
 
 # Ignore emacs auto lock if i3 is active, i3 will responsible for auto lock desktop.
 if [ "$REASON" = "emacs-auto-lock" ]; then
-    if [ "${TTY_I3}" = "${TTY_ACTIVE}" ]; then
-        exit 1
-    fi
+  if [ "${TTY_I3}" = "${TTY_ACTIVE}" ]; then
+    exit 1
+  fi
 fi
 
 # Use i3lock if i3 is active, tty lock otherwise.
 if [ "${TTY_I3}" = "${TTY_ACTIVE}" ]; then
-    if [ "${XDG_VTNR}" != "${TTY_I3}" ] || [ "${I3_UID}" != "${CURRENT_UID}" ]; then
-        i3-msg exec ~/bin/desktop-lock $REASON >/dev/null
-    else
-        i3_lock
-    fi
+  if [ "${XDG_VTNR}" != "${TTY_I3}" ] || [ "${I3_UID}" != "${CURRENT_UID}" ]; then
+    i3-msg exec ~/bin/desktop-lock $REASON >/dev/null
+  else
+    i3_lock
+  fi
 else
-    tty_lock
+  tty_lock
 fi

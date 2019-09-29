@@ -1,6 +1,6 @@
 .PHONY: all build install
 
-build: ${CURDIR}/bin/keymap-ctl ${CURDIR}/bin/xkeysnail-ctl ${CURDIR}/bin/tty-ctl ${CURDIR}/bin/file-open ${CURDIR}/bin/lid-monitor ${CURDIR}/bin/bluetooth-mobile-ctl
+build: ${CURDIR}/bin/keymap-ctl ${CURDIR}/bin/xkeysnail-ctl ${CURDIR}/bin/tty-ctl ${CURDIR}/bin/file-open ${CURDIR}/bin/lid-monitor ${CURDIR}/bin/bluetooth-mobile-ctl ${CURDIR}/bin/i3lock
 
 install: build
 	sudo setcap 'cap_sys_tty_config+ep' `which fbterm`
@@ -34,5 +34,16 @@ $(CURDIR)/bin/lid-monitor: $(CURDIR)/src/lid-monitor.c
 $(CURDIR)/bin/bluetooth-mobile-ctl: $(CURDIR)/src/bluetooth-mobile-ctl.c
 	gcc -g -O0 ${CURDIR}/src/bluetooth-mobile-ctl.c -lm -o ${CURDIR}/bin/bluetooth-mobile-ctl
 
+$(CURDIR)/bin/i3lock: $(CURDIR)/i3lock
+	cd ${CURDIR}/i3lock &&\
+	autoreconf -fi &&\
+	mkdir -p build && cd build &&\
+	../configure --prefix=${CURDIR} &&\
+	make install
+
+$(CURDIR)/i3lock:
+	git clone https://github.com/Lixxia/i3lock.git
+
 clean:
-	-rm -f ${CURDIR}/bin/{keymap-ctl,xkeysnail-ctl,tty-ctl,file-open,lid-monitor,bluetooth-mobile-ctl}
+	-rm -rf ${CURDIR}/i3lock
+	-rm -f ${CURDIR}/bin/{keymap-ctl,xkeysnail-ctl,tty-ctl,file-open,lid-monitor,bluetooth-mobile-ctl,i3lock}

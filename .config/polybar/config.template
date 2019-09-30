@@ -93,7 +93,7 @@ label-padding = 2
 
 [module/xkeysnail]
 type = custom/ipc
-hook-0 = ~/bin/xkeysnail-ctl status >/dev/null && echo  || echo %{F#bd2c40}%{F-}
+hook-0 = ~/bin/xkeysnail-ctl status >/dev/null && echo  || echo %{F#{{EmacsErrorForeground}}}%{F-}
 initial = 1
 
 [module/dual-screen]
@@ -341,6 +341,7 @@ exec = echo "%{A5:~/bin/rofi-power-menu:}      %{A}"
 click-left = ~/bin/desktop-lock
 label-font = 5
 label-foreground = ${colors.success}
+label-underline = ${colors.success}
 interval = 2
 
 
@@ -348,7 +349,7 @@ interval = 2
 type = custom/script
 exec-if = [ $(~/bin/bluetooth-mobile-ctl status) = "off" ]
 format = <label>
-exec = echo "%{A5:~/bin/rofi-power-menu:}      %{A}"
+exec = echo "%{A5:~/bin/rofi-power-menu:}      %{A}"
 click-left = ~/bin/desktop-lock
 label-font = 5
 interval = 2

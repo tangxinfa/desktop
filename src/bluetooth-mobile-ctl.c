@@ -56,7 +56,7 @@ FILE* logger() {
 bool bluetooth_mobile_reachable(const char* device) {
   char command[PATH_MAX] = {'\0'};
   snprintf(command, sizeof(command),
-           "timeout 4 l2ping -r -t 1 -c 1 '%s' >/dev/null 2>&1", device);
+           "timeout 2 l2ping -r -t 1 -c 1 '%s' >/dev/null 2>&1", device);
   int status = system(command);
   status = ((status == -1 || !WIFEXITED(status)) ? EXIT_FAILURE
                                                  : WEXITSTATUS(status));
@@ -87,21 +87,32 @@ void bluetooth_mobile_keepalive(const char* device) {
  * @return true if really faraway, false otherwise.
  */
 bool bluetooth_mobile_faraway(const char* device) {
-  const int rounds = 5;
-  const int round_min_interval = 2;
-  const int check_timeout = 10;
+  const int64_t interval_ms = 1 * 1000;
+  const int64_t total_ms = 21 * 1000;
 
-  const time_t check_begin = time(NULL);
-  for (int i = 0; i < rounds; ++i) {
-    const time_t round_begin = time(NULL);
+  struct timespec ts;
+  clock_gettime(CLOCK_MONOTONIC, &ts);
+  const int64_t check_begin_ms = ts.tv_sec * 1000 + ts.tv_nsec / 1000000;
+
+  while (true) {
+    clock_gettime(CLOCK_MONOTONIC, &ts);
+    const int64_t round_begin_ms = ts.tv_sec * 1000 + ts.tv_nsec / 1000000;
+
     if (bluetooth_mobile_reachable(device)) {
       return false;
     }
-    const time_t round_end = time(NULL);
-    if (round_end - check_begin > check_timeout) {
+
+    clock_gettime(CLOCK_MONOTONIC, &ts);
+    const int64_t round_end_ms = ts.tv_sec * 1000 + ts.tv_nsec / 1000000;
+
+    if (round_end_ms - check_begin_ms > total_ms) {
       break;
-    } else if (round_end - round_begin < round_min_interval) {
-      sleep(round_min_interval);
+    }
+
+    const int64_t delay_ms = interval_ms - (round_end_ms - round_begin_ms);
+
+    if (delay_ms > 0) {
+      usleep(delay_ms * 1000);
     }
   }
 

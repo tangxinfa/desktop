@@ -14,7 +14,7 @@ install: build
 	sudo systemctl daemon-reload
 	sudo systemctl enable desktop-lock@${USER}.service
 	@echo "Install by create symbol links ..."
-	-cp -rs ${CURDIR}/{bin,.config,.local,.xinitrc,.nvidia-xinitrc,.xprofile,.fbtermrc,.launcher,.mlterm} ~/
+	-cp -rs ${CURDIR}/{bin,.config,.local,.xinitrc,.xprofile,.fbtermrc,.launcher,.mlterm} ~/
 
 $(CURDIR)/bin/keymap-ctl: $(CURDIR)/src/keymap-ctl.c
 	gcc -g -O0 ${CURDIR}/src/keymap-ctl.c -lm -o ${CURDIR}/bin/keymap-ctl

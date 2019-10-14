@@ -214,7 +214,11 @@ This prevents overlapping themes; something I would rarely want."
   (when (color-theme-utils-export-file-save)
     (call-process-shell-command "i3-msg exec ~/bin/desktop-on-change")))
 
-(add-hook 'after-enable-theme-hook #'color-theme-utils-export)
+(defun color-theme-utils--export ()
+  "Export current color theme definitions asynchronously."
+  (run-with-idle-timer 0 nil #'color-theme-utils-export))
+
+(add-hook 'after-enable-theme-hook 'color-theme-utils--export)
 
 (provide 'color-theme-utils)
 

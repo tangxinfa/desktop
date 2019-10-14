@@ -32,20 +32,6 @@ void logging(FILE* file, const char* fmt, ...) {
   fsync(fileno(file));
 }
 
-FILE* logger() {
-  static FILE* file = NULL;
-  if (!file) {
-    const char* path = "/tmp/bluetooth-mobile-monitor.log";
-    file = fopen(path, "a");
-    if (!file) {
-      logging(stderr, "Open %s failed: %d", path, errno);
-    } else {
-      logging(stderr, "Open %s succeed", path);
-    }
-  }
-  return file;
-}
-
 /**
  * Check if mobile device is reachable.
  *
@@ -88,7 +74,7 @@ void bluetooth_mobile_keepalive(const char* device) {
  */
 bool bluetooth_mobile_faraway(const char* device) {
   const int64_t interval_ms = 1 * 1000;
-  const int64_t total_ms = 21 * 1000;
+  const int64_t total_ms = 23 * 1000;
 
   struct timespec ts;
   clock_gettime(CLOCK_MONOTONIC, &ts);

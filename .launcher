@@ -40,7 +40,7 @@ case "$LAUNCHER" in
     exec $TERMINAL emacs -nw --no-x-resources
     ;;
   i3)
-    XDG_CURRENT_DESKTOP=i3 exec $(which nvidia-xrun 2>/dev/null || echo startx)
+    XDG_CURRENT_DESKTOP=i3 exec $(which nvidia-xrun 2>/dev/null && grep ON /proc/acpi/bbswitch >/dev/null 2>&1 || echo startx)
     ;;
   gnome3)
     source ~/.xprofile

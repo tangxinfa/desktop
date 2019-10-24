@@ -1,0 +1,86 @@
+#!/usr/bin/env bash
+
+# Reference: Nvidia-xrun (简体中文) - ArchWiki
+#            https://wiki.archlinux.org/index.php/Nvidia-xrun_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)
+
+set -e
+
+installed() {
+  if which nvidia-xrun >/dev/null 2>&1 && [ -s /etc/modprobe.d/bbswitch.conf ]; then
+    echo "yes"
+  else
+    echo "no"
+  fi
+}
+
+enabled() {
+  if cat /proc/acpi/bbswitch 2>/dev/null | grep -E 'ON$' >/dev/null 2>&1; then
+    echo "yes"
+  else
+    echo "no"
+  fi
+}
+
+status() {
+  if [ "$(installed)" = "yes" ]; then
+    echo -n "installed"
+  else
+    echo -n "uninstalled"
+  fi
+  if [ "$(enabled)" = "yes" ]; then
+    echo "/enabled"
+  else
+    echo "/disabled"
+  fi
+}
+
+uninstall() {
+  if yaourt -Q nvidia-xrun-git >/dev/null 2>&1; then
+    yaourt --remove nvidia-xrun-git
+  fi
+  if yaourt -Q nvidia >/dev/null 2>&1; then
+    yaourt --remove nvidia
+  fi
+  sudo rm -f /etc/modules-load.d/bbswitch.conf
+  sudo rm -f /etc/modprobe.d/nvidia-xrun.conf
+  sudo rm -f /etc/modprobe.d/bbswitch.conf
+}
+
+install() {
+  if ! yaourt -Q nvidia >/dev/null 2>&1; then
+    yaourt -S nvidia
+  fi
+  if ! yaourt -Q nvidia-xrun-git >/dev/null 2>&1; then
+    yaourt -S nvidia-xrun-git
+  fi
+  echo 'bbswitch ' | sudo tee /etc/modules-load.d/bbswitch.conf >/dev/null
+  echo 'options bbswitch load_state=0 unload_state=1' | sudo tee /etc/modprobe.d/bbswitch.conf >/dev/null
+  echo -e 'blacklist nvidia\nblacklist nvidia_drm\nblacklist nouveau' | sudo tee /etc/modprobe.d/nvidia-xrun.conf >/dev/null
+}
+
+path() {
+  if [ "$(installed)" = "yes" ] && [ "$(enabled)" = "yes" ]; then
+    which nvidia-xrun
+  else
+    return 1
+  fi
+}
+
+case "${1}" in
+  status)
+    status
+    ;;
+  install)
+    install
+    ;;
+  uninstall)
+    uninstall
+    ;;
+  path)
+    path
+    ;;
+  *)
+    echo -e "usage: ${0} <status|install|uninstall|path>\n\n\tstatus        Status of nvidia-xrun.\n\tinstall       Install nvidia-xrun.\n\tuninstall     Uninstall nvidia-xrun.\n\tpath          Path of nvidia-xrun." >/dev/stderr
+    exit 1
+    ;;
+esac

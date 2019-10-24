@@ -120,6 +120,7 @@ bool bluetooth_mobile_activate_desktop() {
   // Activate the desktop if it running a new lock.
   const bool new_lock = strcmp(new_desktop_lock_id, old_desktop_lock_id) != 0;
   if (new_lock) {
+    logging(stderr, "activate desktop");
     system("~/bin/desktop-activate");
   }
 

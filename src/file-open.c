@@ -1,3 +1,4 @@
+#include <errno.h>
 #include <libgen.h>  // for basename
 #include <limits.h>
 #include <linux/limits.h>  // for PATH_MAX
@@ -5,6 +6,28 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+
+int get_graphic_display(char* display, size_t size) {
+  FILE* fp = popen("~/bin/tty-ctl graphic-display", "r");
+  if (NULL == fp) {
+    perror("popen");
+    return errno;
+  }
+  memset(display, '\0', size);
+  fgets(display, size, fp);
+  char* eol = strchr(display, '\n');
+  if (eol) {
+    *eol = '\0';
+  }
+  int status = pclose(fp);
+  status = ((status == -1 || !WIFEXITED(status)) ? EXIT_FAILURE
+                                                 : WEXITSTATUS(status));
+  if (status != 0) {
+    fprintf(stderr, "Graphic display not found\n");
+    return EXIT_FAILURE;
+  }
+  return status;
+}
 
 void guess_file_extension(const char* file, char* extension,
                           int extension_size) {
@@ -93,7 +116,9 @@ int console_open(const char* file, uid_t uid, gid_t gid) {
   }
 
   char command[PATH_MAX] = {'\0'};
-  snprintf(command, sizeof(command), "openvt -s -w -- sudo -u `id -nu %d` -g `id -ng %d` %s '%s'", uid, gid, program, file);
+  snprintf(command, sizeof(command),
+           "openvt -s -w -- sudo -u `id -nu %d` -g `id -ng %d` %s '%s'", uid,
+           gid, program, file);
   int status = system(command);
   status = ((status == -1 || !WIFEXITED(status)) ? EXIT_FAILURE
                                                  : WEXITSTATUS(status));
@@ -106,14 +131,18 @@ int graphic_open(const char* file) {
   const char* display = getenv("DISPLAY");
   if (display == NULL || display[0] == '\0') {
     system("~/bin/tty-ctl other");
-    display = ":0";
   }
 
-  snprintf(command, sizeof(command),
-           "DISPLAY=%s xdg-open '%s' >/dev/null 2>&1 &", display, file);
-  int status = system(command);
-  status = ((status == -1 || !WIFEXITED(status)) ? EXIT_FAILURE
-                                                 : WEXITSTATUS(status));
+  char graphic_display[32] = {'\0'};
+  int status = get_graphic_display(graphic_display, sizeof(graphic_display));
+  if (0 == status) {
+    snprintf(command, sizeof(command),
+             "DISPLAY=%s xdg-open '%s' >/dev/null 2>&1 &", graphic_display,
+             file);
+    int status = system(command);
+    status = ((status == -1 || !WIFEXITED(status)) ? EXIT_FAILURE
+                                                   : WEXITSTATUS(status));
+  }
   return status;
 }
 

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [ -z "$DISPLAY" ]; then
-    export DISPLAY=:0
+    export DISPLAY=`~/bin/tty-ctl graphic-display`
 fi
 
 if pidof i3lock >/dev/null 2>&1; then

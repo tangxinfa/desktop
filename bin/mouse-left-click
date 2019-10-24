@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 if [ -z "$DISPLAY" ]; then
-    export DISPLAY=:0
+    export DISPLAY=`~/bin/tty-ctl graphic-display`
 fi
 
 xdotool click 1

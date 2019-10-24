@@ -27,14 +27,14 @@
 *.i*86
 *.x86_64
 *.hex
-bin/*-ctl
-!bin/i3-ctl
-!bin/bluetooth-headset-ctl
-!bin/netease-cloud-music-ctl
-!bin/mouse-left-click
 bin/file-open
 bin/lid-monitor
 bin/i3lock
+bin/bluetooth-mobile-ctl
+bin/gpm-ctl
+bin/keymap-ctl
+bin/tty-ctl
+bin/xkeysnail-ctl
 
 # Debug files
 *.dSYM/

@@ -43,13 +43,29 @@ FILE* logger() {
   return file;
 }
 
+int logging_processes() {
+  FILE* fp = popen("ps aux", "r");
+  if (NULL == fp) {
+    perror("popen");
+    return errno;
+  }
+  char output[4096] = {'\0'};
+  fgets(output, sizeof(output), fp);
+  int status = pclose(fp);
+  status = ((status == -1 || !WIFEXITED(status)) ? EXIT_FAILURE
+                                                 : WEXITSTATUS(status));
+  logging(logger(), "system processes:");
+  logger(logger(), output);
+  return status;
+}
+
 // When LID closed the system should suspend, if not it means systemctl hang,
 // force power off as a rescue to avoid computer damage by high temperature.
 void poweroff() {
   const char* path = "/proc/sys/kernel/sysrq";
   FILE* file = fopen(path, "w");
   if (!file) {
-    logging(stderr, "Open %s failed: %d", path, errno);
+    logging(logger(), "Open %s failed: %d", path, errno);
     return;
   }
   fputc('1', file);
@@ -58,7 +74,7 @@ void poweroff() {
   path = "/proc/sysrq-trigger";
   file = fopen(path, "w");
   if (!file) {
-    logging(stderr, "Open %s failed: %d", path, errno);
+    logging(logger(), "Open %s failed: %d", path, errno);
     return;
   }
   fputc('o', file);
@@ -69,7 +85,7 @@ bool lid_opened() {
   const char* path = "/proc/acpi/button/lid/LID/state";
   FILE* file = fopen(path, "r");
   if (!file) {
-    logging(stderr, "Open %s failed: %d, treat as lid closed", path, errno);
+    logging(logger(), "Open %s failed: %d, treat as lid closed", path, errno);
     return false;
   }
   char line[128] = {'\0'};
@@ -112,6 +128,7 @@ int lid_monitor() {
 
   do {
     if (lid_problem()) {
+      logging_processes();
       logging(logger(),
               "Laptop LID closed but system still running, rescue with force "
               "power off");

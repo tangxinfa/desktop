@@ -285,7 +285,7 @@ for_window [class="keepassxc" window_type="normal"] floating enable, move scratc
 for_window [class="Zeal" window_type="normal"] floating enable, resize set 800 600, move absolute position center, focus
 for_window [class="Conky"] floating enable, resize set 400 400, move absolute position center
 for_window [class="Wine" title="迅雷网络" window_type="dialog"] floating disable, move container to workspace $workspace4 # Main RTX window
-assign [class="Seafile*"] $workspace1
+assign [class="Seafile*"] $workspace3
 for_window [class="Solaar"] floating enable
 for_window [class="chinese-calendar"] floating enable
 for_window [class="Gnome-system-monitor"] floating enable, resize set 800 600, move absolute position center

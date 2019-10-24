@@ -1,3 +1,4 @@
+#include <errno.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -34,26 +35,52 @@ int tty_wait(int tty) {
   return status;
 }
 
-int main(int argc, char *argv[]) {
+int get_graphic_display(char* display, size_t size) {
+  FILE* fp = popen(
+      "cat /proc/`pidof Xorg`/cmdline | tr \"\\0\" \"\\n\" | grep : | head "
+      "-1",
+      "r");
+  if (NULL == fp) {
+    perror("popen");
+    return errno;
+  }
+  memset(display, '\0', size);
+  fgets(display, size, fp);
+  int status = pclose(fp);
+  status = ((status == -1 || !WIFEXITED(status)) ? EXIT_FAILURE
+                                                 : WEXITSTATUS(status));
+  char* eol = strchr(display, '\n');
+  if (eol) {
+    *eol = '\0';
+  }
+  if (status == 0 && display[0] == '\0') {
+    status = EXIT_FAILURE;
+  }
+  return status;
+}
+
+int main(int argc, char* argv[]) {
   int to_tty = 0;
   if (argc != 2 ||
       (strcmp(argv[1], "active") != 0 && strcmp(argv[1], "graphic") != 0 &&
        strcmp(argv[1], "other") != 0 && strcmp(argv[1], "activate") != 0 &&
-       strcmp(argv[1], "lock") != 0 && strcmp(argv[1], "capslockoff") != 0)) {
+       strcmp(argv[1], "lock") != 0 && strcmp(argv[1], "capslockoff") != 0 &&
+       strcmp(argv[1], "graphic-display") != 0)) {
     to_tty = atoi(argc == 2 ? argv[1] : "0");
     if (to_tty == 0) {
       fprintf(stderr,
               "Usage: %s "
-              "<active|graphic|other|activate|lock|capslockoff|"
-              "N>\n"
-              "\tactive      Print active tty.\n"
-              "\tgraphic     Print graphic tty.\n"
-              "\tother       Swith to other tty.\n"
-              "\t            Create tty if $TTY_CTL_OTHER_CREATE set.\n"
-              "\tactivate    Active caller's tty.\n"
-              "\tlock        Lock all tty.\n"
-              "\tcapslockoff Set CapsLock off.\n"
-              "\tN           Switch to tty N.\n",
+              "<active|graphic|other|activate|lock|capslockoff|graphic-display|"
+              "N|>\n"
+              "\tactive          Print active tty.\n"
+              "\tgraphic         Print graphic tty.\n"
+              "\tother           Swith to other tty.\n"
+              "\t                Create tty if $TTY_CTL_OTHER_CREATE is set.\n"
+              "\tactivate        Active caller's tty.\n"
+              "\tlock            Lock all tty.\n"
+              "\tcapslockoff     Set CapsLock off.\n"
+              "\tgraphic-display Print graphic display.\n"
+              "\tN               Switch to tty N.\n",
               argv[0]);
       return EXIT_FAILURE;
     }
@@ -83,24 +110,23 @@ int main(int argc, char *argv[]) {
     system(
         "setleds -caps < /dev/tty`cat /sys/class/tty/tty0/active | awk -Ftty "
         "'{print $2}'`");
-    const char *display = getenv("DISPLAY");
-    if (display == NULL || display[0] == '\0') {
-      display = ":0";
-    }
-
-    // X environments.
-    // setcapslock will crash with core in Non-X environments, setcapslock
-    // sometimes not work, must use xdotool to let Caps_Lock key up first.
-    snprintf(command, sizeof(command), "xdpyinfo -display '%s'>/dev/null 2>&1", display);
-    status = system(command);
-    status = ((status == -1 || !WIFEXITED(status)) ? EXIT_FAILURE
-                                                   : WEXITSTATUS(status));
-    if (0 == status) {
+    char display[32] = {'\0'};
+    if (0 == get_graphic_display(display, sizeof(display))) {
+      // X environments.
+      // setcapslock will crash with core in Non-X environments, setcapslock
+      // sometimes not work, must use xdotool to let Caps_Lock key up first.
       snprintf(command, sizeof(command),
-               "export DISPLAY=%s; xdotool key Caps_Lock; "
-               "setcapslock off",
-               display);
-      system(command);
+               "xdpyinfo -display '%s'>/dev/null 2>&1", display);
+      status = system(command);
+      status = ((status == -1 || !WIFEXITED(status)) ? EXIT_FAILURE
+                                                     : WEXITSTATUS(status));
+      if (0 == status) {
+        snprintf(command, sizeof(command),
+                 "export DISPLAY=%s; xdotool key Caps_Lock; "
+                 "setcapslock off",
+                 display);
+        system(command);
+      }
     }
 
     return EXIT_SUCCESS;
@@ -131,7 +157,16 @@ int main(int argc, char *argv[]) {
     return status;
   }
 
-  const char *my_tty = getenv("XDG_VTNR");
+  if (strcmp(argv[1], "graphic-display") == 0) {
+    char display[32] = {'\0'};
+    status = get_graphic_display(display, sizeof(display));
+    if (status == 0) {
+      printf("%s\n", display);
+    }
+    return status;
+  }
+
+  const char* my_tty = getenv("XDG_VTNR");
   if (my_tty == NULL) {
     fputs("Warning: $XDG_VTNR not exists, default is \"1\"\n", stderr);
     my_tty = "1";

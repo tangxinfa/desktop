@@ -7,6 +7,9 @@ desktop_locked() {
 }
 
 i3_lock() {
+  if [ -z "$DISPLAY" ]; then
+    export DISPLAY=$(~/bin/tty-ctl graphic-display)
+  fi
   revert() {
     xset dpms 0 0 0
   }

@@ -5,7 +5,6 @@ Before=sleep.target
 [Service]
 User=%I
 Type=forking
-Environment=DISPLAY=:0
 ExecStart=/home/%I/bin/desktop-lock system-sleep
 ExecStartPost=/usr/bin/sleep 1
 

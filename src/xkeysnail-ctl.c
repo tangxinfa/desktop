@@ -10,12 +10,43 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-int xkeysnail_start() {
-  const char* display = getenv("DISPLAY");
-  if (display == NULL || display[0] == '\0') {
-    setenv("DISPLAY", ":0", 1);
+int command_output(const char* command, char* output, size_t output_size) {
+  FILE* fp = popen(command, "r");
+  if (NULL == fp) {
+    perror("popen");
+    return errno;
   }
-  int status = system(
+  if (output && output_size > 0) {
+    memset(output, '\0', output_size);
+    fgets(output, output_size, fp);
+  }
+  int status = pclose(fp);
+  status = ((status == -1 || !WIFEXITED(status)) ? EXIT_FAILURE
+                                                 : WEXITSTATUS(status));
+  return status;
+}
+
+int attach_graphic_display() {
+  char display[32] = {'\0'};
+  command_output("~/bin/tty-ctl graphic-display", display, sizeof(display));
+  char* eol = strchr(display, '\n');
+  if (eol) {
+    *eol = '\0';
+  }
+  if (display[0] == '\0') {
+    fprintf(stderr, "Graphic display not found\n");
+    return EXIT_FAILURE;
+  }
+  setenv("DISPLAY", display, 1);
+  return 0;
+}
+
+int xkeysnail_start() {
+  int status = attach_graphic_display();
+  if (status != 0) {
+    return status;
+  }
+  status = system(
       "xhost +SI:localuser:root >/dev/null 2>>/tmp/xkeysnail.log; "
       "xkeysnail ~/.config/xkeysnail/config.py --quiet --watch "
       ">/dev/null 2>>/tmp/xkeysnail.log &");
@@ -48,32 +79,16 @@ int xkeysnail_status() {
                                                  : WEXITSTATUS(status));
 }
 
-int command_output(const char* command, char* output, size_t output_size) {
-  FILE* fp = popen(command, "r");
-  if (NULL == fp) {
-    perror("popen");
-    return errno;
-  }
-  if (output && output_size > 0) {
-    memset(output, '\0', output_size);
-    fgets(output, output_size, fp);
-  }
-  int status = pclose(fp);
-  status = ((status == -1 || !WIFEXITED(status)) ? EXIT_FAILURE
-                                                 : WEXITSTATUS(status));
-  return status;
-}
-
-void release_modifier_keys() {
+int release_modifier_keys() {
   // xorg - How to force release of a keyboard modifiers - Unix & Linux Stack
   // Exchange
   // https://unix.stackexchange.com/questions/60007/how-to-force-release-of-a-keyboard-modifiers
-  const char* display = getenv("DISPLAY");
-  if (display == NULL || display[0] == '\0') {
-    setenv("DISPLAY", ":0", 1);
+  int status = attach_graphic_display();
+  if (status != 0) {
+    return status;
   }
 
-  command_output(
+  return command_output(
       "grep '^#define' /usr/include/X11/keysymdef.h | sed -r 's/^#define "
       "XK_(\\S*?).*$/\\1/;' | grep -E '_(L|R|Level.*)$' | xargs xdotool keyup "
       ">/dev/null 2>&1",

@@ -35,6 +35,32 @@ int tty_wait(int tty) {
   return status;
 }
 
+int tty_other(int tty) {
+  FILE* fp = popen("who | awk '{print $2}'", "r");
+  if (NULL == fp) {
+    perror("popen");
+    return -1;
+  }
+  char tty_name[16] = {'\0'};
+  snprintf(tty_name, sizeof(tty_name), "tty%d", tty);
+  int other = -1;
+  char other_name[16] = {'\0'};
+  while (fgets(other_name, sizeof(other_name), fp)) {
+    if (other_name[0] != '\0' && other_name[strlen(other_name) - 1] == '\n') {
+      other_name[strlen(other_name) - 1] = '\0';
+    }
+    if (strcmp(tty_name, other_name) == 0) {
+      continue;
+    }
+    if (strncmp(other_name, "tty", 3) == 0) {
+      other = atoi(other_name + 3);
+      break;
+    }
+  }
+  pclose(fp);
+  return other;
+}
+
 int get_graphic_display(char* display, size_t size) {
   FILE* fp = popen(
       "cat /proc/`pidof Xorg`/cmdline | tr \"\\0\" \"\\n\" | grep : | head "
@@ -187,13 +213,13 @@ int main(int argc, char* argv[]) {
     return 0 == status ? tty_wait(atoi(my_tty)) : status;
   }
 
-  const int other_tty = (strcmp(my_tty, "1") == 0 ? 2 : 1);
-  if (getenv("TTY_CTL_OTHER_CREATE") || tty_ready(other_tty) == 0) {
-    snprintf(command, sizeof(command), "chvt %d", other_tty);
+  const int other = tty_other(atoi(my_tty));
+  if (other > 0 && (getenv("TTY_CTL_OTHER_CREATE") || tty_ready(other) == 0)) {
+    snprintf(command, sizeof(command), "chvt %d", other);
     status = system(command);
     status = ((status == -1 || !WIFEXITED(status)) ? EXIT_FAILURE
                                                    : WEXITSTATUS(status));
-    return 0 == status ? tty_wait(other_tty) : status;
+    return 0 == status ? tty_wait(other) : status;
   }
 
   return EXIT_FAILURE;

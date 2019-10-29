@@ -9,7 +9,7 @@
 #
 # Please see http://i3wm.org/docs/userguide.html for a complete reference!
 
-exec_always --no-startup-id ~/bin/dual-screen-detect
+exec_always --no-startup-id ~/bin/dual-screen-ctl detect
 
 set $mod Mod4
 set $auto-lock ~/bin/desktop-lock\ i3-auto-lock
@@ -74,7 +74,7 @@ bindsym Control+$mod+p exec --no-startup-id ~/bin/rofi-power-menu
 ##  depends: yaourt -S rofi
 bindsym $mod+r exec --no-startup-id "killall rofi && true || rofi -p '' -show run"
 bindsym $mod+d exec --no-startup-id "killall rofi && true || rofi -p '' -show drun"
-bindsym $mod+t exec --no-startup-id "killall rofi && true || rofi -p '' -show '' -modi ':~/bin/rofi-ydcv' -no-sidebar-mode -fixed-num-lines -lines 14 -yoffset -10 -location 2 -theme-str '#element { padding: 0.1em; margin: 0;}'"
+bindsym $mod+t exec --no-startup-id "killall rofi && true || rofi -p '' -show '' -modi ':~/bin/rofi-ydcv' -no-sidebar-mode -fixed-num-lines -lines 10 -yoffset -10 -location 2 -theme-str '#element { padding: 0.1em; margin: 0;}'"
 bindsym $mod+w exec --no-startup-id "killall rofi && true || rofi -p '' -show window"
 
 # mouse left click
@@ -348,6 +348,7 @@ exec --no-startup-id compton -cCGb\
      --use-ewmh-active-win\
      --mark-wmwin-focused\
      --detect-client-leader
+exec --no-startup-id ~/bin/dual-screen-ctl monitor
 exec --no-startup-id ~/bin/desktop-on-open
 exec --no-startup-id ~/bin/on-at-`~/bin/at-place`
 exec_always --no-startup-id setcapslock off

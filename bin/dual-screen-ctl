@@ -1,0 +1,57 @@
+#!/bin/bash
+
+if [ -z "$DISPLAY" ]; then
+  export DISPLAY=$(~/bin/tty-ctl graphic-display)
+fi
+
+detect() {
+  PRIMARY_OLD="$(grep -E '^DualScreen.Primary:' ~/.config/X11/xresources.d/dual-screen | awk '{print $2}')"
+  SECONDARY_OLD="$(grep -E '^DualScreen.Secondary:' ~/.config/X11/xresources.d/dual-screen | awk '{print $2}')"
+  if [ -z "${SECONDARY_OLD}" ]; then
+    SECONDARY_OLD=${PRIMARY_OLD}
+  fi
+  PRIMARY_NEW="$(xrandr | grep ' connected' | awk '{print $1}' | head -1)"
+  SECONDARY_NEW="$(xrandr | grep ' connected' | awk '{print $1}' | head -2 | tail -1)"
+  if [ -z "${PRIMARY_NEW}" ]; then
+    PRIMARY_NEW=${SECONDARY_NEW}
+  fi
+  if [ -z "${SECONDARY_NEW}" ]; then
+    SECONDARY_NEW=${PRIMARY_NEW}
+  fi
+
+  if [ "$PRIMARY_OLD" == "$PRIMARY_NEW" ] && [ "$SECONDARY_OLD" == "$SECONDARY_NEW" ]; then
+    echo "DualScreen no update"
+    return 1
+  fi
+
+  echo "! Generate by $(basename $0)" >~/.config/X11/xresources.d/dual-screen
+  echo "DualScreen.Primary:   ${PRIMARY_NEW}" >>~/.config/X11/xresources.d/dual-screen
+  echo "DualScreen.Secondary: ${SECONDARY_NEW}" >>~/.config/X11/xresources.d/dual-screen
+
+  xrdb -merge ~/.config/X11/xresources.d/dual-screen
+  return 0
+}
+
+monitor() {
+  srandrd ~/bin/dual-screen-ctl apply
+}
+
+apply() {
+  detect && ~/bin/desktop-on-change
+}
+
+case "${1}" in
+  detect)
+    detect
+    ;;
+  monitor)
+    monitor
+    ;;
+  apply)
+    apply
+    ;;
+  *)
+    echo -e "usage: ${0} <detect|monitor>\n\n\tdetect       ccpDetect dual screen.\n\tmonitor      Monitor screen plugged or unplugged." >/dev/stderr
+    exit 1
+    ;;
+esac

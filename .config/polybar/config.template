@@ -28,7 +28,7 @@ error = #{{EmacsErrorForeground}}
 success = #{{EmacsSuccessForeground}}
 
 [bar/top]
-monitor = ${xrdb:DualScreen.Primary:HDMI-1}
+monitor = ${env:MONITOR:}
 width = 100%
 height = 40
 

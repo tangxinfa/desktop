@@ -65,7 +65,8 @@ int main(int argc, char* argv[]) {
       (strcmp(argv[1], "active") != 0 && strcmp(argv[1], "graphic") != 0 &&
        strcmp(argv[1], "other") != 0 && strcmp(argv[1], "activate") != 0 &&
        strcmp(argv[1], "lock") != 0 && strcmp(argv[1], "capslockoff") != 0 &&
-       strcmp(argv[1], "graphic-display") != 0)) {
+       strcmp(argv[1], "graphic-display") != 0 &&
+       strcmp(argv[1], "dmesg-off") != 0)) {
     to_tty = atoi(argc == 2 ? argv[1] : "0");
     if (to_tty == 0) {
       fprintf(stderr,
@@ -80,6 +81,7 @@ int main(int argc, char* argv[]) {
               "\tlock            Lock all tty.\n"
               "\tcapslockoff     Set CapsLock off.\n"
               "\tgraphic-display Print graphic display.\n"
+              "\tdmesg-off       Disable printing messages to console.\n"
               "\tN               Switch to tty N.\n",
               argv[0]);
       return EXIT_FAILURE;
@@ -164,6 +166,11 @@ int main(int argc, char* argv[]) {
       printf("%s\n", display);
     }
     return status;
+  }
+
+  if (strcmp(argv[1], "dmesg-off") == 0) {
+    system("dmesg --console-off");
+    return EXIT_SUCCESS;
   }
 
   const char* my_tty = getenv("XDG_VTNR");

@@ -1,0 +1,6 @@
+#!/bin/bash
+
+polybar-msg cmd quit
+for monitor in $(polybar -m | awk -F: '{print $1}'); do
+  MONITOR=$monitor polybar --reload top &
+done

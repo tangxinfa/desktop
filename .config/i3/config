@@ -9,6 +9,8 @@
 #
 # Please see http://i3wm.org/docs/userguide.html for a complete reference!
 
+exec_always --no-startup-id ~/bin/dual-screen-detect
+
 set $mod Mod4
 set $auto-lock ~/bin/desktop-lock\ i3-auto-lock
 set $manual-lock ~/bin/desktop-lock
@@ -256,6 +258,7 @@ for_window [class="Gnome-terminal" window_role="gnome-terminal-popup.*"] floatin
 for_window [class="Xdialog"] floating enable
 for_window [title=".*DingTalk.*" window_type="dialog"] floating disable, move container to workspace $workspace4
 for_window [title=".*WeChat.*" window_type="dialog"] floating disable, move container to workspace $workspace4
+assign [class="firefox" title="https://im.dingtalk.com"] $workspace4
 assign [class="firefox" window_type="normal"] $workspace1
 assign [class="Chromium"] $workspace1
 assign [class="Google-chrome"] $workspace1
@@ -332,7 +335,7 @@ exec --no-startup-id gtk-launch redshift-gtk
 exec --no-startup-id gtk-launch solaar
 exec --no-startup-id gtk-launch variety
 exec --no-startup-id gtk-launch org.keepassxc.KeePassXC
-exec_always --no-startup-id polybar-msg cmd restart || polybar top
+exec_always --no-startup-id ~/bin/polybar-launcher
 exec --no-startup-id compton -cCGb\
      -t 0\
      --config /dev/null\

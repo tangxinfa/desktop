@@ -50,12 +50,11 @@ int logging_processes() {
     return errno;
   }
   char output[4096] = {'\0'};
-  fgets(output, sizeof(output), fp);
+  fread(output, sizeof(output) - 1, 1, fp);
   int status = pclose(fp);
   status = ((status == -1 || !WIFEXITED(status)) ? EXIT_FAILURE
                                                  : WEXITSTATUS(status));
-  logging(logger(), "system processes:");
-  logger(logger(), output);
+  logging(logger(), "system processes:\n%s", output);
   return status;
 }
 

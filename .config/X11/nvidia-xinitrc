@@ -5,7 +5,6 @@ if [ $# -gt 0 ]; then
   $*
 elif [ "graphical.target" != "$(systemctl get-default)" ]; then
   ~/bin/dual-screen-detect
-  [[ -f ~/.config/X11/xresources ]] && xrdb -merge ~/.config/X11/xresources
   eval $(dbus-launch --sh-syntax)
   exec i3
 fi

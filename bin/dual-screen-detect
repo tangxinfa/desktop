@@ -5,8 +5,8 @@ SECONDARY_OLD="$(grep -E '^DualScreen.Secondary:' ~/.config/X11/xresources.d/dua
 if [ -z "${SECONDARY_OLD}" ]; then
   SECONDARY_OLD=${PRIMARY_OLD}
 fi
-PRIMARY_NEW="$(xrandr | grep ' connected' | grep primary | awk '{print $1}' | head -1)"
-SECONDARY_NEW="$(xrandr | grep ' connected' | grep -v primary | awk '{print $1}' | head -1)"
+PRIMARY_NEW="$(xrandr | grep ' connected' | awk '{print $1}' | head -1)"
+SECONDARY_NEW="$(xrandr | grep ' connected' | awk '{print $1}' | head -2 | tail -1)"
 if [ -z "${PRIMARY_NEW}" ]; then
   PRIMARY_NEW=${SECONDARY_NEW}
 fi
@@ -19,10 +19,8 @@ if [ "$PRIMARY_OLD" == "$PRIMARY_NEW" ] && [ "$SECONDARY_OLD" == "$SECONDARY_NEW
   exit 1
 fi
 
-sed -i -e '/^DualScreen\./d' ~/.config/X11/xresources.d/dual-screen
-if [ -n "${PRIMARY_NEW}" ]; then
-  sed -i -e "/^! Generate by $(basename $0)/d" ~/.config/X11/xresources.d/dual-screen
-  echo "! Generate by $(basename $0)" >>~/.config/X11/xresources.d/dual-screen
-  echo "DualScreen.Primary:   ${PRIMARY_NEW}" >>~/.config/X11/xresources.d/dual-screen
-  echo "DualScreen.Secondary: ${SECONDARY_NEW}" >>~/.config/X11/xresources.d/dual-screen
-fi
+echo "! Generate by $(basename $0)" >~/.config/X11/xresources.d/dual-screen
+echo "DualScreen.Primary:   ${PRIMARY_NEW}" >>~/.config/X11/xresources.d/dual-screen
+echo "DualScreen.Secondary: ${SECONDARY_NEW}" >>~/.config/X11/xresources.d/dual-screen
+
+xrdb -merge ~/.config/X11/xresources.d/dual-screen

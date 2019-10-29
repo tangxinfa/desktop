@@ -76,107 +76,115 @@ This prevents overlapping themes; something I would rarely want."
     (when (listp underline)
       (alist-get :color underline nil))))
 
+(defun color-theme-utils--color-name-to-rgb (color)
+  "A `color-name-to-rgb' wrap for process special colors."
+  (cond ((string-equal color "unspecified-fg")
+         (if window-system '(0 0 0) '(1 1 1)))
+        ((equal color "unspecified-bg")
+         (if window-system '(1 1 1) '(0 0 0)))
+        (t (color-name-to-rgb color))))
+
 (defun color-theme-utils--color-rgb-to-hex (red green blue &optional digits-per-component)
   "Like `color-rgb-to-hex' but without # prefix."
   (string-trim-left (color-rgb-to-hex red green blue digits-per-component) "#"))
 
 (defun color-theme-utils--colors ()
-  `((EmacsDefaultBackground . ,(apply #'color-theme-utils--color-rgb-to-hex (nconc (color-name-to-rgb
-                                                                                    (face-background 'default nil t))
-                                                                                   (list 2))))
-    (EmacsDefaultForeground . ,(apply #'color-theme-utils--color-rgb-to-hex (nconc (color-name-to-rgb
-                                                                                    (face-foreground 'default nil t))
-                                                                                   (list 2))))
-    (EmacsHlLineBackground . ,(apply #'color-theme-utils--color-rgb-to-hex (nconc (color-name-to-rgb
-                                                                                   (or (face-background 'hl-line nil t) (face-background 'default  nil t)))
-                                                                                  (list 2))))
-    (EmacsModeLineBackground . ,(apply #'color-theme-utils--color-rgb-to-hex (nconc (color-name-to-rgb
-                                                                                     (or (face-background 'mode-line nil t) (face-background 'default  nil t)))
+  `((EmacsDefaultBackground . ,(apply #'color-theme-utils--color-rgb-to-hex (append (color-theme-utils--color-name-to-rgb
+                                                                                     (face-background 'default nil t))
                                                                                     (list 2))))
-    (EmacsModeLineForeground . ,(apply #'color-theme-utils--color-rgb-to-hex (nconc (color-name-to-rgb
-                                                                                     (or (face-foreground 'mode-line nil t) (face-foreground 'default nil t)))
+    (EmacsDefaultForeground . ,(apply #'color-theme-utils--color-rgb-to-hex (append (color-theme-utils--color-name-to-rgb
+                                                                                     (face-foreground 'default nil t))
                                                                                     (list 2))))
-    (EmacsModeLineUnderline . ,(apply #'color-theme-utils--color-rgb-to-hex (nconc (color-name-to-rgb
-                                                                                    (or (color-theme-utils--underline-face-color 'mode-line) (face-background 'default nil t)))
+    (EmacsHlLineBackground . ,(apply #'color-theme-utils--color-rgb-to-hex (append (color-theme-utils--color-name-to-rgb
+                                                                                    (or (face-background 'hl-line nil t) (face-background 'default  nil t)))
                                                                                    (list 2))))
-    (EmacsModeLineHighlightForeground . ,(apply #'color-theme-utils--color-rgb-to-hex (nconc (color-name-to-rgb
-                                                                                              (or (face-foreground 'mode-line-highlight nil t) (face-foreground 'default nil t)))
+    (EmacsModeLineBackground . ,(apply #'color-theme-utils--color-rgb-to-hex (append (color-theme-utils--color-name-to-rgb
+                                                                                      (or (face-background 'mode-line nil t) (face-background 'default  nil t)))
+                                                                                     (list 2))))
+    (EmacsModeLineForeground . ,(apply #'color-theme-utils--color-rgb-to-hex (append (color-theme-utils--color-name-to-rgb
+                                                                                      (or (face-foreground 'mode-line nil t) (face-foreground 'default nil t)))
+                                                                                     (list 2))))
+    (EmacsModeLineUnderline . ,(apply #'color-theme-utils--color-rgb-to-hex (append (color-theme-utils--color-name-to-rgb
+                                                                                     (or (color-theme-utils--underline-face-color 'mode-line) (face-background 'default nil t)))
+                                                                                    (list 2))))
+    (EmacsModeLineHighlightForeground . ,(apply #'color-theme-utils--color-rgb-to-hex (append (color-theme-utils--color-name-to-rgb
+                                                                                               (or (face-foreground 'mode-line-highlight nil t) (face-foreground 'default nil t)))
+                                                                                              (list 2))))
+    (EmacsModeLineInactiveBackground . ,(apply #'color-theme-utils--color-rgb-to-hex (append (color-theme-utils--color-name-to-rgb
+                                                                                              (or (face-background 'mode-line-inactive nil t) (face-background 'default  nil t)))
                                                                                              (list 2))))
-    (EmacsModeLineInactiveBackground . ,(apply #'color-theme-utils--color-rgb-to-hex (nconc (color-name-to-rgb
-                                                                                             (or (face-background 'mode-line-inactive nil t) (face-background 'default  nil t)))
+    (EmacsModeLineInactiveForeground . ,(apply #'color-theme-utils--color-rgb-to-hex (append (color-theme-utils--color-name-to-rgb
+                                                                                              (or (face-foreground 'mode-line-inactive nil t) (face-foreground 'default nil t)))
+                                                                                             (list 2))))
+    (EmacsModeLineInactiveUnderline . ,(apply #'color-theme-utils--color-rgb-to-hex (append (color-theme-utils--color-name-to-rgb
+                                                                                             (or (color-theme-utils--underline-face-color 'mode-line-inactive) (face-background 'default nil t)))
                                                                                             (list 2))))
-    (EmacsModeLineInactiveForeground . ,(apply #'color-theme-utils--color-rgb-to-hex (nconc (color-name-to-rgb
-                                                                                             (or (face-foreground 'mode-line-inactive nil t) (face-foreground 'default nil t)))
-                                                                                            (list 2))))
-    (EmacsModeLineInactiveUnderline . ,(apply #'color-theme-utils--color-rgb-to-hex (nconc (color-name-to-rgb
-                                                                                            (or (color-theme-utils--underline-face-color 'mode-line-inactive) (face-background 'default nil t)))
+    (EmacsRegionBackground . ,(apply #'color-theme-utils--color-rgb-to-hex (append (color-theme-utils--color-name-to-rgb
+                                                                                    (or (face-background 'region nil t) (face-background 'default  nil t)))
+                                                                                   (list 2))))
+    (EmacsRegionForeground . ,(apply #'color-theme-utils--color-rgb-to-hex (append (color-theme-utils--color-name-to-rgb
+                                                                                    (or (face-foreground 'region nil t) (face-foreground 'default  nil t)))
+                                                                                   (list 2))))
+    (EmacsFringeBackground . ,(apply #'color-theme-utils--color-rgb-to-hex (append (color-theme-utils--color-name-to-rgb
+                                                                                    (or (face-background 'fringe nil t) (face-background 'default  nil t)))
+                                                                                   (list 2))))
+    (EmacsFringeForeground . ,(apply #'color-theme-utils--color-rgb-to-hex (append (color-theme-utils--color-name-to-rgb
+                                                                                    (or (face-foreground 'fringe nil t) (face-foreground 'default  nil t)))
+                                                                                   (list 2))))
+    (EmacsVerticalBorderBackground . ,(apply #'color-theme-utils--color-rgb-to-hex (append (color-theme-utils--color-name-to-rgb
+                                                                                            (or (face-background 'vertical-border nil t) (face-background 'default  nil t)))
                                                                                            (list 2))))
-    (EmacsRegionBackground . ,(apply #'color-theme-utils--color-rgb-to-hex (nconc (color-name-to-rgb
-                                                                                   (or (face-background 'region nil t) (face-background 'default  nil t)))
-                                                                                  (list 2))))
-    (EmacsRegionForeground . ,(apply #'color-theme-utils--color-rgb-to-hex (nconc (color-name-to-rgb
-                                                                                   (or (face-foreground 'region nil t) (face-foreground 'default  nil t)))
-                                                                                  (list 2))))
-    (EmacsFringeBackground . ,(apply #'color-theme-utils--color-rgb-to-hex (nconc (color-name-to-rgb
-                                                                                   (or (face-background 'fringe nil t) (face-background 'default  nil t)))
-                                                                                  (list 2))))
-    (EmacsFringeForeground . ,(apply #'color-theme-utils--color-rgb-to-hex (nconc (color-name-to-rgb
-                                                                                   (or (face-foreground 'fringe nil t) (face-foreground 'default  nil t)))
-                                                                                  (list 2))))
-    (EmacsVerticalBorderBackground . ,(apply #'color-theme-utils--color-rgb-to-hex (nconc (color-name-to-rgb
-                                                                                           (or (face-background 'vertical-border nil t) (face-background 'default  nil t)))
-                                                                                          (list 2))))
-    (EmacsVerticalBorderForeground . ,(apply #'color-theme-utils--color-rgb-to-hex (nconc (color-name-to-rgb
-                                                                                           (or (face-foreground 'vertical-border nil t) (face-foreground 'default  nil t)))
-                                                                                          (list 2))))
-    (EmacsPopupMenuBackground . ,(apply #'color-theme-utils--color-rgb-to-hex (nconc (color-name-to-rgb
-                                                                                      (or (face-background 'popup-menu-face nil t) (face-background 'default  nil t)))
-                                                                                     (list 2))))
-    (EmacsPopupMenuForeground . ,(apply #'color-theme-utils--color-rgb-to-hex (nconc (color-name-to-rgb
-                                                                                      (or (face-foreground 'popup-menu-face nil t) (face-foreground 'default  nil t)))
-                                                                                     (list 2))))
-    (EmacsPopupMenuSelectionBackground . ,(apply #'color-theme-utils--color-rgb-to-hex (nconc (color-name-to-rgb
-                                                                                               (or (face-background 'popup-menu-selection-face nil t) (face-background 'default  nil t)))
-                                                                                              (list 2))))
-    (EmacsPopupMenuSelectionForeground . ,(apply #'color-theme-utils--color-rgb-to-hex (nconc (color-name-to-rgb
-                                                                                               (or (face-foreground 'popup-menu-selection-face nil t) (face-foreground 'default  nil t)))
-                                                                                              (list 2))))
-    (EmacsTooltipBackground . ,(apply #'color-theme-utils--color-rgb-to-hex (nconc (color-name-to-rgb
-                                                                                    (or (face-background 'tooltip nil t) (face-background 'default  nil t)))
+    (EmacsVerticalBorderForeground . ,(apply #'color-theme-utils--color-rgb-to-hex (append (color-theme-utils--color-name-to-rgb
+                                                                                            (or (face-foreground 'vertical-border nil t) (face-foreground 'default  nil t)))
+                                                                                           (list 2))))
+    (EmacsPopupMenuBackground . ,(apply #'color-theme-utils--color-rgb-to-hex (append (color-theme-utils--color-name-to-rgb
+                                                                                       (or (face-background 'popup-menu-face nil t) (face-background 'default  nil t)))
+                                                                                      (list 2))))
+    (EmacsPopupMenuForeground . ,(apply #'color-theme-utils--color-rgb-to-hex (append (color-theme-utils--color-name-to-rgb
+                                                                                       (or (face-foreground 'popup-menu-face nil t) (face-foreground 'default  nil t)))
+                                                                                      (list 2))))
+    (EmacsPopupMenuSelectionBackground . ,(apply #'color-theme-utils--color-rgb-to-hex (append (color-theme-utils--color-name-to-rgb
+                                                                                                (or (face-background 'popup-menu-selection-face nil t) (face-background 'default  nil t)))
+                                                                                               (list 2))))
+    (EmacsPopupMenuSelectionForeground . ,(apply #'color-theme-utils--color-rgb-to-hex (append (color-theme-utils--color-name-to-rgb
+                                                                                                (or (face-foreground 'popup-menu-selection-face nil t) (face-foreground 'default  nil t)))
+                                                                                               (list 2))))
+    (EmacsTooltipBackground . ,(apply #'color-theme-utils--color-rgb-to-hex (append (color-theme-utils--color-name-to-rgb
+                                                                                     (or (face-background 'tooltip nil t) (face-background 'default  nil t)))
+                                                                                    (list 2))))
+    (EmacsTooltipForeground . ,(apply #'color-theme-utils--color-rgb-to-hex (append (color-theme-utils--color-name-to-rgb
+                                                                                     (or (face-foreground 'tooltip nil t) (face-foreground 'default  nil t)))
+                                                                                    (list 2))))
+    (EmacsIsearchBackground . ,(apply #'color-theme-utils--color-rgb-to-hex (append (color-theme-utils--color-name-to-rgb
+                                                                                     (or (face-background 'isearch nil t) (face-background 'default  nil t)))
+                                                                                    (list 2))))
+    (EmacsIsearchForeground . ,(apply #'color-theme-utils--color-rgb-to-hex (append (color-theme-utils--color-name-to-rgb
+                                                                                     (or (face-foreground 'isearch nil t) (face-foreground 'default  nil t)))
+                                                                                    (list 2))))
+    (EmacsHighlightBackground . ,(apply #'color-theme-utils--color-rgb-to-hex (append (color-theme-utils--color-name-to-rgb
+                                                                                       (or (face-background 'highlight nil t) (face-background 'default nil t)))
+                                                                                      (list 2))))
+    (EmacsShadowForeground . ,(apply #'color-theme-utils--color-rgb-to-hex (append (color-theme-utils--color-name-to-rgb
+                                                                                    (or (face-foreground 'shadow nil t) (face-foreground 'default nil t)))
                                                                                    (list 2))))
-    (EmacsTooltipForeground . ,(apply #'color-theme-utils--color-rgb-to-hex (nconc (color-name-to-rgb
-                                                                                    (or (face-foreground 'tooltip nil t) (face-foreground 'default  nil t)))
+    (EmacsCursorBackground . ,(apply #'color-theme-utils--color-rgb-to-hex (append (color-theme-utils--color-name-to-rgb
+                                                                                    (or (face-background 'cursor nil t) (face-background 'default nil t)))
                                                                                    (list 2))))
-    (EmacsIsearchBackground . ,(apply #'color-theme-utils--color-rgb-to-hex (nconc (color-name-to-rgb
-                                                                                    (or (face-background 'isearch nil t) (face-background 'default  nil t)))
+    (EmacsCursorForeground . ,(apply #'color-theme-utils--color-rgb-to-hex (append (color-theme-utils--color-name-to-rgb
+                                                                                    (or (face-foreground 'cursor nil t) (face-background 'default nil t)))
                                                                                    (list 2))))
-    (EmacsIsearchForeground . ,(apply #'color-theme-utils--color-rgb-to-hex (nconc (color-name-to-rgb
-                                                                                    (or (face-foreground 'isearch nil t) (face-foreground 'default  nil t)))
-                                                                                   (list 2))))
-    (EmacsHighlightBackground . ,(apply #'color-theme-utils--color-rgb-to-hex (nconc (color-name-to-rgb
-                                                                                      (or (face-background 'highlight nil t) (face-background 'default nil t)))
-                                                                                     (list 2))))
-    (EmacsShadowForeground . ,(apply #'color-theme-utils--color-rgb-to-hex (nconc (color-name-to-rgb
-                                                                                   (or (face-foreground 'shadow nil t) (face-foreground 'default nil t)))
+    (EmacsKeywordForeground . ,(apply #'color-theme-utils--color-rgb-to-hex (append (color-theme-utils--color-name-to-rgb
+                                                                                     (or (face-foreground 'font-lock-keyword-face nil t) (face-foreground 'default nil t)))
+                                                                                    (list 2))))
+    (EmacsWarningForeground . ,(apply #'color-theme-utils--color-rgb-to-hex (append (color-theme-utils--color-name-to-rgb
+                                                                                     (or (face-foreground 'warning nil t) (face-foreground 'default nil t)))
+                                                                                    (list 2))))
+    (EmacsErrorForeground . ,(apply #'color-theme-utils--color-rgb-to-hex (append (color-theme-utils--color-name-to-rgb
+                                                                                   (or (face-foreground 'error nil t) (face-foreground 'default nil t)))
                                                                                   (list 2))))
-    (EmacsCursorBackground . ,(apply #'color-theme-utils--color-rgb-to-hex (nconc (color-name-to-rgb
-                                                                                   (or (face-background 'cursor nil t) (face-background 'default nil t)))
-                                                                                  (list 2))))
-    (EmacsCursorForeground . ,(apply #'color-theme-utils--color-rgb-to-hex (nconc (color-name-to-rgb
-                                                                                   (or (face-foreground 'cursor nil t) (face-background 'default nil t)))
-                                                                                  (list 2))))
-    (EmacsKeywordForeground . ,(apply #'color-theme-utils--color-rgb-to-hex (nconc (color-name-to-rgb
-                                                                                    (or (face-foreground 'font-lock-keyword-face nil t) (face-foreground 'default nil t)))
-                                                                                   (list 2))))
-    (EmacsWarningForeground . ,(apply #'color-theme-utils--color-rgb-to-hex (nconc (color-name-to-rgb
-                                                                                    (or (face-foreground 'warning nil t) (face-foreground 'default nil t)))
-                                                                                   (list 2))))
-    (EmacsErrorForeground . ,(apply #'color-theme-utils--color-rgb-to-hex (nconc (color-name-to-rgb
-                                                                                  (or (face-foreground 'error nil t) (face-foreground 'default nil t)))
-                                                                                 (list 2))))
-    (EmacsSuccessForeground . ,(apply #'color-theme-utils--color-rgb-to-hex (nconc (color-name-to-rgb
-                                                                                    (or (face-foreground 'success nil t) (face-foreground 'default nil t)))
-                                                                                   (list 2))))))
+    (EmacsSuccessForeground . ,(apply #'color-theme-utils--color-rgb-to-hex (append (color-theme-utils--color-name-to-rgb
+                                                                                     (or (face-foreground 'success nil t) (face-foreground 'default nil t)))
+                                                                                    (list 2))))))
 
 (defun color-theme-utils-basic-color-name (color)
   "Basic color name of COLOR."

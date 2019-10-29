@@ -1,3 +1,6 @@
+# Disable printing messages to console.
+~/bin/tty-ctl dmesg-off
+
 # Startup xkeysnail monitor
 nohup ~/bin/xkeysnail-ctl monitor >/dev/null 2>&1 &
 
@@ -40,7 +43,12 @@ case "$LAUNCHER" in
     exec $TERMINAL emacs -nw --no-x-resources
     ;;
   i3)
-    XDG_CURRENT_DESKTOP=i3 exec $(~/bin/nvidia-xrun-ctl path || echo startx)
+    if [ "$I3_USE_NVIDIA_XRUN" = "1" ]; then
+      STARTX=$(~/bin/nvidia-xrun-ctl path || echo startx)
+    else
+      STARTX=startx
+    fi
+    XDG_CURRENT_DESKTOP=i3 exec $STARTX
     ;;
   gnome3)
     source ~/.xprofile

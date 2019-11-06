@@ -21,6 +21,14 @@ enabled() {
   fi
 }
 
+activated() {
+  if lspci -nnk | grep -i vga -A3 | grep 'in use: nvidia' >/dev/null 2>/dev/null; then
+    echo "yes"
+  else
+    echo "no"
+  fi
+}
+
 status() {
   if [ "$(installed)" = "yes" ]; then
     echo -n "installed"
@@ -28,10 +36,23 @@ status() {
     echo -n "uninstalled"
   fi
   if [ "$(enabled)" = "yes" ]; then
-    echo "/enabled"
+    echo -n "/enabled"
   else
-    echo "/disabled"
+    echo -n "/disabled"
   fi
+  if [ "$(activated)" = "yes" ]; then
+    echo "/active"
+  else
+    echo "/inactive"
+  fi
+}
+
+block() {
+  echo -e 'blacklist nvidia\nblacklist nvidia_drm\nblacklist nouveaucg' | sudo tee /etc/modprobe.d/nvidia-xrun.conf >/dev/null
+}
+
+unblock() {
+  sudo rm -f /etc/modprobe.d/nvidia-xrun.conf
 }
 
 uninstall() {
@@ -42,7 +63,7 @@ uninstall() {
     yaourt --remove nvidia
   fi
   sudo rm -f /etc/modules-load.d/bbswitch.conf
-  sudo rm -f /etc/modprobe.d/nvidia-xrun.conf
+  unblock
   sudo rm -f /etc/modprobe.d/bbswitch.conf
 }
 
@@ -55,7 +76,7 @@ install() {
   fi
   echo 'bbswitch ' | sudo tee /etc/modules-load.d/bbswitch.conf >/dev/null
   echo 'options bbswitch load_state=0 unload_state=1' | sudo tee /etc/modprobe.d/bbswitch.conf >/dev/null
-  echo -e 'blacklist nvidia\nblacklist nvidia_drm\nblacklist nouveau' | sudo tee /etc/modprobe.d/nvidia-xrun.conf >/dev/null
+  block
 }
 
 path() {
@@ -64,6 +85,10 @@ path() {
   else
     return 1
   fi
+}
+
+drivers() {
+  lspci -nnk | grep -i vga -A3 | grep 'in use: ' | awk -F': ' '{print $2}'
 }
 
 case "${1}" in
@@ -79,8 +104,17 @@ case "${1}" in
   path)
     path
     ;;
+  drivers)
+    drivers
+    ;;
+  block)
+    block
+    ;;
+  unblock)
+    unblock
+    ;;
   *)
-    echo -e "usage: ${0} <status|install|uninstall|path>\n\n\tstatus        Status of nvidia-xrun.\n\tinstall       Install nvidia-xrun.\n\tuninstall     Uninstall nvidia-xrun.\n\tpath          Path of nvidia-xrun." >/dev/stderr
+    echo -e "usage: ${0} <status|install|uninstall|path|drivers|block|unblock>\n\n\tstatus        Status of nvidia-xrun.\n\tinstall       Install nvidia-xrun.\n\tuninstall     Uninstall nvidia-xrun.\n\tpath          Path of enabled nvidia-xrun.\n\tdrivers       Video drivers in use.\n\tblock         Add nvidia drivers to blacklist.\n\tunblock       Remove nvidia drivers from blacklist." >/dev/stderr
     exit 1
     ;;
 esac

@@ -1,6 +1,31 @@
 #!/bin/bash
 
-polybar-msg cmd quit
-for monitor in $(polybar -m | awk -F: '{print $1}'); do
-  MONITOR=$monitor polybar --reload top &
+if [ -z "$DISPLAY" ]; then
+  export DISPLAY=$(~/bin/tty-ctl graphic-display)
+fi
+
+pids=$(pidof polybar)
+monitors=$(xrandr | grep ' connected' | awk '{print $1}')
+
+pids_dirty=()
+for monitor in $monitors; do
+  restarted=false
+  for pid in $pids; do
+    if strings /proc/$pid/environ | grep -E "^MONITOR=$monitor\$" >/dev/null; then
+      echo "restart polybar $pid" >/dev/stderr
+      polybar-msg -p $pid cmd restart >/dev/stderr
+      restarted=true
+    else
+      pids_dirty=($pid)
+    fi
+  done
+  if [ $restarted = false ]; then
+    echo "launch polybar $pid" >/dev/stderr
+    MONITOR=$monitor nohup polybar top >/dev/stderr 2>&1 &
+  fi
+done
+
+for pid in $pids_dirty; do
+  echo "stop polybar $pid" >/dev/stderr
+  polybar-msg -p $pid cmd quit >/dev/stderr
 done

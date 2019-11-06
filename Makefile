@@ -20,7 +20,7 @@ $(CURDIR)/bin/keymap-ctl: $(CURDIR)/src/keymap-ctl.c
 	gcc -g -O0 ${CURDIR}/src/keymap-ctl.c -lm -o ${CURDIR}/bin/keymap-ctl
 
 $(CURDIR)/bin/xkeysnail-ctl: $(CURDIR)/src/xkeysnail-ctl.c
-	gcc -g -O0 ${CURDIR}/src/xkeysnail-ctl.c -lm -o ${CURDIR}/bin/xkeysnail-ctl
+	gcc -g -O0 ${CURDIR}/src/xkeysnail-ctl.c -lm -lpthread -o ${CURDIR}/bin/xkeysnail-ctl
 
 $(CURDIR)/bin/tty-ctl: $(CURDIR)/src/tty-ctl.c
 	gcc -g -O0 ${CURDIR}/src/tty-ctl.c -lm -o ${CURDIR}/bin/tty-ctl

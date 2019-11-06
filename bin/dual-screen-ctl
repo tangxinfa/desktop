@@ -38,6 +38,7 @@ monitor() {
 
 apply() {
   detect && ~/bin/desktop-on-change
+  nohup arandr >/dev/null 2>&1 &
 }
 
 case "${1}" in

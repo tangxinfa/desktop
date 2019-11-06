@@ -58,6 +58,9 @@ int tty_other(int tty) {
     }
   }
   pclose(fp);
+  if (other < 1) {
+    other = (tty == 1 ? 2 : 1);
+  }
   return other;
 }
 
@@ -214,7 +217,7 @@ int main(int argc, char* argv[]) {
   }
 
   const int other = tty_other(atoi(my_tty));
-  if (other > 0 && (getenv("TTY_CTL_OTHER_CREATE") || tty_ready(other) == 0)) {
+  if (getenv("TTY_CTL_OTHER_CREATE") || tty_ready(other) == 0) {
     snprintf(command, sizeof(command), "chvt %d", other);
     status = system(command);
     status = ((status == -1 || !WIFEXITED(status)) ? EXIT_FAILURE

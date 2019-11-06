@@ -7,4 +7,4 @@ killall dunst
 mustache ~/.config/emacs.theme ~/.config/polybar/config.template > ~/.config/polybar/config
 mustache ~/.config/emacs.theme ~/.config/rofi/theme.rasi.template > ~/.config/rofi/theme.rasi
 mustache ~/.config/emacs.theme ~/.dialogrc.template > ~/.dialogrc
-polybar-msg cmd restart
+~/bin/polybar-launcher

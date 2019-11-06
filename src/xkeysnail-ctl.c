@@ -1,11 +1,14 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <limits.h>
+#include <pthread.h>
+#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/file.h>
 #include <sys/inotify.h>
+#include <sys/prctl.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
@@ -14,7 +17,7 @@ int command_output(const char* command, char* output, size_t output_size) {
   FILE* fp = popen(command, "r");
   if (NULL == fp) {
     perror("popen");
-    return errno;
+    return EXIT_FAILURE;
   }
   if (output && output_size > 0) {
     memset(output, '\0', output_size);
@@ -47,9 +50,9 @@ int xkeysnail_start() {
     return status;
   }
   status = system(
-      "xhost +SI:localuser:root >/dev/null 2>>/tmp/xkeysnail.log; "
+      "xhost +SI:localuser:root >/dev/stderr; "
       "xkeysnail ~/.config/xkeysnail/config.py --quiet --watch "
-      ">/dev/null 2>>/tmp/xkeysnail.log &");
+      ">/dev/stderr &");
   status = ((status == -1 || !WIFEXITED(status)) ? EXIT_FAILURE
                                                  : WEXITSTATUS(status));
   // Wait until xkeysnail startup.
@@ -65,6 +68,28 @@ int xkeysnail_start() {
     }
   }
   return status;
+}
+
+static int g_notify_fd = -1;
+
+void notify(int sig) {
+  char c = '\0';
+  write(g_notify_fd, &c, 1);
+}
+
+void* xkeysnail_run(void* param) {
+  int status = attach_graphic_display();
+  if (status != 0) {
+    return NULL;
+  }
+  system(
+      "xhost +SI:localuser:root >/dev/stderr; "
+      "exec xkeysnail ~/.config/xkeysnail/config.py --quiet --watch "
+      ">/dev/stderr");
+
+  notify(SIGCHLD);
+
+  return NULL;
 }
 
 int xkeysnail_stop() {
@@ -117,7 +142,20 @@ void xkeysnail_status_maintain() {
 
     // Start xkeysnail if graphic tty active.
     if (xkeysnail_status() != 0) {
-      xkeysnail_start();
+      pthread_t tid;
+      pthread_attr_t attr;
+      if (0 != pthread_attr_init(&attr)) {
+        perror("pthread_attr_init");
+        exit(EXIT_FAILURE);
+      }
+      if (0 != pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED)) {
+        perror("pthread_attr_setdetachstate");
+        exit(EXIT_FAILURE);
+      }
+      if (0 != pthread_create(&tid, &attr, &xkeysnail_run, NULL)) {
+        perror("pthread_create");
+        exit(EXIT_FAILURE);
+      }
       fprintf(stderr, "Start xkeysnail\n");
     }
 
@@ -149,57 +187,88 @@ int xkeysnail_monitor() {
   const int lock_fd = open(lock_file, O_CREAT | O_RDWR | O_CLOEXEC, 0666);
   if (lock_fd < 0) {
     fprintf(stderr, "Create lock %s failed: %d\n", lock_file, errno);
-    return errno;
+    return EXIT_FAILURE;
   }
   if (flock(lock_fd, LOCK_EX | LOCK_NB) == -1) {
-    fprintf(stderr, "Acquire lock %s failed: %d\n", lock_file, errno);
-    return errno;
+    if (errno == EWOULDBLOCK) {
+      fprintf(stderr,
+              "Acquire lock %s failed: %d, maybe a instance already running, "
+              "try to wake it up!\n",
+              lock_file, errno);
+      system("killall -USR1 xkeysnaild");
+    } else {
+      fprintf(stderr, "Acquire lock %s failed: %d\n", lock_file, errno);
+    }
+    return EXIT_FAILURE;
   }
 
+  int pipe_fd[2] = {-1, -1};
+  if (-1 == pipe(pipe_fd)) {
+    perror("pipe");
+    return EXIT_FAILURE;
+  }
+
+  if (fcntl(pipe_fd[0], F_SETFL, O_NONBLOCK) < 0) {
+    perror("fcntl");
+    return EXIT_FAILURE;
+  }
+
+  g_notify_fd = pipe_fd[1];
+
+  prctl(PR_SET_NAME, "xkeysnaild");
+
+  if (SIG_ERR == signal(SIGUSR1, notify)) {
+    perror("signal");
+    return EXIT_FAILURE;
+  }
+
+  xkeysnail_stop();
   xkeysnail_status_maintain();
 
   const int inotify_fd = inotify_init();
   if (inotify_fd == -1) {
     perror("inotify_init");
-    return errno;
+    return EXIT_FAILURE;
   }
 
   int watch_fd =
       inotify_add_watch(inotify_fd, "/sys/class/tty/tty0/active", IN_MODIFY);
   if (watch_fd == -1) {
-    perror("inotify_add_watch");
-    return errno;
+    perror("inotify_add_watch /sys/class/tty/tty0/active");
+    return EXIT_FAILURE;
   }
 
   fprintf(stderr,
           "inotify watch on /sys/class/tty/tty0/active with watch fd %d\n",
           watch_fd);
 
-  watch_fd =
-      inotify_add_watch(inotify_fd, "/tmp/xkeysnail.log", IN_CLOSE_WRITE);
-  if (watch_fd == -1) {
-    perror("inotify_add_watch");
-    return errno;
-  }
-
-  fprintf(stderr, "inotify watch on /tmp/xkeysnail.log with watch fd %d\n",
-          watch_fd);
-
   char buffer[10 * (sizeof(struct inotify_event) + NAME_MAX + 1)]
       __attribute__((aligned(8)));
   memset(buffer, 0, sizeof(buffer));
+  fd_set fdset;
 
   while (1) {
-    ssize_t readed = read(inotify_fd, buffer, sizeof(buffer));
-    if (readed == -1) {
-      perror("read");
-      return errno;
+    FD_ZERO(&fdset);
+    FD_SET(inotify_fd, &fdset);
+    FD_SET(pipe_fd[0], &fdset);
+
+    if (select((inotify_fd > pipe_fd[0] ? inotify_fd : pipe_fd[0]) + 1, &fdset,
+               NULL, NULL, NULL) == -1) {
+      if (errno != EINTR) {
+        perror("select");
+        return EXIT_FAILURE;
+      }
+      continue;
     }
 
-    for (char* p = buffer; p < buffer + readed;) {
-      struct inotify_event* event = (struct inotify_event*)p;
-      fprintf(stderr, "readed inotify event on watch fd %d\n", event->wd);
-      p += sizeof(struct inotify_event) + event->len;
+    if (FD_ISSET(inotify_fd, &fdset)) {
+      read(inotify_fd, buffer, sizeof(buffer));
+    }
+
+    if (FD_ISSET(pipe_fd[0], &fdset)) {
+      // Read all data until empty.
+      while (read(pipe_fd[0], buffer, sizeof(buffer)) > 0) {
+      }
     }
 
     xkeysnail_status_maintain();

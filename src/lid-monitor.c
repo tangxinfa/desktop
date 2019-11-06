@@ -49,7 +49,7 @@ int logging_processes() {
     perror("popen");
     return errno;
   }
-  char output[4096] = {'\0'};
+  char output[1*1024*1024] = {'\0'};
   fread(output, sizeof(output) - 1, 1, fp);
   int status = pclose(fp);
   status = ((status == -1 || !WIFEXITED(status)) ? EXIT_FAILURE

@@ -4,7 +4,6 @@
 if [ $# -gt 0 ]; then
   $*
 elif [ "graphical.target" != "$(systemctl get-default)" ]; then
-  ~/bin/dual-screen-ctl detect
   eval $(dbus-launch --sh-syntax)
   exec i3
 fi

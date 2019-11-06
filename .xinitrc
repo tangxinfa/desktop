@@ -12,7 +12,6 @@ fi
 [ -f ~/.xprofile ] && source ~/.xprofile
 
 if [ "graphical.target" != "`systemctl get-default`" ]; then
-    ~/bin/dual-screen-ctl detect
     eval $(dbus-launch --sh-syntax)
     exec i3
 fi

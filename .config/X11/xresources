@@ -1,5 +1,2 @@
 ! Font Config
 #include "xresources.d/font-config"
-
-!Dual Screen
-#include "xresources.d/dual-screen"

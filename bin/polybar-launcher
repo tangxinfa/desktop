@@ -5,7 +5,7 @@ if [ -z "$DISPLAY" ]; then
 fi
 
 pids=$(pidof polybar)
-monitors=$(xrandr | grep ' connected' | awk '{print $1}')
+monitors=$(~/bin/dual-screen-ctl list)
 
 pids_dirty=()
 for monitor in $monitors; do

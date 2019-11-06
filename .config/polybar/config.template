@@ -98,7 +98,8 @@ initial = 1
 
 [module/dual-screen]
 type = custom/script
-exec-if = [ "$(grep -E '^DualScreen.Primary:' ~/.config/X11/xresources.d/duals-creen | awk '{print $2}')" != "$(grep -E '^DualScreen.Secondary:' ~/.config/X11/xresources.d/duals-creen | awk '{print $2}')" ]
+exec-if = [ "$(~/bin/dual-screen-ctl list | wc -l)" != "1" ]
+click-left = arandr
 format = <label>
 exec = echo 
 

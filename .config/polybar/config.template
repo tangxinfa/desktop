@@ -62,11 +62,11 @@ font-5 = "file\-icons:size=12;1"
 font-6 = "Source Han Sans CN:size=18;1"
 font-7 = "DejaVu Sans:size=18;1"
 
-modules-left = i3 xwindow
-modules-center =
-modules-right = pomodoro xkeysnail dual-screen filesystem xbacklight pulseaudio memory cpu temperature battery network-wired network-wireless weather date power-with-bluetooth-mobile power-without-bluetooth-mobile
+modules-left = i3{{^DualScreenMode}} xwindow{{/DualScreenMode}}
+modules-center = {{#DualScreenMode}}date{{/DualScreenMode}}
+modules-right = {{^DualScreenMode}}pomodoro xkeysnail dual-screen filesystem xbacklight pulseaudio memory cpu temperature battery network-wired network-wireless weather date power-with-bluetooth-mobile power-without-bluetooth-mobile{{/DualScreenMode}}
 
-tray-position = center
+tray-position = {{#DualScreenMode}}left{{/DualScreenMode}}{{^DualScreenMode}}center{{/DualScreenMode}}
 tray-padding = 0
 tray-maxsize = 26
 

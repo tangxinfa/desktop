@@ -4,28 +4,26 @@ if [ -z "$DISPLAY" ]; then
   export DISPLAY=$(~/bin/tty-ctl graphic-display)
 fi
 
+monitor=$(~/bin/dual-screen-ctl primary)
 pids=$(pidof polybar)
-monitors=$(~/bin/dual-screen-ctl list)
-
-pids_dirty=()
-for monitor in $monitors; do
-  restarted=false
-  for pid in $pids; do
-    if strings /proc/$pid/environ | grep -E "^MONITOR=$monitor\$" >/dev/null; then
-      echo "restart polybar $pid" >/dev/stderr
-      polybar-msg -p $pid cmd restart >/dev/stderr
+restarted=false
+for i in "${!pids[@]}"; do
+  if [ -n "${pids[$i]}" ]; then
+    if strings /proc/${pids[$i]}/environ | grep -E "^MONITOR=$monitor\$" >/dev/null; then
+      echo "restart polybar ${pids[$i]} for $monitor" >/dev/stderr
+      polybar-msg -p ${pids[$i]} cmd restart >/dev/stderr
       restarted=true
-    else
-      pids_dirty=($pid)
+      unset 'pids[$i]'
     fi
-  done
-  if [ $restarted = false ]; then
-    echo "launch polybar $pid" >/dev/stderr
-    MONITOR=$monitor nohup polybar top >/dev/stderr 2>&1 &
   fi
 done
+if [ $restarted = false ]; then
+  echo "start polybar for $monitor" >/dev/stderr
+  MONITOR=$monitor nohup polybar top >/dev/stderr 2>&1 &
+fi
 
-for pid in $pids_dirty; do
-  echo "stop polybar $pid" >/dev/stderr
+for pid in $pids; do
+  monitor=$(strings /proc/${pid}/environ | grep -E "^MONITOR=" | awk -F= '{print $2}')
+  echo "stop polybar $pid for $monitor" >/dev/stderr
   polybar-msg -p $pid cmd quit >/dev/stderr
 done

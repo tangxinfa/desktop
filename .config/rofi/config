@@ -1,7 +1,7 @@
 ! "Enabled modi" Set from: Commandline
 rofi.modi:                           drun,run,window
 ! "Window width" Set from: Commandline
-rofi.width:                          30
+rofi.width:                          600
 ! "Number of lines" Set from: Default
 rofi.lines:                          7
 ! "Number of columns" Set from: Default

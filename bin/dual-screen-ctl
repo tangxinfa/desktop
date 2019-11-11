@@ -4,25 +4,74 @@ if [ -z "$DISPLAY" ]; then
   export DISPLAY=$(~/bin/tty-ctl graphic-display)
 fi
 
-primary() {
-  xrandr | grep ' connected' | awk '{print $1}' | sed -n 1p
+actives() {
+  xrandr --listactivemonitors | grep -v -E '^Monitors:' | awk '{print $4}'
 }
 
-secondary() {
-  xrandr | grep ' connected' | awk '{print $1}' | sed -n 2p
-}
-
-list() {
+connecteds() {
   xrandr | grep ' connected' | awk '{print $1}'
 }
 
+offlines() {
+  local -n _CONNECTEDS=$1
+  local -n _ACTIVES=$2
+  for ACTIVE in $_ACTIVES; do
+    local OFFLINE=true
+    for CONNECTED in $_CONNECTEDS; do
+      if [[ $CONNECTED == $ACTIVE ]]; then
+        OFFLINE=false
+        break
+      fi
+    done
+    if [ $OFFLINE = true ]; then
+      echo $ACTIVE
+    fi
+  done
+}
+
+onlines() {
+  local -n _CONNECTEDS=$1
+  local -n _ACTIVES=$2
+  for CONNECTED in $_CONNECTEDS; do
+    for ACTIVE in $_ACTIVES; do
+      if [[ $CONNECTED == $ACTIVE ]]; then
+        echo $CONNECTED
+      fi
+    done
+  done
+}
+
+list() {
+  local CONNECTEDS=$(connecteds)
+  local ACTIVES=$(actives)
+  onlines CONNECTEDS ACTIVES
+}
+
+primary() {
+  if [ -z "$1" ]; then
+    local CONNECTEDS=$(connecteds)
+  else
+    local CONNECTEDS=("$@")
+  fi
+  echo "${CONNECTEDS}" | sed -n 1p
+}
+
+secondary() {
+  if [ -z "$1" ]; then
+    local CONNECTEDS=$(connecteds)
+  else
+    local CONNECTEDS=("$@")
+  fi
+  echo "${CONNECTEDS}" | sed -n 2p
+}
+
 monitor() {
-  SCRIPT_PATH=$(readlink "${BASH_SOURCE[0]}")
+  local SCRIPT_PATH=$(readlink "${BASH_SOURCE[0]}")
   if [ -z "$SCRIPT_PATH" ]; then
     SCRIPT_PATH="${BASH_SOURCE[0]}"
   fi
-  SCRIPT_NAME=$(basename "${SCRIPT_PATH}")
-  LOCK_FILE="/tmp/${SCRIPT_NAME}.lock"
+  local SCRIPT_NAME=$(basename "${SCRIPT_PATH}")
+  local LOCK_FILE="/tmp/${SCRIPT_NAME}.lock"
 
   if [ -z "$DUAL_SCREEN_MONITOR_LOCKED" ]; then
     touch "${LOCK_FILE}"
@@ -34,13 +83,26 @@ monitor() {
 }
 
 apply() {
-  PRIMARY=$(primary)
-  SECONDARY=$(secondary)
+  local CONNECTEDS=$(connecteds)
+  local ACTIVES=$(actives)
+  local OFFLINES=$(offlines CONNECTEDS ACTIVES)
+  local PRIMARY=$(primary "${CONNECTEDS[@]}")
+  local SECONDARY=$(secondary "${CONNECTEDS[@]}")
+  local COMMAND="xrandr --output ${PRIMARY} --auto"
   if [ -z "${SECONDARY}" ]; then
-    xrandr --output "${PRIMARY}" --auto
+    local MESSAGE="Single Screen"
+    local IMAGE="video-single-display-symbolic.symbolic"
   else
-    xrandr --output "${PRIMARY}" --auto --output "${SECONDARY}" --auto --same-as "${PRIMARY}"
+    COMMAND="${COMMAND} --output ${SECONDARY} --auto --same-as ${PRIMARY}"
+    local MESSAGE="Dual Screen"
+    local IMAGE="video-joined-displays-symbolic.symbolic"
   fi
+  for OFFLINE in ${OFFLINES}; do
+    COMMAND="${COMMAND} --output ${OFFLINE} --off"
+  done
+  echo $COMMAND >/dev/stderr
+  dunstify -u low -t 3000 -i "${IMAGE}" "$MESSAGE" >/dev/stderr
+  $COMMAND
 }
 
 case "${1}" in
@@ -60,7 +122,7 @@ case "${1}" in
     apply
     ;;
   *)
-    echo -e "usage: ${0} <list|primary|secondary|monitor>\n\n\tlist         List srceens.\n\tprimary      Get primary srceen.\n\tsecondary    Get secondary screen.\n\tmonitor      Monitor screen plugged or unplugged." >/dev/stderr
+    echo -e "usage: ${0} <list|primary|secondary|monitor|apply>\n\n\tlist         List srceens.\n\tprimary      Get primary srceen.\n\tsecondary    Get secondary screen.\n\tmonitor      Monitor screen plugged or unplugged.\n\tapply        Apply screen settings." >/dev/stderr
     exit 1
     ;;
 esac

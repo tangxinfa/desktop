@@ -98,6 +98,9 @@ This prevents overlapping themes; something I would rarely want."
     (EmacsHlLineBackground . ,(apply #'color-theme-utils--color-rgb-to-hex (append (color-theme-utils--color-name-to-rgb
                                                                                     (or (face-background 'hl-line nil t) (face-background 'default  nil t)))
                                                                                    (list 2))))
+    (EmacsHlLineForeground . ,(apply #'color-theme-utils--color-rgb-to-hex (append (color-theme-utils--color-name-to-rgb
+                                                                                    (or (face-foreground 'hl-line nil t) (face-foreground 'default  nil t)))
+                                                                                   (list 2))))
     (EmacsModeLineBackground . ,(apply #'color-theme-utils--color-rgb-to-hex (append (color-theme-utils--color-name-to-rgb
                                                                                       (or (face-background 'mode-line nil t) (face-background 'default  nil t)))
                                                                                      (list 2))))
@@ -163,6 +166,9 @@ This prevents overlapping themes; something I would rarely want."
                                                                                     (list 2))))
     (EmacsHighlightBackground . ,(apply #'color-theme-utils--color-rgb-to-hex (append (color-theme-utils--color-name-to-rgb
                                                                                        (or (face-background 'highlight nil t) (face-background 'default nil t)))
+                                                                                      (list 2))))
+    (EmacsHighlightForeground . ,(apply #'color-theme-utils--color-rgb-to-hex (append (color-theme-utils--color-name-to-rgb
+                                                                                       (or (face-foreground 'highlight nil t) (face-foreground 'default nil t)))
                                                                                       (list 2))))
     (EmacsShadowForeground . ,(apply #'color-theme-utils--color-rgb-to-hex (append (color-theme-utils--color-name-to-rgb
                                                                                     (or (face-foreground 'shadow nil t) (face-foreground 'default nil t)))

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+NOTIFICATION_ID=315190199
+
 if [ -z "$DISPLAY" ]; then
   export DISPLAY=$(~/bin/tty-ctl graphic-display)
 fi
@@ -53,7 +55,12 @@ primary() {
   else
     local CONNECTEDS=("$@")
   fi
-  echo "${CONNECTEDS}" | sed -n 1p
+  for CONNECTED in $CONNECTEDS; do
+    if [[ $CONNECTED == eDP* ]] || [[ $CONNECTED == VGA* ]]; then
+      echo $CONNECTED
+      break
+    fi
+  done
 }
 
 secondary() {
@@ -62,7 +69,18 @@ secondary() {
   else
     local CONNECTEDS=("$@")
   fi
-  echo "${CONNECTEDS}" | sed -n 2p
+  for CONNECTED in $CONNECTEDS; do
+    if [[ $CONNECTED == HDMI* ]] || [[ $CONNECTED == DVI* ]]; then
+      echo $CONNECTED
+      break
+    fi
+  done
+}
+
+status() {
+  # Execute "xrandr" command will cause X desktop with sense of frustration,
+  # optimize by reading status file generate by monitor().
+  cat /tmp/dual-screen.status
 }
 
 monitor() {
@@ -79,6 +97,16 @@ monitor() {
     exec flock -x -n -o "${LOCK_FILE}" -c "${SCRIPT_PATH} monitor"
     exit $?
   fi
+
+  local CONNECTEDS=$(connecteds)
+  local ACTIVES=$(actives)
+  local ONLINES=$(onlines CONNECTEDS ACTIVES)
+  if [ "${#ONLINES[@]}" -gt 1 ]; then
+    echo -n "on" >/tmp/dual-screen.status
+  else
+    echo -n "off" >/tmp/dual-screen.status
+  fi
+
   srandrd -n ~/bin/dual-screen-ctl apply
 }
 
@@ -86,8 +114,16 @@ apply() {
   local CONNECTEDS=$(connecteds)
   local ACTIVES=$(actives)
   local OFFLINES=$(offlines CONNECTEDS ACTIVES)
+  local ONLINES=$(onlines CONNECTEDS ACTIVES)
   local PRIMARY=$(primary "${CONNECTEDS[@]}")
   local SECONDARY=$(secondary "${CONNECTEDS[@]}")
+
+  if [ "${#ONLINES[@]}" -gt 1 ]; then
+    echo -n "on" >/tmp/dual-screen.status
+  else
+    echo -n "off" >/tmp/dual-screen.status
+  fi
+
   local COMMAND="xrandr --output ${PRIMARY} --auto"
   if [ -z "${SECONDARY}" ]; then
     local MESSAGE="Single Screen"
@@ -101,11 +137,15 @@ apply() {
     COMMAND="${COMMAND} --output ${OFFLINE} --off"
   done
   echo $COMMAND >/dev/stderr
-  dunstify -u low -t 3000 -i "${IMAGE}" "$MESSAGE" >/dev/stderr
+  dunstify -r ${NOTIFICATION_ID} -u low -t 3000 -i "${IMAGE}" "$MESSAGE" >/dev/stderr
   $COMMAND
+  ~/bin/desktop-on-change dual-screen
 }
 
 case "${1}" in
+  status)
+    status
+    ;;
   list)
     list
     ;;
@@ -122,7 +162,13 @@ case "${1}" in
     apply
     ;;
   *)
-    echo -e "usage: ${0} <list|primary|secondary|monitor|apply>\n\n\tlist         List srceens.\n\tprimary      Get primary srceen.\n\tsecondary    Get secondary screen.\n\tmonitor      Monitor screen plugged or unplugged.\n\tapply        Apply screen settings." >/dev/stderr
+    echo -e "usage: ${0} <status|list|primary|secondary|monitor|apply>\n" >/dev/stderr
+    echo -e "\tstatus       Get status." >/dev/stderr
+    echo -e "\tlist         List srceens." >/dev/stderr
+    echo -e "\tprimary      Get primary srceen." >/dev/stderr
+    echo -e "\tsecondary    Get secondary screen." >/dev/stderr
+    echo -e "\tmonitor      Monitor screen plugged or unplugged." >/dev/stderr
+    echo -e "\tapply        Apply screen settings." >/dev/stderr
     exit 1
     ;;
 esac

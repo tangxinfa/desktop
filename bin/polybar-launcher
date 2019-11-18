@@ -4,23 +4,30 @@ if [ -z "$DISPLAY" ]; then
   export DISPLAY=$(~/bin/tty-ctl graphic-display)
 fi
 
-monitor=$(~/bin/dual-screen-ctl primary)
+monitors=$(~/bin/dual-screen-ctl list)
 pids=$(pidof polybar)
-restarted=false
-for i in "${!pids[@]}"; do
-  if [ -n "${pids[$i]}" ]; then
-    if strings /proc/${pids[$i]}/environ | grep -E "^MONITOR=$monitor\$" >/dev/null; then
-      echo "restart polybar ${pids[$i]} for $monitor" >/dev/stderr
-      polybar-msg -p ${pids[$i]} cmd restart >/dev/stderr
-      restarted=true
-      unset 'pids[$i]'
+for monitor in $monitors; do
+  restarted=false
+  for i in "${!pids[@]}"; do
+    if [ -n "${pids[$i]}" ]; then
+      if strings /proc/${pids[$i]}/environ | grep -E "^MONITOR=$monitor\$" >/dev/null; then
+        echo "restart polybar ${pids[$i]} for $monitor" >/dev/stderr
+        polybar-msg -p ${pids[$i]} cmd restart >/dev/stderr
+        restarted=true
+        unset 'pids[$i]'
+      fi
     fi
+  done
+  if [ $restarted = false ]; then
+    if [[ $monitor == VGA* ]]; then
+      POLYBAR="polybar -c $HOME/.config/polybar/config.compact top"
+    else
+      POLYBAR="polybar top"
+    fi
+    echo "start polybar for $monitor: $POLYBAR" >/dev/stderr
+    MONITOR=$monitor $POLYBAR >/dev/null 2>&1 &
   fi
 done
-if [ $restarted = false ]; then
-  echo "start polybar for $monitor" >/dev/stderr
-  MONITOR=$monitor nohup polybar top >/dev/stderr 2>&1 &
-fi
 
 for pid in $pids; do
   monitor=$(strings /proc/${pid}/environ | grep -E "^MONITOR=" | awk -F= '{print $2}')

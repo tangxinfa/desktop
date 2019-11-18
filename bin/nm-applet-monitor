@@ -17,7 +17,8 @@ if [ -z "$NM_APPLET_MONITOR_LOCKED" ]; then
 fi
 
 # nm-applet may leak memory, fix it by limit it's memory usage.
-ulimit -Sv 512000
+ulimit -Sv 1024000
+ulimit -Sm 100000
 ulimit -c 0
 while [ 1 ]; do
     echo -e "$(date)\tStartup nm-applet" >> "${LOCK_FILE}"

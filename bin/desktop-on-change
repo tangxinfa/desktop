@@ -4,13 +4,8 @@ xrdb -merge -I$HOME/.config/X11 ${HOME}/.config/X11/xresources
 
 mustache ~/.config/emacs.theme ~/.config/dunst/dunstrc.template > ~/.config/dunst/dunstrc
 killall dunst
-echo -n -e '---\nDualScreenMode: ' > ~/.config/screen.theme
-if [ "`dual-screen-ctl list | wc -l`" -gt "1" ]; then
-    echo -e "true\n---" >> ~/.config/screen.theme;
-else
-    echo -e "false\n---" >> ~/.config/screen.theme;
-fi
-cat ~/.config/emacs.theme ~/.config/screen.theme | mustache - ~/.config/polybar/config.template > ~/.config/polybar/config
+echo -e '---\nCompactLayout: false\n---' | cat ~/.config/emacs.theme - | mustache - ~/.config/polybar/config.template > ~/.config/polybar/config
+echo -e '---\nCompactLayout: true\n---' | cat ~/.config/emacs.theme - | mustache - ~/.config/polybar/config.template > ~/.config/polybar/config.compact
 mustache ~/.config/emacs.theme ~/.config/rofi/theme.rasi.template > ~/.config/rofi/theme.rasi
 mustache ~/.config/emacs.theme ~/.dialogrc.template > ~/.dialogrc
 ~/bin/polybar-launcher

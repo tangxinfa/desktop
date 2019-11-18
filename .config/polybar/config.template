@@ -62,11 +62,11 @@ font-5 = "file\-icons:size=12;1"
 font-6 = "Source Han Sans CN:size=18;1"
 font-7 = "DejaVu Sans:size=18;1"
 
-modules-left = i3{{^DualScreenMode}} xwindow{{/DualScreenMode}}
-modules-center = {{#DualScreenMode}}date{{/DualScreenMode}}
-modules-right = {{^DualScreenMode}}pomodoro xkeysnail dual-screen filesystem xbacklight pulseaudio memory cpu temperature battery network-wired network-wireless weather date power-with-bluetooth-mobile power-without-bluetooth-mobile{{/DualScreenMode}}
+modules-left = i3{{^CompactLayout}} xwindow{{/CompactLayout}}{{#CompactLayout}} date network-wireless{{/CompactLayout}}
+modules-center =
+modules-right = {{^CompactLayout}}pomodoro xkeysnail dual-screen filesystem xbacklight pulseaudio memory cpu temperature battery network-wired network-wireless weather date power-with-bluetooth-mobile power-without-bluetooth-mobile{{/CompactLayout}}
 
-tray-position = {{#DualScreenMode}}left{{/DualScreenMode}}{{^DualScreenMode}}center{{/DualScreenMode}}
+tray-position = {{#CompactLayout}}left{{/CompactLayout}}{{^CompactLayout}}center{{/CompactLayout}}
 tray-padding = 0
 tray-maxsize = 26
 
@@ -98,7 +98,7 @@ initial = 1
 
 [module/dual-screen]
 type = custom/script
-exec-if = [ "$(~/bin/dual-screen-ctl list | wc -l)" != "1" ]
+exec-if = [ $(~/bin/dual-screen-ctl status) = "on" ]
 click-left = arandr
 format = <label>
 exec = echo 
@@ -132,6 +132,7 @@ ramp-capacity-9 = 
 [module/i3]
 type = internal/i3
 format = <label-state> <label-mode>
+{{#CompactLayout}}format-offset = 40{{/CompactLayout}}
 index-sort = true
 wrapping-scroll = false
 ; Only show workspaces on the same output as the bar
@@ -230,8 +231,9 @@ interface = wlp4s0
 interval = 3.0
 
 format-connected = %{A5:gnome-system-monitor -r&:}%{A1:nmcli d wifi >/dev/null 2>&1 && networkmanager_dmenu:}%{A6:~/bin/network-editor wifi &:}<ramp-signal><label-connected>%{A}%{A}%{A}
-label-connected =
+label-connected = {{#CompactLayout}}%essid%{{/CompactLayout}}
 format-disconnected = %{A5:gnome-system-monitor -r&:}%{A1:nmcli d wifi >/dev/null 2>&1 && networkmanager_dmenu:}%{A}%{A}
+
 
 ramp-signal-0 = 
 ramp-signal-0-foreground = ${colors.error}
@@ -259,6 +261,7 @@ time = "%a %H:%M"
 time-alt = "%H:%M:%S"
 format = <label>
 label = "%{A5:~/bin/polybar-calendar on:}%{A4:~/bin/polybar-calendar off:}%{A1:~/bin/polybar-calendar on:}%date%%time%%{A}%{A}%{A}"
+{{#CompactLayout}}format-offset = 40{{/CompactLayout}}
 
 [module/pomodoro]
 type = custom/script

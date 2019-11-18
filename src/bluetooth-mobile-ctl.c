@@ -13,7 +13,7 @@
 #include <unistd.h>
 
 const char* monitor_lock_file = "/tmp/bluetooth-mobile-monitor.lock";
-const char* status_file = "/tmp/bluetooth-mobile-ctl.status";
+const char* status_file = "/tmp/bluetooth-mobile.status";
 
 void logging(FILE* file, const char* fmt, ...) {
   time_t t;

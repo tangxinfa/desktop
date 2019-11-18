@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+notification_id=100791699
+
 if [ -z "$DISPLAY" ]; then
   export DISPLAY=$(~/bin/tty-ctl graphic-display)
 fi
@@ -27,7 +29,7 @@ volume_set() {
   echo "Volume left ${volume_left} ${status_left} right ${volume_right} ${status_right}, restore to default volume ${volume_default}" >>/dev/stderr
   amixer --quiet set Master "${volume_default}%"
   if [ "${status_left}" = "off" ] && [ "${status_right}" = "off" ]; then
-    dunstify -u critical -t 5000 -i audio-volume-muted-symbolic.symbolic '🛈 Please Unmute Audio Volume' >/dev/stderr
+    dunstify -r $notification_id -u critical -t 5000 -i audio-volume-muted-symbolic.symbolic '🛈 Please Unmute Audio Volume' >/dev/stderr
   fi
 }
 
@@ -35,9 +37,9 @@ notification() {
   state
   if [ "$?" = "0" ]; then
     volume_set
-    dunstify -u normal -t 3000 -i netease-cloud-music '✔ Netease Cloud Music Playing' >/dev/stderr
+    dunstify -r $notification_id -u normal -t 3000 -i netease-cloud-music '✔ Netease Cloud Music' 'Playing' >/dev/stderr
   elif [ "$?" = "1" ]; then
-    dunstify -u critical -t 3000 -i netease-cloud-music '✘ Netease Cloud Music Paused' >/dev/stderr
+    dunstify -r $notification_id -u critical -t 3000 -i netease-cloud-music '✘ Netease Cloud Music' 'Paused' >/dev/stderr
   fi
 }
 
@@ -64,6 +66,31 @@ toggle() {
   done
 }
 
+auto_pause() {
+  SCRIPT_PATH=$(readlink "${BASH_SOURCE[0]}")
+  if [ -z "$SCRIPT_PATH" ]; then
+    SCRIPT_PATH="${BASH_SOURCE[0]}"
+  fi
+  SCRIPT_NAME=$(basename "${SCRIPT_PATH}")
+  LOCK_FILE="/tmp/${SCRIPT_NAME}.lock"
+
+  if [ -z "$NETEASE_CLOUD_MUSIC_LOCKED" ]; then
+    touch "${LOCK_FILE}"
+    export NETEASE_CLOUD_MUSIC_LOCKED="${LOCK_FILE}"
+    exec flock -x -n -o "${LOCK_FILE}" -c "${SCRIPT_PATH} auto-pause"
+    exit $?
+  fi
+  while [ 1 ]; do
+    STATUS=$(~/bin/bluetooth-headset-ctl status)
+    STATE=$(state)
+    if [ "$STATUS" = "disconnected" ] && [ "$STATE" = "running" ]; then
+      toggle
+      notification
+    fi
+    sleep 10
+  done
+}
+
 case "${1}" in
   status)
     state
@@ -84,8 +111,11 @@ case "${1}" in
     toggle
     notification
     ;;
+  auto-pause)
+    auto_pause
+    ;;
   *)
-    echo -e "usage: ${0} <status|pause|resume|toggle>\n\n\tstatus      Show play status.\n\tpause       Pause play.\n\tresume      Resume play.\n\ttoggle      Toggle play." >/dev/stderr
+    echo -e "usage: ${0} <status|pause|resume|toggle|auto-pause>\n\n\tstatus      Show play status.\n\tpause       Pause play.\n\tresume      Resume play.\n\ttoggle      Toggle play.\n\tauto-pause  Auto pause if bluetooth headset disconnected." >/dev/stderr
     exit 1
     ;;
 esac

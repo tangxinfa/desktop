@@ -2,7 +2,7 @@
     background-color:            #{{EmacsDefaultBackground}};
     text-color:                  #{{EmacsDefaultForeground}};
     highlight-background-color:  #{{EmacsHlLineBackground}};
-    highlight-foreground-color:  #{{EmacsDefaultForeground}};
+    highlight-foreground-color:  #{{EmacsHlLineForeground}};
     highlight-border-color:      #{{EmacsCursorBackground}};
 }
 
@@ -51,12 +51,9 @@
 #element {
     padding: 0.5em;
     border-radius: 1em;
-    border: 1;
 }
 
 #element.selected {
     background-color: @highlight-background-color;
     text-color: @highlight-foreground-color;
-    border-color: @highlight-border-color;
-    border: 1;
 }

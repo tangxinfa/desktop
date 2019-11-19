@@ -66,8 +66,8 @@ int tty_other(int tty) {
 
 int get_graphic_display(char* display, size_t size) {
   FILE* fp = popen(
-      "cat /proc/`pidof Xorg`/cmdline | tr \"\\0\" \"\\n\" | grep : | head "
-      "-1",
+      "(cat /proc/`pidof Xorg Xwayland -s`/cmdline | tr \"\\0\" \"\\n\" | grep "
+      ": | head -1) 2>/dev/null",
       "r");
   if (NULL == fp) {
     perror("popen");
@@ -181,8 +181,8 @@ int main(int argc, char* argv[]) {
 
   if (strcmp(argv[1], "graphic") == 0) {
     status = system(
-        "(readlink /proc/`pidof Xorg Xwayland -s`/fd/0 | awk "
-        "-F/dev/tty '{print $2}') 2>/dev/null");
+        "(strings /proc/`pidof Xorg Xwayland -s`/environ | grep -E "
+        "'^XDG_VTNR=' | awk -F= '{print $2}') 2>/dev/null");
     status = ((status == -1 || !WIFEXITED(status)) ? EXIT_FAILURE
                                                    : WEXITSTATUS(status));
     return status;

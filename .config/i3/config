@@ -319,9 +319,8 @@ exec --no-startup-id gtk-launch solaar
 exec --no-startup-id gtk-launch variety
 exec --no-startup-id gtk-launch org.keepassxc.KeePassXC
 exec_always --no-startup-id ~/bin/polybar-launcher
-exec --no-startup-id compton -cCGb\
+exec --no-startup-id picom -cCGb\
      -t 0\
-     --config /dev/null\
      --inactive-dim=0.15\
      --detect-transient\
      --focus-exclude 'class_g = "Rofi"'\

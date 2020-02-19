@@ -75,7 +75,7 @@ while [ true ]; do
             ALERT_TITLE="Battery Low"
             ALERT_DESCRIPTION="please charging ..."
             ALERT_ICON="battery-low-symbolic.symbolic"
-            ALERT_TIMEOUT=10000
+            ALERT_TIMEOUT=30000
             ;;
         *)
             let OK_TIMES+=1

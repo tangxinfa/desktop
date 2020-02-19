@@ -34,13 +34,24 @@ volume_set() {
 }
 
 notification() {
+  if [ "$(~/bin/bluetooth-headset-ctl status)" = "connected" ]; then
+    playing_icon=""
+    paused_icon=""
+  else
+    playing_icon=""
+    paused_icon=""
+  fi
   state
   if [ "$?" = "0" ]; then
     volume_set
-    dunstify -r $notification_id -u normal -t 3000 -i netease-cloud-music '✔ Netease Cloud Music' 'Playing' >/dev/stderr
+    dunstify -r $notification_id -u normal -t 3000 -i netease-cloud-music "${playing_icon} Netease Cloud Music" "Playing" >/dev/stderr
   elif [ "$?" = "1" ]; then
-    dunstify -r $notification_id -u critical -t 3000 -i netease-cloud-music '✘ Netease Cloud Music' 'Paused' >/dev/stderr
+    dunstify -r $notification_id -u critical -t 3000 -i netease-cloud-music "${paused_icon} Netease Cloud Music" "Paused" >/dev/stderr
   fi
+}
+
+terminate() {
+  killall -9 netease-cloud-music
 }
 
 toggle() {
@@ -80,12 +91,20 @@ auto_pause() {
     exec flock -x -n -o "${LOCK_FILE}" -c "${SCRIPT_PATH} auto-pause"
     exit $?
   fi
+  REQUIRE_TERMINATE=0
   while [ 1 ]; do
     STATUS=$(~/bin/bluetooth-headset-ctl status)
     STATE=$(state)
     if [ "$STATUS" = "disconnected" ] && [ "$STATE" = "running" ]; then
-      toggle
+      if [ "${REQUIRE_TERMINATE}" = "1" ]; then
+        terminate
+      else
+        toggle
+      fi
       notification
+      REQUIRE_TERMINATE=1
+    else
+      REQUIRE_TERMINATE=0
     fi
     sleep 10
   done

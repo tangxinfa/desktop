@@ -64,7 +64,7 @@ font-7 = "DejaVu Sans:size=18;1"
 
 modules-left = i3{{^CompactLayout}} xwindow{{/CompactLayout}}{{#CompactLayout}} date network-wireless{{/CompactLayout}}
 modules-center =
-modules-right = {{^CompactLayout}}pomodoro xkeysnail dual-screen filesystem xbacklight pulseaudio memory cpu temperature battery network-wired network-wireless weather date power-with-bluetooth-mobile power-without-bluetooth-mobile{{/CompactLayout}}
+modules-right = {{^CompactLayout}}pomodoro headset-ready headset-playing dual-screen xkeysnail filesystem xbacklight pulseaudio memory cpu temperature battery network-wired network-wireless weather date power-with-bluetooth-mobile power-without-bluetooth-mobile{{/CompactLayout}}
 
 tray-position = {{#CompactLayout}}left{{/CompactLayout}}{{^CompactLayout}}center{{/CompactLayout}}
 tray-padding = 0
@@ -90,6 +90,21 @@ cursor-scroll = ns-resize
 type = internal/xwindow
 label =  %title:0:40:...%
 label-padding = 2
+
+[module/headset-ready]
+type = custom/script
+exec-if = [ $(~/bin/bluetooth-headset-ctl status) = "connected" ] && [ $(~/bin/netease-cloud-music-ctl status) != "running" ]
+format = <label>
+click-left = blueman-manager
+exec = echo 
+
+[module/headset-playing]
+type = custom/script
+exec-if = [ $(~/bin/bluetooth-headset-ctl status) = "connected" ] && [ $(~/bin/netease-cloud-music-ctl status) = "running" ]
+format = <label>
+label-foreground = ${colors.success}
+click-left = blueman-manager
+exec = echo 
 
 [module/xkeysnail]
 type = custom/ipc
@@ -361,7 +376,8 @@ interval = 2
 
 [module/weather]
 type = custom/script
-exec = ~/bin/polybar-weather
+exec = timeout 30 ~/bin/polybar-weather
+format = <label>
 interval = 1800
 click-left = dex /usr/share/applications/org.gnome.Weather.desktop
 

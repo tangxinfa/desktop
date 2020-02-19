@@ -12,13 +12,13 @@ headset_connected() {
 }
 
 headset_set_profile() {
-  index=$(pacmd list-cards | grep -E '(^\s+index:)|(^\s+device.string)' | grep -B 1 $BLUETOOTH_HEADSET_DEVICE | head -1 | awk -F': ' '{print $2}')
+  local index=$(pacmd list-cards | grep -E '(^\s+index:)|(^\s+device.string)' | grep -B 1 $BLUETOOTH_HEADSET_DEVICE | head -1 | awk -F': ' '{print $2}')
   pacmd set-card-profile $index a2dp_sink
 }
 
 headset_connect() {
   dunstify -r ${notification_id} -u low -t 60000 -i audio-headset '○ Headset' 'Connecting'
-  delay=0
+  local delay=1
   if bluetooth | grep 'bluetooth = off' >/dev/null; then
     delay=3
   fi
@@ -26,9 +26,18 @@ headset_connect() {
   sleep $delay
   bluetoothctl power on
   sleep $delay
+  local repaired=0
+  local output
   for ((i = 1; i <= 10; i++)); do
-    if bluetoothctl connect "${BLUETOOTH_HEADSET_DEVICE}"; then
+    echo "bluetoothctl connect '${BLUETOOTH_HEADSET_DEVICE} ...'" >>/dev/stderr
+    output=$(bluetoothctl connect "${BLUETOOTH_HEADSET_DEVICE}")
+    if [ "$?" = "0" ]; then
       break
+    elif [[ $output == *"Device"*"not available"* ]] && [[ $repaired == "0" ]]; then
+      echo "${output}, repair by toggle on bluetooth ..." >>/dev/stderr
+      bluetooth off
+      bluetooth on
+      repaired=1
     fi
     sleep $delay
   done
@@ -41,6 +50,7 @@ headset_connect() {
 }
 
 headset_disconnect() {
+  dunstify -r ${notification_id} -u low -t 60000 -i audio-headset '○ Headset' 'Disconnecting'
   bluetoothctl disconnect "${BLUETOOTH_HEADSET_DEVICE}"
   if headset_connected; then
     dunstify -r ${notification_id} -u normal -t 3000 -i audio-headset '✔ Headset' 'Disconnect failed'
@@ -75,7 +85,7 @@ case "${1}" in
     fi
     ;;
   *)
-    echo -e "usage: ${0} <status|connect|disconnect|toggle>\n\n\tstatus      Headset connect status.\n\tconnect     Connect headset.\n\tdisconnect  Disconnect headset.\n\ttoggle      Headset connect/disconnect." >/dev/stderr
+    echo -e "usage: ${0} <status|connect|disconnect|toggle>\n\n\tstatus      Headset connect status.\n\tconnect     Connect headset.\n\tdisconnect  Disconnect headset.\n\ttoggle      Headset connect/disconnect." >>/dev/stderr
     exit 1
     ;;
 esac

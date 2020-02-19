@@ -43,18 +43,30 @@ FILE* logger() {
   return file;
 }
 
-int logging_processes() {
+int logging_system_status() {
+  char output[1*1024*1024] = {'\0'};
   FILE* fp = popen("ps aux", "r");
   if (NULL == fp) {
     perror("popen");
     return errno;
   }
-  char output[1*1024*1024] = {'\0'};
   fread(output, sizeof(output) - 1, 1, fp);
   int status = pclose(fp);
   status = ((status == -1 || !WIFEXITED(status)) ? EXIT_FAILURE
                                                  : WEXITSTATUS(status));
-  logging(logger(), "system processes:\n%s", output);
+  logging(logger(), "processes:\n%s", output);
+  memset(output, '\0', sizeof(output));
+  fp = popen("dmesg -T | tail -100", "r");
+  if (NULL == fp) {
+    perror("popen");
+    return errno;
+  }
+  fread(output, sizeof(output) - 1, 1, fp);
+  status = pclose(fp);
+  status = ((status == -1 || !WIFEXITED(status)) ? EXIT_FAILURE
+                                                 : WEXITSTATUS(status));
+  logging(logger(), "dmesg:\n%s", output);
+
   return status;
 }
 
@@ -127,7 +139,7 @@ int lid_monitor() {
 
   do {
     if (lid_problem()) {
-      logging_processes();
+      logging_system_status();
       logging(logger(),
               "Laptop LID closed but system still running, rescue with force "
               "power off");

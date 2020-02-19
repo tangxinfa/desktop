@@ -14,31 +14,38 @@
     border-color: @highlight-background-color;
     border-radius: 5px;
     transparency: "real";
-    padding: 1em 2em 1.5em 2em;
+    padding: 1em 2em;
 }
 
 #inputbar {
     children: [ entry, prompt ];
     padding: 0;
     border: 1;
+    spacing: 0;
+    background-color: @highlight-background-color;
     border-color: @highlight-background-color;
     border-radius: 1em;
     margin: 0 0 0 14em;
 }
 
 #prompt {
-    padding: 0.20em 0.25em;
-    margin: 0.1em;
-    border: 1;
-    border-radius: 1em;
+    padding: 0.25em;
     font: "Awasome 15";
-    border-color: @highlight-background-color;
-    text-color: @highlight-background-color;
+    margin: 0;
+    spacing: 0;
+    border: 2;
+    border-color: @background-color;
+    border-radius: 1em;
+    background-color: @highlight-background-color;
+    text-color: @background-color;
 }
 
 #entry {
     padding: 0.25em 0.5em;
     margin: 0;
+    spacing: 0;
+    background-color: @highlight-background-color;
+    text-color: @highlight-foreground-color;
 }
 
 #listview {

@@ -8,6 +8,13 @@ if [ ! -f ~/.config/wifi_places ]; then
 fi
 source ~/.config/wifi_places
 
+if [ "$1" = "list" ]; then
+    for name in "${!wifi_places[@]}"; do
+        echo ${wifi_places[$name]}
+    done
+    exit 0
+fi
+
 pattern=
 for name in "${!wifi_places[@]}"; do
     if [ ! -z $pattern ]; then

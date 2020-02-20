@@ -13,16 +13,37 @@ nohup ~/bin/lid-monitor >/dev/null 2>&1 &
 # Startup bluetooth mobile monitor.
 nohup ~/bin/bluetooth-mobile-ctl monitor >/dev/null 2>&1 &
 
+declare -A LAUNCHER_NAMES=(
+  ["emacs"]="GNU Emacs Editor"
+  ["i3"]="Tiling Window Manager"
+  ["gnome3"]="GNOME 3 Desktop"
+  ["fbterm"]="Frame Buffer Terminal"
+  ["mlterm"]="Multi Lingual Terminal"
+)
+
+declare -A LAUNCHER_PATHS=(
+  ["emacs"]="$(which emacs 2>/dev/null)"
+  ["i3"]="$(which i3 2>/dev/null)"
+  ["gnome3"]="$(which gnome-session 2>/dev/null)"
+  ["fbterm"]="$(which fbterm 2>/dev/null)"
+  ["mlterm"]="$(which mlterm-fb 2>/dev/null)"
+)
+
 # Desktop launcher.
 if [ -z "$LAUNCHER" ]; then
+  declare -a MENU_ARGS
+  MENU_HEIGHT=6
+  for name in "${!LAUNCHER_NAMES[@]}"; do
+    if [ -n "${LAUNCHER_PATHS[${name}]}" ]; then
+      MENU_ARGS[${#MENU_ARGS[@]}]="${name}"
+      MENU_ARGS[${#MENU_ARGS[@]}]="${LAUNCHER_NAMES[${name}]}"
+      let MENU_HEIGHT+=1
+    fi
+  done
   LAUNCHER=$(dialog --clear --title "Desktop Launcher" \
     --no-cancel \
-    --menu "" 11 79 8 \
-    emacs "GNU Emacs Editor" \
-    i3 "Tiling Window Manager" \
-    gnome3 "GNOME 3 Desktop" \
-    fbterm "Frame Buffer Terminal" \
-    mlterm "Multi Lingual Terminal" \
+    --menu "" ${MENU_HEIGHT} 79 8 \
+    "${MENU_ARGS[@]}" \
     2>&1 >/dev/tty)
   clear
 fi

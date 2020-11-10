@@ -15,17 +15,8 @@ i3_lock() {
   }
   trap revert HUP INT TERM
 
-  # If trun off screen with delay not works, you should:
-  #    export DPMS_FORCE_TURN_OFF_SCREEN=true
-  # Which fallback to force turn off screen.
-  if [ "$DPMS_FORCE_TURN_OFF_SCREEN" = true ]; then
-    (
-      sleep 1
-      xset dpms force off
-    ) &
-  else
-    xset +dpms dpms 5 5 5
-  fi
+  # Trun off screen with delay my not works
+  (sleep 1; xset dpms force off; xset +dpms dpms 5 5 5) &
 
   background_color=$(grep -E '^EmacsDefaultBackground:' ~/.config/emacs.theme | awk -F'"' '{print $2}')
   indicator_verification_color=$(grep -E '^EmacsWarningForeground:' ~/.config/emacs.theme | awk -F'"' '{print $2}')

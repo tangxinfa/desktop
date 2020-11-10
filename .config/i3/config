@@ -69,7 +69,7 @@ bindsym Control+$mod+p exec --no-startup-id ~/bin/rofi-power-menu
 ##  depends: yaourt -S rofi
 bindsym $mod+r exec --no-startup-id "killall rofi && true || rofi -p '' -show run"
 bindsym $mod+d exec --no-startup-id "killall rofi && true || rofi -p '' -show drun"
-bindsym $mod+t exec --no-startup-id "killall rofi && true || rofi -p '' -show '' -modi ':~/bin/rofi-ydcv' -no-sidebar-mode -fixed-num-lines -lines 10 -yoffset -10 -location 2 -theme-str '#element { padding: 0.1em; margin: 0;}'"
+bindsym $mod+t exec --no-startup-id "killall rofi && true || rofi -p '' -show '' -modi ':~/bin/rofi-translate' -no-sidebar-mode -lines 10 -yoffset 10 -location 2 -theme-str '#element { padding: 0.1em; margin: 0;}' -theme-str '#window { padding: 0em 2em; }'"
 bindsym $mod+w exec --no-startup-id "killall rofi && true || rofi -p '' -show window"
 
 # mouse left click
@@ -241,6 +241,7 @@ for_window [class="Gnome-terminal" window_role="gnome-terminal-popup.*"] floatin
 for_window [class="Xdialog"] floating enable
 for_window [title=".*DingTalk.*" window_type="dialog"] floating disable, move container to workspace $workspace4
 for_window [title=".*WeChat.*" window_type="dialog"] floating disable, move container to workspace $workspace4
+for_window [urgent="latest" class="firefox"] focus
 assign [class="firefox" title="https://im.dingtalk.com"] $workspace4
 assign [class="firefox" window_type="normal"] $workspace1
 assign [class="Chromium"] $workspace1
@@ -252,6 +253,7 @@ assign [class="XMind"] $workspace3
 assign [class="Wireshark"] $workspace3
 assign [class="libreoffice"] $workspace3
 for_window [title="LibreOffice"] move container to workspace $workspace3
+assign [class="calibre"] $workspace3
 assign [class="Java" title="XMind"] $workspace3
 for_window [class="Dia" window_role="toolbox_window"] floating enable
 assign [title="Electronic WeChat"] $workspace4
@@ -268,10 +270,11 @@ assign [class="Totem"] $workspace5
 assign [class="Steam"] $workspace5
 assign [title="Steam"] $workspace5
 assign [class="hl_linux"] $workspace5
-for_window [class="keepassxc" window_type="normal"] floating enable, move scratchpad, resize set 640 360
+for_window [class="KeePassXC" window_type="normal"] floating enable, move scratchpad, resize set 640 360, move absolute position center
 for_window [class="Zeal" window_type="normal"] floating enable, resize set 800 600, move absolute position center, focus
 for_window [class="Conky"] floating enable, resize set 400 400, move absolute position center
 for_window [class="Wine" title="迅雷网络" window_type="dialog"] floating disable, move container to workspace $workspace4 # Main RTX window
+for_window [class="qq"] floating enable, move container to workspace $workspace4
 assign [class="Seafile*"] $workspace3
 for_window [class="Solaar"] floating enable
 for_window [class="chinese-calendar"] floating enable
@@ -311,15 +314,17 @@ exec --no-startup-id sleep 20 && dropbox start
 exec --no-startup-id seafile-applet
 exec --no-startup-id gtk-launch firefox
 exec --no-startup-id pidof emacs || i3-msg workspace $workspace2
-exec --no-startup-id pidof emacs || emacs
+exec --no-startup-id emacsclient -n -a 'emacs' ~
 exec --no-startup-id ~/bin/battery-monitor
 exec --no-startup-id gtk-launch geoclue-demo-agent
 exec --no-startup-id gtk-launch redshift-gtk
 exec --no-startup-id gtk-launch solaar
 exec --no-startup-id gtk-launch variety
+exec --no-startup-id ~/bin/variety-clean
 exec --no-startup-id gtk-launch org.keepassxc.KeePassXC
 exec_always --no-startup-id ~/bin/polybar-launcher
-exec --no-startup-id picom -cCGb\
+exec_always --no-startup-id picom -cCGb\
+     -l -7\
      -t 0\
      --inactive-dim=0.15\
      --detect-transient\

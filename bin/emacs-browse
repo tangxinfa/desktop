@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+if [ -z "$DISPLAY" ]; then
+    export DISPLAY=`~/bin/tty-ctl graphic-display`
+fi
+
+EMACS_USER=$(strings /proc/`pidof -s emacs`/environ | grep -E '^USER=' | awk -F= '{print $2}') 
+CURRENT_USER="`whoami`"
+EMACS_CLIENT=emacsclient
+if [ -n "${EMACS_USER}" ] && [ "${CURRENT_USER}" = "root" ] && [ "${CURRENT_USER}" != "${EMACS_USER}" ]; then
+    EMACS_CLIENT="sudo -u ${EMACS_USER} -E emacsclient"
+fi
+$EMACS_CLIENT -n -a emacs -e "(my/browse-url-in-kill-ring)"

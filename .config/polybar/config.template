@@ -64,7 +64,7 @@ font-7 = "DejaVu Sans:size=18;1"
 
 modules-left = i3{{^CompactLayout}} xwindow{{/CompactLayout}}{{#CompactLayout}} date network-wireless{{/CompactLayout}}
 modules-center =
-modules-right = {{^CompactLayout}}pomodoro headset-ready headset-playing dual-screen xkeysnail filesystem xbacklight pulseaudio memory cpu temperature battery network-wired network-wireless weather date power-with-bluetooth-mobile power-without-bluetooth-mobile{{/CompactLayout}}
+modules-right = {{^CompactLayout}}pomodoro headset-ready headset-playing dual-screen xkeysnail filesystem xbacklight pulseaudio memory cpu temperature battery network-wired network-wireless weather date power{{/CompactLayout}}
 
 tray-position = {{#CompactLayout}}left{{/CompactLayout}}{{^CompactLayout}}center{{/CompactLayout}}
 tray-padding = 0
@@ -341,38 +341,33 @@ animation-charging-framerate = 750
 [module/temperature]
 type = internal/temperature
 thermal-zone = 0
-warn-temperature = 90
+warn-temperature = 80
+base-temperature = 30
 format = %{A1:gnome-system-monitor -p&:}<ramp><label>%{A}
-format-warn = <ramp><label-warn>
+format-warn = %{A1:gnome-system-monitor -p&:}<ramp><label-warn>%{A}
 label = %temperature-c%
 label-warn = %temperature-c%
+label-warn-foreground = ${colors.error}
 ramp-0 = 
 ramp-1 = 
-ramp-2 = 
-ramp-2-foreground = ${colors.warning}
+ramp-2 = 
+ramp-3 = 
+ramp-4 = 
+ramp-5 = 
+ramp-6 = 
+ramp-7 = 
+ramp-8 = 
+ramp-9 = 
+ramp-7-foreground = ${colors.warning}
+ramp-8-foreground = ${colors.warning}
+ramp-9-foreground = ${colors.warning}
 
-
-[module/power-with-bluetooth-mobile]
+[module/power]
 type = custom/script
-exec-if = [ $(~/bin/bluetooth-mobile-ctl status) = "on" ]
 format = <label>
 exec = echo "%{A5:~/bin/rofi-power-menu:}      %{A}"
 click-left = ~/bin/desktop-lock
 label-font = 5
-label-foreground = ${colors.success}
-label-underline = ${colors.success}
-interval = 2
-
-
-[module/power-without-bluetooth-mobile]
-type = custom/script
-exec-if = [ $(~/bin/bluetooth-mobile-ctl status) = "off" ]
-format = <label>
-exec = echo "%{A5:~/bin/rofi-power-menu:}      %{A}"
-click-left = ~/bin/desktop-lock
-label-font = 5
-interval = 2
-
 
 [module/weather]
 type = custom/script

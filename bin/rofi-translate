@@ -1,0 +1,22 @@
+#!/bin/bash
+
+if [[ "$*" != "" ]]; then
+  TEXT="$*"
+else
+  TEXT=$(timeout 1 xclip -o 2>/dev/null)
+fi
+
+TEXT="${TEXT//[\'\"]/}"
+
+if [[ "${TEXT}" != "" ]]; then
+  (echo "${TEXT}" | festival --tts >/dev/null 2>&1 &)
+  if [ -x "$(which trans)" ]; then
+    trans -show-languages n -show-prompt-message n -no-ansi -no-pager -no-view en:zh "${TEXT}"
+  else
+    # Avoid use ydcv's "-r" option for voice reading, which is a blocking call
+    ydcv -f "${TEXT}"
+  fi
+  exit 0
+fi
+
+exit 1

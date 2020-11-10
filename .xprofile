@@ -5,3 +5,5 @@ export LC_CTYPE=zh_CN.UTF-8
 
 synclient HorizHysteresis=30 VertHysteresis=30
 syndaemon -d -i 2 -t
+
+export QT_PLUGIN_PATH=/usr/lib/qt/plugins

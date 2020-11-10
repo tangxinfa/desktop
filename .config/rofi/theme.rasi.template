@@ -22,18 +22,17 @@
     padding: 0;
     border: 1;
     spacing: 0;
-    background-color: @highlight-background-color;
     border-color: @highlight-background-color;
     border-radius: 1em;
     margin: 0 0 0 14em;
 }
 
 #prompt {
-    padding: 0.25em;
-    font: "Awasome 15";
+    padding: 0.2em 0.35em 0.1em 0.35em;
+    font: "Awasome 14";
     margin: 0;
     spacing: 0;
-    border: 2;
+    border: 0.1em;
     border-color: @background-color;
     border-radius: 1em;
     background-color: @highlight-background-color;
@@ -44,8 +43,6 @@
     padding: 0.25em 0.5em;
     margin: 0;
     spacing: 0;
-    background-color: @highlight-background-color;
-    text-color: @highlight-foreground-color;
 }
 
 #listview {

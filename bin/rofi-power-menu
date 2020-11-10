@@ -2,21 +2,22 @@
 
 # Reference https://raw.githubusercontent.com/okraits/rofi-tools/master/rofi-power
 
-OPTIONS="  Lock\n  Suspend\n  Hibernate\n  Exit\n  Reboot\n  PowerOff"
-LAUNCHER="rofi -dmenu -i -p "
-killall rofi
-option=$(echo -e "$OPTIONS" | $LAUNCHER | awk '{print $NF}' | tr -d '\r\n')
+option="$1"
+if [ -z "$option" ]; then
+    OPTIONS="  Lock\n  Suspend\n  Hibernate\n  Exit\n  Reboot\n  PowerOff"
+    LAUNCHER="rofi -dmenu -i -p "
+    killall rofi
+    option=$(echo -e "$OPTIONS" | $LAUNCHER | awk '{print $NF}' | tr -d '\r\n')
+fi
 if [ ${#option} -gt 0 ]; then
   case $option in
     Lock)
       ~/bin/desktop-lock
       ;;
     Suspend)
-      ~/bin/desktop-lock &
       systemctl suspend
       ;;
     Hibernate)
-      ~/bin/desktop-lock &
       systemctl hibernate
       ;;
     Exit)

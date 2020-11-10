@@ -1,6 +1,6 @@
 .PHONY: all build install
 
-build: ${CURDIR}/bin/keymap-ctl ${CURDIR}/bin/xkeysnail-ctl ${CURDIR}/bin/tty-ctl ${CURDIR}/bin/file-open ${CURDIR}/bin/lid-monitor ${CURDIR}/bin/bluetooth-mobile-ctl ${CURDIR}/bin/i3lock
+build: ${CURDIR}/bin/keymap-ctl ${CURDIR}/bin/xkeysnail-ctl ${CURDIR}/bin/tty-ctl ${CURDIR}/bin/file-open ${CURDIR}/bin/lid-monitor ${CURDIR}/bin/i3lock
 
 install: build
 	sudo setcap 'cap_sys_tty_config+ep' `which fbterm`
@@ -9,12 +9,13 @@ install: build
 	sudo chown root:root ${CURDIR}/bin/tty-ctl && sudo chmod gu+s ${CURDIR}/bin/tty-ctl
 	sudo chown root:root ${CURDIR}/bin/file-open && sudo chmod gu+s ${CURDIR}/bin/file-open
 	sudo chown root:root ${CURDIR}/bin/lid-monitor && sudo chmod gu+s ${CURDIR}/bin/lid-monitor
-	sudo chown root:root ${CURDIR}/bin/bluetooth-mobile-ctl && sudo chmod gu+s ${CURDIR}/bin/bluetooth-mobile-ctl
-	sudo cp ${CURDIR}/service/desktop-lock@.service /etc/systemd/system/
+	sudo ln -sf ${CURDIR}/service/*.service /etc/systemd/system/
+	sudo ln -sf ${CURDIR}/etc/pam.d/i3lock /etc/pam.d/i3lock
 	sudo systemctl daemon-reload
-	sudo systemctl enable desktop-lock@${USER}.service
+	ls ${CURDIR}/service | sed -e "s/@/@${USER}/g" | xargs sudo systemctl enable
 	@echo "Install by create symbol links ..."
 	-cp -rs ${CURDIR}/{bin,.config,.local,.xinitrc,.xprofile,.fbtermrc,.launcher,.mlterm} ~/
+	git config --global core.hooksPath ~/.config/git/hooks
 
 $(CURDIR)/bin/keymap-ctl: $(CURDIR)/src/keymap-ctl.c
 	gcc -g -O0 ${CURDIR}/src/keymap-ctl.c -lm -o ${CURDIR}/bin/keymap-ctl
@@ -31,9 +32,6 @@ $(CURDIR)/bin/file-open: $(CURDIR)/src/file-open.c
 $(CURDIR)/bin/lid-monitor: $(CURDIR)/src/lid-monitor.c
 	gcc -g -O0 ${CURDIR}/src/lid-monitor.c -lm -o ${CURDIR}/bin/lid-monitor
 
-$(CURDIR)/bin/bluetooth-mobile-ctl: $(CURDIR)/src/bluetooth-mobile-ctl.c
-	gcc -g -O0 ${CURDIR}/src/bluetooth-mobile-ctl.c -lm -o ${CURDIR}/bin/bluetooth-mobile-ctl
-
 $(CURDIR)/bin/i3lock: $(CURDIR)/i3lock
 	cd ${CURDIR}/i3lock &&\
 	autoreconf -fi &&\
@@ -42,8 +40,8 @@ $(CURDIR)/bin/i3lock: $(CURDIR)/i3lock
 	make install
 
 $(CURDIR)/i3lock:
-	git clone https://github.com/Lixxia/i3lock.git
+	git clone https://github.com/tangxinfa/i3lock.git -b fix-wrong-timetext-after-wakeup
 
 clean:
 	-rm -rf ${CURDIR}/i3lock
-	-rm -f ${CURDIR}/bin/{keymap-ctl,xkeysnail-ctl,tty-ctl,file-open,lid-monitor,bluetooth-mobile-ctl,i3lock}
+	-rm -f ${CURDIR}/bin/{keymap-ctl,xkeysnail-ctl,tty-ctl,file-open,lid-monitor,i3lock}

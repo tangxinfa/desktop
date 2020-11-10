@@ -10,9 +10,6 @@ nohup ~/bin/battery-monitor >/dev/null 2>&1 &
 # Startup lid monitor.
 nohup ~/bin/lid-monitor >/dev/null 2>&1 &
 
-# Startup bluetooth mobile monitor.
-nohup ~/bin/bluetooth-mobile-ctl monitor >/dev/null 2>&1 &
-
 declare -A LAUNCHER_NAMES=(
   ["emacs"]="GNU Emacs Editor"
   ["i3"]="Tiling Window Manager"

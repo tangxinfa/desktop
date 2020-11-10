@@ -111,11 +111,11 @@ bool lid_opened() {
 }
 
 bool lid_problem() {
-  for (int i = 0; i < 30; ++i) {
+  for (int i = 0; i < 90; ++i) {
     if (lid_opened()) {
       return false;
     }
-    if (i > 10) {
+    if (i > 60) {
       logging(logger(), "Laptop LID closed, why not suspend?");
     }
     sleep(1);

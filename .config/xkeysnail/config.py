@@ -25,7 +25,8 @@ define_keymap(re.compile("firefox"), {
     #     https://addons.mozilla.org/en-US/firefox/addon/titleurlcopy/?src=userprofile
     K("C-c"): {
         K("o"): {
-            K("l"): [K("C-k"), K("C-f6"), K("C-c")]
+            # C-x o l (Copy url and title)
+            K("l"): K("M-c"),
         },
         K("r"): {
             K("b"): [K("C-Shift-o")]
@@ -40,8 +41,13 @@ define_keymap(re.compile("firefox"), {
         K("b"): {
             K("u"): [K("F5")]
         },
-        K("C-c"): [K("C-enter")],
-        K("enter"): [launch(["left-click"])],
+        K("C-c"): K("enter"),
+        K("C-o"): [K("C-l"), K("M-c"), launch(["emacs-browse"])],
+        K("enter"): [launch(["xdotool", "click", "1"])],
+    },
+    K("M-r"): {
+        K("r"): [K("C-M-r"), K("f11")],
+        K("w"): [K("C-M-r"), K("f11")]
     },
 }, "Firefox")
 
@@ -70,7 +76,7 @@ define_keymap(re.compile("Zeal"), {
 }, "Zeal")
 
 # Keybindings for keepassxc
-define_keymap(re.compile("keepassxc"), {
+define_keymap(re.compile("KeePassXC"), {
     # Type C-g to move to scratchpad
     # Type C-c c n to copy username
     # Type C-c c p to copy password
@@ -119,9 +125,9 @@ define_keymap(lambda wm_class: wm_class not in ("Emacs", "URxvt", "Rofi", "Gnome
     K("M-Shift-comma"): with_mark(K("C-home")),
     K("M-Shift-dot"): with_mark(K("C-end")),
     # Newline
-    K("C-m"): K("enter"),
-    K("C-j"): K("enter"),
-    K("C-o"): [K("enter"), K("left")],
+    K("C-m"): K("C-enter"),
+    K("C-j"): K("C-enter"),
+    K("C-o"): [K("C-enter"), K("left")],
     # Copy
     K("C-w"): [K("C-x"), set_mark(False)],
     K("M-w"): [K("C-c"), set_mark(False)],
@@ -168,7 +174,7 @@ define_keymap(lambda wm_class: wm_class not in ("Emacs", "URxvt", "Rofi", "Gnome
             # C-x o l (Focus address bar)
             K("l"): K("C-l"),
             # C-x o . (Focus content area)
-            K("dot"): [K("C-k"), K("C-g"), K("TAB"), set_mark(False)],
+            K("dot"): [K("f6")],
         },
         K("r"): {
             # C-x r m (Set a bookmark)
@@ -178,5 +184,7 @@ define_keymap(lambda wm_class: wm_class not in ("Emacs", "URxvt", "Rofi", "Gnome
         },
         #C-x b (Search tabs, only firefox support)
         K("b"): [K("C-l"), K("Shift-key_5")],
+        K("Shift-KEY_9"): [launch(["macro-begin"])],
+        K("Shift-KEY_0"): [launch(["macro-end"])]
     }
 }, "Emacs-like keys")

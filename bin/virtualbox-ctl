@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+STATUS_FILE=/tmp/virtualbox.status
+
+save() {
+  local runningvms=$(VBoxManage list runningvms | awk -F'"' '{print $2}')
+  if [ -n "$runningvms" ]; then
+    echo $runningvms | sort | uniq | xargs --max-procs 3 -I% VBoxManage controlvm '%' savestate
+    echo $runningvms >>"${STATUS_FILE}"
+  fi
+}
+
+restore() {
+  cat "${STATUS_FILE}" 2>/dev/null | sort | uniq | xargs --max-procs 3 -I% VBoxManage startvm '%' --type separate
+  rm "${STATUS_FILE}" 2>/dev/null
+}
+
+case "${1}" in
+  save)
+    save
+    ;;
+  restore)
+    restore
+    ;;
+  status)
+    echo "virtualbox status:"
+    cat "${STATUS_FILE}" 2>/dev/null
+    ;;
+  *)
+    echo -e "usage: ${0} <status|save|restore>\n\n\tstatus      Show status.\n\tsave        Save status.\n\trestore     Restore status." >/dev/stderr
+    exit 1
+    ;;
+esac

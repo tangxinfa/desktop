@@ -1,0 +1,11 @@
+[Unit]
+Description=VirtualBox restore service
+After=suspend.target
+
+[Service]
+User=%I
+Type=forking
+ExecStart=/home/%I/bin/virtualbox-ctl restore
+
+[Install]
+WantedBy=suspend.target

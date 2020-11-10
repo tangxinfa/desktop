@@ -1,7 +1,6 @@
 #!/bin/bash
 
 REASON="$1"
-VBoxManage list runningvms | awk -F'"' '{system("VBoxManage controlvm " $2 " savestate")}'
 EMACS_PID="`pidof emacs | awk '{print $1}'`"
 if [ -n "$EMACS_PID" ]; then
     if grep -a -E "XDG_VTNR=${XDG_VTNR}[^\\d]" /proc/${EMACS_PID}/environ >/dev/null 2>&1; then

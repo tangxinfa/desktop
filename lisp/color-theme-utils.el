@@ -88,23 +88,33 @@ This prevents overlapping themes; something I would rarely want."
   "Like `color-rgb-to-hex' but without # prefix."
   (string-trim-left (color-rgb-to-hex red green blue digits-per-component) "#"))
 
-(defun color-theme-utils--face-background (face)
+(defun color-theme-utils--face-background (face &optional force)
   "Get background color of FACE."
-  (apply #'color-theme-utils--color-rgb-to-hex
-         (append (color-theme-utils--color-name-to-rgb
-                  (or (face-background face nil t)
-                      (face-background 'default nil t)
-                      "#FFFFFF"))
-                 (list 2))))
+  (let ((color
+         (apply #'color-theme-utils--color-rgb-to-hex
+                (append (color-theme-utils--color-name-to-rgb
+                         (or (face-background face nil t)
+                             (face-background 'default nil t)
+                             "#FFFFFF"))
+                        (list 2)))))
+    (unless force
+      (when (equal color (color-theme-utils--face-foreground face t))
+        (setq color (color-theme-utils--face-background 'default))))
+    color))
 
-(defun color-theme-utils--face-foreground (face)
+(defun color-theme-utils--face-foreground (face &optional force)
   "Get foreground color of FACE."
-  (apply #'color-theme-utils--color-rgb-to-hex
-         (append (color-theme-utils--color-name-to-rgb
-                  (or (face-foreground face nil t)
-                      (face-foreground 'default nil t)
-                      "#000000"))
-                 (list 2))))
+  (let ((color
+         (apply #'color-theme-utils--color-rgb-to-hex
+                (append (color-theme-utils--color-name-to-rgb
+                         (or (face-foreground face nil t)
+                             (face-foreground 'default nil t)
+                             "#000000"))
+                        (list 2)))))
+    (unless force
+      (when (equal color (color-theme-utils--face-background face t))
+        (setq color (color-theme-utils--face-foreground 'default))))
+    color))
 
 (defun color-theme-utils--face-underline (face)
   "Get underline color of FACE."

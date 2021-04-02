@@ -70,11 +70,21 @@ This prevents overlapping themes; something I would rarely want."
 (defvar color-theme-utils-export-file "~/.config/emacs.theme"
   "YAML front matter file to save Emacs color theme definitions.")
 
-(defun color-theme-utils--underline-face-color (face)
+(defun color-theme-utils--face-underline-color (face)
   "Get underline color of FACE."
-  (let ((underline (face-attribute face :underline nil t)))
-    (when (listp underline)
-      (alist-get :color underline nil))))
+  (let* ((underline (face-attribute face :underline nil t))
+         (color (if (stringp underline)
+                    underline
+                  (when (listp underline)
+                    (alist-get :color underline nil)))))
+    (if (stringp color)
+        color)))
+
+(defun color-theme-utils--face-overline-color (face)
+  "Get overline color of FACE."
+  (let ((overline (face-attribute face :overline nil t)))
+    (if (stringp overline)
+        overline)))
 
 (defun color-theme-utils--color-name-to-rgb (color)
   "A `color-name-to-rgb' wrap for process special colors."
@@ -88,55 +98,80 @@ This prevents overlapping themes; something I would rarely want."
   "Like `color-rgb-to-hex' but without # prefix."
   (string-trim-left (color-rgb-to-hex red green blue digits-per-component) "#"))
 
-(defun color-theme-utils--face-background (face &optional force)
+(defun color-theme-utils--face-invisible (face)
+  (let ((height (face-attribute face :height nil t)))
+    (cond
+     ((numberp height) (<= height 1))
+     (t nil))))
+
+(defun color-theme-utils--face-background (face &optional force fallback)
   "Get background color of FACE."
   (let ((color
          (apply #'color-theme-utils--color-rgb-to-hex
                 (append (color-theme-utils--color-name-to-rgb
                          (or (face-background face nil t)
-                             (face-background 'default nil t)
+                             (face-background (or fallback 'default) nil t)
                              "#FFFFFF"))
                         (list 2)))))
     (unless force
-      (when (equal color (color-theme-utils--face-foreground face t))
-        (setq color (color-theme-utils--face-background 'default))))
+      (when (or (color-theme-utils--face-invisible face) (equal color (color-theme-utils--face-foreground face t)))
+        (setq color (color-theme-utils--face-background (or fallback 'default)))))
     color))
 
-(defun color-theme-utils--face-foreground (face &optional force)
+(defun color-theme-utils--face-foreground (face &optional force fallback)
   "Get foreground color of FACE."
   (let ((color
          (apply #'color-theme-utils--color-rgb-to-hex
                 (append (color-theme-utils--color-name-to-rgb
                          (or (face-foreground face nil t)
-                             (face-foreground 'default nil t)
+                             (face-foreground (or fallback 'default) nil t)
                              "#000000"))
                         (list 2)))))
     (unless force
-      (when (equal color (color-theme-utils--face-background face t))
-        (setq color (color-theme-utils--face-foreground 'default))))
+      (when (or (color-theme-utils--face-invisible face) (equal color (color-theme-utils--face-background face t)))
+        (setq color (color-theme-utils--face-foreground (or fallback 'default)))))
     color))
 
-(defun color-theme-utils--face-underline (face)
+(defun color-theme-utils--face-underline (face &optional force fallback)
   "Get underline color of FACE."
-  (apply #'color-theme-utils--color-rgb-to-hex
-         (append (color-theme-utils--color-name-to-rgb
-                  (or (color-theme-utils--underline-face-color face)
-                      (face-background 'default nil t)
-                      "#FFFFFF"))
-                 (list 2))))
+  (let ((color
+         (apply #'color-theme-utils--color-rgb-to-hex
+                (append (color-theme-utils--color-name-to-rgb
+                         (or (color-theme-utils--face-underline-color face)
+                             (face-background 'default nil t)
+                             "#FFFFFF"))
+                        (list 2)))))
+    (unless force
+      (when (or (color-theme-utils--face-invisible face) (equal (color-theme-utils--face-foreground face t)  (color-theme-utils--face-background face t)))
+        (setq color (color-theme-utils--face-underline (or fallback 'default)))))
+    color))
+
+(defun color-theme-utils--face-overline (face &optional force fallback)
+  "Get overline color of FACE."
+  (let ((color
+         (apply #'color-theme-utils--color-rgb-to-hex
+                (append (color-theme-utils--color-name-to-rgb
+                         (or (color-theme-utils--face-overline-color face)
+                             (face-background 'default nil t)
+                             "#FFFFFF"))
+                        (list 2)))))
+    (unless force
+      (when (or (color-theme-utils--face-invisible face) (equal (color-theme-utils--face-foreground face t)  (color-theme-utils--face-background face t)))
+        (setq color (color-theme-utils--face-overline (or fallback 'default)))))
+    color))
 
 (defun color-theme-utils--colors ()
   `((EmacsDefaultBackground . ,(color-theme-utils--face-background 'default))
     (EmacsDefaultForeground . ,(color-theme-utils--face-foreground 'default))
     (EmacsHlLineBackground . ,(color-theme-utils--face-background 'hl-line))
     (EmacsHlLineForeground . ,(color-theme-utils--face-foreground 'hl-line))
-    (EmacsModeLineBackground . ,(color-theme-utils--face-background 'mode-line))
-    (EmacsModeLineForeground . ,(color-theme-utils--face-foreground 'mode-line))
-    (EmacsModeLineUnderline . ,(color-theme-utils--face-underline 'mode-line))
-    (EmacsModeLineHighlightForeground . ,(color-theme-utils--face-foreground 'mode-line-highlight))
-    (EmacsModeLineInactiveBackground . ,(color-theme-utils--face-background 'mode-line-inactive))
-    (EmacsModeLineInactiveForeground . ,(color-theme-utils--face-foreground 'mode-line-inactive))
-    (EmacsModeLineInactiveUnderline . ,(color-theme-utils--face-underline 'mode-line-inactive))
+    (EmacsModeLineBackground . ,(color-theme-utils--face-background 'mode-line nil 'default))
+    (EmacsModeLineForeground . ,(color-theme-utils--face-foreground 'mode-line nil 'default))
+    (EmacsModeLineUnderline . ,(color-theme-utils--face-underline 'mode-line nil 'default))
+    (EmacsModeLineHighlightForeground . ,(color-theme-utils--face-foreground 'mode-line-highlight nil 'font-lock-keyword-face))
+    (EmacsModeLineInactiveBackground . ,(color-theme-utils--face-background 'mode-line-inactive nil 'shadow))
+    (EmacsModeLineInactiveForeground . ,(color-theme-utils--face-foreground 'mode-line-inactive nil 'shadow))
+    (EmacsModeLineInactiveUnderline . ,(color-theme-utils--face-underline 'mode-line-inactive nil 'shadow))
     (EmacsRegionBackground . ,(color-theme-utils--face-background 'region))
     (EmacsRegionForeground . ,(color-theme-utils--face-foreground 'region))
     (EmacsFringeBackground . ,(color-theme-utils--face-background 'fringe))
@@ -192,10 +227,10 @@ This prevents overlapping themes; something I would rarely want."
 (defun color-theme-utils-export ()
   "Export currrent color theme definitions."
   (interactive)
-  (message "Emacs color theme %s"
-           (propertize (symbol-name (or (car custom-enabled-themes) 'default-theme)) 'face 'font-lock-variable-name-face))
   (when (color-theme-utils-export-file-save)
-    (call-process-shell-command "i3-msg exec ~/bin/desktop-on-change")))
+    (call-process-shell-command "i3-msg exec ~/bin/desktop-on-change"))
+  (message "Emacs color theme %s"
+           (propertize (symbol-name (or (car custom-enabled-themes) 'default-theme)) 'face 'font-lock-variable-name-face)))
 
 (defun color-theme-utils--export ()
   "Export current color theme definitions asynchronously."

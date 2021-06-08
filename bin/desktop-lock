@@ -16,13 +16,51 @@ i3_lock() {
   trap revert HUP INT TERM
 
   # Trun off screen with delay my not works
-  (sleep 1; xset dpms force off; xset +dpms dpms 5 5 5) &
+  (
+    sleep 1
+    xset dpms force off
+    xset +dpms dpms 5 5 5
+  ) &
 
-  background_color=$(grep -E '^EmacsDefaultBackground:' ~/.config/emacs.theme | awk -F'"' '{print $2}')
-  indicator_verification_color=$(grep -E '^EmacsWarningForeground:' ~/.config/emacs.theme | awk -F'"' '{print $2}')
-  indicator_error_color=$(grep -E '^EmacsErrorForeground:' ~/.config/emacs.theme | awk -F'"' '{print $2}')
-  indicator_default_color=$(grep -E '^EmacsSuccessForeground:' ~/.config/emacs.theme | awk -F'"' '{print $2}')
-  $(desktop_locked) || ${HOME}/bin/i3lock -n -c "#${background_color:-000000}" -o "#${indicator_verification_color:-191d0f}" -w "#${indicator_error_color:-572020}" -l "#${indicator_default_color:-ffffff}" -e
+  default_background_color="000000"
+  indicator_warning_color="191d0f"
+  indicator_error_color="572020"
+  indicator_default_color="ffffff"
+  if [ -f ~/.config/emacs.theme ]; then
+    default_background_color=$(grep -E '^EmacsDefaultBackground:' ~/.config/emacs.theme | awk -F'"' '{print $2}')
+    indicator_warning_color=$(grep -E '^EmacsWarningForeground:' ~/.config/emacs.theme | awk -F'"' '{print $2}')
+    indicator_error_color=$(grep -E '^EmacsErrorForeground:' ~/.config/emacs.theme | awk -F'"' '{print $2}')
+    indicator_default_color=$(grep -E '^EmacsSuccessForeground:' ~/.config/emacs.theme | awk -F'"' '{print $2}')
+  fi
+  $(desktop_locked) || i3lock \
+    --insidever-color=${default_background_color} \
+    --ringver-color=${indicator_warning_color} \
+    --insidewrong-color=${default_background_color} \
+    --ringwrong-color=${indicator_error_color} \
+    --inside-color=${default_background_color} \
+    --ring-color=${indicator_default_color} \
+    --line-color=${default_background_color} \
+    --separator-color=${indicator_default_color} \
+    --verif-color=${indicator_default_color} \
+    --wrong-color=${indicator_error_color} \
+    --time-color=${indicator_default_color} \
+    --date-color=${indicator_default_color} \
+    --layout-color=${indicator_default_color} \
+    --keyhl-color=${default_background_color} \
+    --bshl-color=${indicator_warning_color} \
+    --screen 1 \
+    --blur 5 \
+    --clock \
+    --indicator \
+    --time-str="%H:%M:%S" \
+    --date-str="%A, %m %Y" \
+    --keylayout 1 \
+    --verif-text="" \
+    --wrong-text="" \
+    --noinput-text="" \
+    --lock-text="" \
+    --force-clock \
+    -n
 
   revert
 }

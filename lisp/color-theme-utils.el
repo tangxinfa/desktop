@@ -101,7 +101,7 @@ This prevents overlapping themes; something I would rarely want."
 (defun color-theme-utils--face-invisible (face)
   (let ((height (face-attribute face :height nil t)))
     (cond
-     ((numberp height) (<= height 1))
+     ((and (window-system) (numberp height)) (<= height 1))
      (t nil))))
 
 (defun color-theme-utils--face-background (face &optional force fallback)
@@ -115,7 +115,8 @@ This prevents overlapping themes; something I would rarely want."
                         (list 2)))))
     (unless force
       (when (or (color-theme-utils--face-invisible face) (equal color (color-theme-utils--face-foreground face t)))
-        (setq color (color-theme-utils--face-background (or fallback 'default)))))
+        (unless (eq face (or fallback 'default))
+          (setq color (color-theme-utils--face-background (or fallback 'default))))))
     color))
 
 (defun color-theme-utils--face-foreground (face &optional force fallback)
@@ -129,7 +130,8 @@ This prevents overlapping themes; something I would rarely want."
                         (list 2)))))
     (unless force
       (when (or (color-theme-utils--face-invisible face) (equal color (color-theme-utils--face-background face t)))
-        (setq color (color-theme-utils--face-foreground (or fallback 'default)))))
+        (unless (eq face (or fallback 'default))
+          (setq color (color-theme-utils--face-foreground (or fallback 'default))))))
     color))
 
 (defun color-theme-utils--face-underline (face &optional force fallback)
@@ -143,7 +145,8 @@ This prevents overlapping themes; something I would rarely want."
                         (list 2)))))
     (unless force
       (when (or (color-theme-utils--face-invisible face) (equal (color-theme-utils--face-foreground face t)  (color-theme-utils--face-background face t)))
-        (setq color (color-theme-utils--face-underline (or fallback 'default)))))
+        (unless (eq face (or fallback 'default))
+          (setq color (color-theme-utils--face-underline (or fallback 'default))))))
     color))
 
 (defun color-theme-utils--face-overline (face &optional force fallback)
@@ -157,7 +160,8 @@ This prevents overlapping themes; something I would rarely want."
                         (list 2)))))
     (unless force
       (when (or (color-theme-utils--face-invisible face) (equal (color-theme-utils--face-foreground face t)  (color-theme-utils--face-background face t)))
-        (setq color (color-theme-utils--face-overline (or fallback 'default)))))
+        (unless (eq face (or fallback 'default))
+          (setq color (color-theme-utils--face-overline (or fallback 'default))))))
     color))
 
 (defun color-theme-utils--colors ()

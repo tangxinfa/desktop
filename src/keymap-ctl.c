@@ -28,14 +28,16 @@ const char *keymaps_start[] = {
     NULL,                    // Placeholder of the keymaps header
     "keycode 58 = Control",  // Caps-Lock as Control
     "keycode 125 = Alt",     // Left Meta(Win) as Alt
+    "keycode 100 = Alt",     // Right Alt as Alt
     NULL                     // Terminate with NULL
 };
 
 const char *keymaps_stop[] = {
     NULL,                      // Placeholder of the keymaps header
     "keycode 58 = Caps_Lock",  // Caps-Lock
-    "keycode 125 = nul",       // Left Meta(Win)
-    NULL                       // Terminate with NULL
+    "keycode 100 = AltGr\nalt	keycode 100 = Compose",  // Right Alt
+    "keycode 125 = nul",                                 // Left Meta(Win)
+    NULL                                                 // Terminate with NULL
 };
 
 const char *keymaps_header() {

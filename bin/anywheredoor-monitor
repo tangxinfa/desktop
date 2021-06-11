@@ -1,0 +1,34 @@
+#!/bin/bash
+
+notification_id=225481726
+
+SCRIPT_PATH=$(readlink "${BASH_SOURCE[0]}")
+if [ -z "$SCRIPT_PATH" ]; then
+  SCRIPT_PATH="${BASH_SOURCE[0]}"
+fi
+SCRIPT_NAME=$(basename "${SCRIPT_PATH}")
+LOCK_FILE="/tmp/${SCRIPT_NAME}.lock"
+
+if [ -z "$ANYWHEREDOOR_MONITOR_LOCKED" ]; then
+  touch "${LOCK_FILE}"
+  export ANYWHEREDOOR_MONITOR_LOCKED="${LOCK_FILE}"
+  exec flock -x -n -o "${LOCK_FILE}" -c "${SCRIPT_PATH}"
+  exit $?
+fi
+
+cd ~/Opensource/anywheredoor
+mkdir /tmp/anywheredoor-logs
+if [ ! -L ~/Opensource/anywheredoor/logs ]; then
+  rm -rf ~/Opensource/anywheredoor/logs
+  ln -sf /tmp/anywheredoor-logs ~/Opensource/anywheredoor/logs
+fi
+
+while [ 1 ]; do
+  echo -E "$(date)\tLaunch anywheredoor ..."
+  python3 anywheredoor/anywheredoor_pub.py --config anywheredoor/anywheredoor.conf &
+  python3 anywheredoor/anywheredoor_sub.py --config anywheredoor/anywheredoor.conf &
+  echo -E "$(date)\tWaiting anywheredoor quit ..."
+  wait -n
+  kill $(jobs -p)
+  dunstify -r $notification_id -u critical -t 3000 'anywheredoor' 'exited abnormally, restart ...'
+done

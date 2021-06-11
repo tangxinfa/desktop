@@ -26,6 +26,12 @@ declare -A LAUNCHER_PATHS=(
   ["mlterm"]="$(which mlterm-fb 2>/dev/null)"
 )
 
+# Default launcher for terminal id.
+declare -A LAUNCHER_DEFAULTS=(
+  [0]="fbterm"
+  [1]="i3"
+)
+
 # Desktop launcher.
 if [ -z "$LAUNCHER" ]; then
   declare -a MENU_ARGS
@@ -37,8 +43,13 @@ if [ -z "$LAUNCHER" ]; then
       let MENU_HEIGHT+=1
     fi
   done
+  MENU_DEFAULT_ITEM=${LAUNCHER_DEFAULTS[0]}
+  if [ -n "${LAUNCHER_DEFAULTS[${XDG_VTNR}]}" ]; then
+    MENU_DEFAULT_ITEM=${LAUNCHER_DEFAULTS[${XDG_VTNR}]}
+  fi
   LAUNCHER=$(dialog --clear --title "Desktop Launcher" \
     --no-cancel \
+    --default-item ${MENU_DEFAULT_ITEM} \
     --menu "" ${MENU_HEIGHT} 79 8 \
     "${MENU_ARGS[@]}" \
     2>&1 >/dev/tty)

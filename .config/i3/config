@@ -67,10 +67,10 @@ bindsym Control+$mod+p exec --no-startup-id ~/bin/rofi-power-menu
 
 # program launcher: rofi
 ##  depends: yaourt -S rofi
-bindsym $mod+r exec --no-startup-id "killall rofi && true || rofi -p '' -show run"
-bindsym $mod+d exec --no-startup-id "killall rofi && true || rofi -p '' -show drun"
+bindsym $mod+r exec --no-startup-id "killall rofi && true || rofi -p '' -show run -no-sidebar-mode -yoffset 10 -location 2 -theme-str '#window { padding: 0em 2em; }'"
+bindsym $mod+d exec --no-startup-id "killall rofi && true || rofi -p '' -show drun -no-sidebar-mode -yoffset 10 -location 2 -theme-str '#window { padding: 0em 2em; }'"
 bindsym $mod+t exec --no-startup-id "killall rofi && true || rofi -p '' -show '' -modi ':~/bin/rofi-translate' -no-sidebar-mode -lines 10 -yoffset 10 -location 2 -theme-str '#element { padding: 0.1em; margin: 0;}' -theme-str '#window { padding: 0em 2em; }'"
-bindsym $mod+w exec --no-startup-id "killall rofi && true || rofi -p '' -show window"
+bindsym $mod+w exec --no-startup-id "killall rofi && true || rofi -p '' -show window -no-sidebar-mode -yoffset 10 -location 2 -theme-str '#window { padding: 0em 2em; }'"
 
 # mouse left click
 bindsym Control+$mod+Return exec --no-startup-id ~/bin/mouse-left-click
@@ -232,6 +232,9 @@ bindsym XF86AudioPause exec playerctl pause
 bindsym XF86AudioNext exec playerctl next
 bindsym XF86AudioPrev exec playerctl previous
 
+# Execute keyboard macro
+bindsym Control+$mod+e exec ~/bin/macro
+
 popup_during_fullscreen leave_fullscreen
 
 # workspace arrangement
@@ -255,6 +258,7 @@ assign [class="libreoffice"] $workspace3
 for_window [title="LibreOffice"] move container to workspace $workspace3
 assign [class="calibre"] $workspace3
 assign [class="Java" title="XMind"] $workspace3
+assign [class="jetbrains-studio"] $workspace3
 for_window [class="Dia" window_role="toolbox_window"] floating enable
 assign [title="Electronic WeChat"] $workspace4
 assign [class="dingtalk"] $workspace4
@@ -318,14 +322,14 @@ exec --no-startup-id emacsclient -n -a 'emacs' ~
 exec --no-startup-id ~/bin/battery-monitor
 exec --no-startup-id gtk-launch geoclue-demo-agent
 exec --no-startup-id gtk-launch redshift-gtk
-exec --no-startup-id gtk-launch solaar
+exec --no-startup-id solaar -w hide
 exec --no-startup-id gtk-launch variety
 exec --no-startup-id ~/bin/variety-clean
 exec --no-startup-id gtk-launch org.keepassxc.KeePassXC
 exec_always --no-startup-id ~/bin/polybar-launcher
 exec_always --no-startup-id picom -cCGb\
      -l -7\
-     -t 0\
+     -t 5\
      --inactive-dim=0.15\
      --detect-transient\
      --focus-exclude 'class_g = "Rofi"'\
@@ -338,6 +342,8 @@ exec_always --no-startup-id picom -cCGb\
 exec --no-startup-id ~/bin/dual-screen-ctl monitor
 exec --no-startup-id ~/bin/desktop-on-open
 exec --no-startup-id ~/bin/on-at-`~/bin/at-place`
-exec_always --no-startup-id setcapslock off
+exec_always --no-startup-id ~/bin/tty-ctl capslockoff
 exec --no-startup-id ~/bin/xkeysnail-ctl monitor
 exec --no-startup-id ~/bin/netease-cloud-music-ctl auto-pause
+exec --no-startup-id ~/bin/virtualbox-ctl restore
+exec --no-startup-id ~/bin/anywheredoor-monitor

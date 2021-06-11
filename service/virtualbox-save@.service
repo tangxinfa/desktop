@@ -6,7 +6,6 @@ Before=sleep.target
 User=%I
 Type=forking
 ExecStart=/home/%I/bin/virtualbox-ctl save
-ExecStartPost=/usr/bin/sleep 1
 
 [Install]
 WantedBy=sleep.target

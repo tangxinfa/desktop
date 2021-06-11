@@ -5,8 +5,8 @@ STATUS_FILE=/tmp/virtualbox.status
 save() {
   local runningvms=$(VBoxManage list runningvms | awk -F'"' '{print $2}')
   if [ -n "$runningvms" ]; then
-    echo $runningvms | sort | uniq | xargs --max-procs 3 -I% VBoxManage controlvm '%' savestate
-    echo $runningvms >>"${STATUS_FILE}"
+    echo "$runningvms" | sort | uniq | xargs --max-procs 3 -I% VBoxManage controlvm '%' savestate
+    echo "$runningvms" >>"${STATUS_FILE}"
   fi
 }
 
@@ -26,8 +26,11 @@ case "${1}" in
     echo "virtualbox status:"
     cat "${STATUS_FILE}" 2>/dev/null
     ;;
+  context-menu)
+    xdotool search -classname "VirtualBox Machine" | xargs -I% xdotool key --window % "Alt_R+Home"
+    ;;
   *)
-    echo -e "usage: ${0} <status|save|restore>\n\n\tstatus      Show status.\n\tsave        Save status.\n\trestore     Restore status." >/dev/stderr
+    echo -e "usage: ${0} <status|save|restore|context-menu>\n\n\tstatus       Show status.\n\tsave         Save status.\n\trestore      Restore status.\n\tcontext-menu Show context menu." >/dev/stderr
     exit 1
     ;;
 esac

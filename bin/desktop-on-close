@@ -1,5 +1,7 @@
 #!/bin/bash
 
+~/bin/virtualbox-ctl save
+
 REASON="$1"
 EMACS_PID="`pidof emacs | awk '{print $1}'`"
 if [ -n "$EMACS_PID" ]; then

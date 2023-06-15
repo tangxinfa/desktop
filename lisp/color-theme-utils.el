@@ -173,9 +173,9 @@ This prevents overlapping themes; something I would rarely want."
     (EmacsModeLineForeground . ,(color-theme-utils--face-foreground 'mode-line nil 'default))
     (EmacsModeLineUnderline . ,(color-theme-utils--face-underline 'mode-line nil 'default))
     (EmacsModeLineHighlightForeground . ,(color-theme-utils--face-foreground 'mode-line-highlight nil 'font-lock-keyword-face))
-    (EmacsModeLineInactiveBackground . ,(color-theme-utils--face-background 'mode-line-inactive nil 'shadow))
-    (EmacsModeLineInactiveForeground . ,(color-theme-utils--face-foreground 'mode-line-inactive nil 'shadow))
-    (EmacsModeLineInactiveUnderline . ,(color-theme-utils--face-underline 'mode-line-inactive nil 'shadow))
+    (EmacsModeLineInactiveBackground . ,(color-theme-utils--face-background 'mode-line-inactive nil 'tab-bar-tab-group-current))
+    (EmacsModeLineInactiveForeground . ,(color-theme-utils--face-foreground 'mode-line-inactive nil 'tab-bar-tab-group-current))
+    (EmacsModeLineInactiveUnderline . ,(color-theme-utils--face-underline 'mode-line-inactive nil 'tab-bar-tab-group-current))
     (EmacsRegionBackground . ,(color-theme-utils--face-background 'region))
     (EmacsRegionForeground . ,(color-theme-utils--face-foreground 'region))
     (EmacsFringeBackground . ,(color-theme-utils--face-background 'fringe))
@@ -232,7 +232,8 @@ This prevents overlapping themes; something I would rarely want."
   "Export currrent color theme definitions."
   (interactive)
   (when (color-theme-utils-export-file-save)
-    (call-process-shell-command "i3-msg exec ~/bin/desktop-on-change"))
+    (let ((default-directory "~"))
+      (call-process-shell-command "i3-msg exec ~/bin/desktop-on-change")))
   (message "Emacs color theme %s"
            (propertize (symbol-name (or (car custom-enabled-themes) 'default-theme)) 'face 'font-lock-variable-name-face)))
 

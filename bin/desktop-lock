@@ -26,8 +26,10 @@ i3_lock() {
   indicator_warning_color="191d0f"
   indicator_error_color="572020"
   indicator_default_color="ffffff"
+  key_highlight_color="ffffff"
   if [ -f ~/.config/emacs.theme ]; then
     default_background_color=$(grep -E '^EmacsDefaultBackground:' ~/.config/emacs.theme | awk -F'"' '{print $2}')
+    key_highlight_color=$(grep -E '^EmacsHighlightBackground:' ~/.config/emacs.theme | awk -F'"' '{print $2}')
     indicator_warning_color=$(grep -E '^EmacsWarningForeground:' ~/.config/emacs.theme | awk -F'"' '{print $2}')
     indicator_error_color=$(grep -E '^EmacsErrorForeground:' ~/.config/emacs.theme | awk -F'"' '{print $2}')
     indicator_default_color=$(grep -E '^EmacsSuccessForeground:' ~/.config/emacs.theme | awk -F'"' '{print $2}')
@@ -46,7 +48,7 @@ i3_lock() {
     --time-color=${indicator_default_color} \
     --date-color=${indicator_default_color} \
     --layout-color=${indicator_default_color} \
-    --keyhl-color=${default_background_color} \
+    --keyhl-color=${key_highlight_color} \
     --bshl-color=${indicator_warning_color} \
     --screen 1 \
     --blur 5 \

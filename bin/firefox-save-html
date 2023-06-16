@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+# Get firefox browser window id
+ID=$((xdotool search --onlyvisible --role browser; xdotool search --onlyvisible --class firefox) | sort | uniq -c | grep ' 2 ' | head -1 | awk '{print $2}')
+if [[ -z "$ID" ]]; then
+    echo "No visible firefox browser found" >/dev/stderr
+    exit 1
+fi
+
+# Save current firefox webpage.
+xdotool windowactivate "$ID"
+xdotool key "ctrl+s" key "Home" type "~/tmp/"
+xdotool key "return"
+# The emacs will watch the save complete and browse it with Emacs EWW Browser.

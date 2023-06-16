@@ -95,7 +95,7 @@ auto_pause() {
   while [ 1 ]; do
     STATUS=$(~/bin/bluetooth-headset-ctl status)
     STATE=$(state)
-    if [ "$STATUS" = "disconnected" ] && [ "$STATE" = "running" ]; then
+    if [ "$STATUS" = "disconnected" ] && [ "$STATE" = "running" ] && [ "`at-place`" != "home" ]; then
       if [ "${REQUIRE_TERMINATE}" = "1" ]; then
         terminate
       else
@@ -117,14 +117,14 @@ case "${1}" in
   resume)
     if [ $(state) != "running" ]; then
       toggle
+      notification
     fi
-    notification
     ;;
   pause)
     if [ $(state) = "running" ]; then
       toggle
+      notification
     fi
-    notification
     ;;
   toggle)
     toggle

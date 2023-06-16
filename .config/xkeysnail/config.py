@@ -6,11 +6,13 @@ from xkeysnail.transform import *
 # Emulate hhkb keyboard layout:
 #   Switch left win and left control
 #   Set capslock as left control
+#   PrtSc as right alt
 define_conditional_modmap(lambda wm_class, device_name: device_name != "Topre Corporation HHKB Professional", {
     Key.LEFT_META: Key.LEFT_ALT,
     Key.LEFT_ALT: Key.LEFT_META,
     Key.LEFT_CTRL: Key.LEFT_ALT,
     Key.CAPSLOCK: Key.LEFT_CTRL,
+    Key.SYSRQ: Key.RIGHT_ALT,
 })
 
 # Keybindings for Firefox/Chrome
@@ -42,13 +44,18 @@ define_keymap(re.compile("firefox"), {
             K("u"): [K("F5")]
         },
         K("C-c"): K("enter"),
-        K("C-o"): [K("C-l"), K("M-c"), launch(["emacs-browse"])],
+        K("C-o"): [K("M-c"), launch(["emacs-browse"])],
+        K("C-e"): [launch(["firefox-save-html"])],
         K("enter"): [launch(["xdotool", "click", "1"])],
+        # edit with emacs
+        K("apostrophe"): [K("Shift-F10"), launch(["press-key-later", "e", "0.1"])],
     },
     K("M-r"): {
         K("r"): [K("C-M-r"), K("f11")],
         K("w"): [K("C-M-r"), K("f11")]
     },
+    # edit with emacs
+    K("M-enter"): [K("Shift-F10"), launch(["press-key-later", "e", "0.1"])]
 }, "Firefox")
 
 # Keybindings for Chrome
@@ -74,6 +81,13 @@ define_keymap(re.compile("Zeal"), {
     K("C-g"): K("C-q"),
     K("esc"): K("C-q"),
 }, "Zeal")
+
+# Keybindings for chinese-calendar
+define_keymap(re.compile("chinese-calendar"), {
+    # Type Esc or C-g to quit
+    K("C-g"): K("Super-Shift-q"),
+    K("esc"): K("Super-Shift-q"),
+}, "chinese-calendar")
 
 # Keybindings for keepassxc
 define_keymap(re.compile("KeePassXC"), {
@@ -150,7 +164,13 @@ define_keymap(lambda wm_class: wm_class not in ("Emacs", "URxvt", "Rofi", "Gnome
     K("C-g"): [K("esc"), set_mark(False)],
     # Escape
     K("C-q"): escape_next_key,
-    # C-x YYY
+    K("C-c"): {
+        K("b"): {
+            # Refresh
+            K("u"): [K("F5")]
+        },
+    },
+    # C-x
     K("C-x"): {
         # C-x h (select all)
         K("h"): [K("C-home"), K("C-a"), set_mark(True)],

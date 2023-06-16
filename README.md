@@ -10,6 +10,10 @@ My desktop configurations
 
 ## Dependencies ##
 
+### Generics ###
+
+    yaourt -S ruby-mustache
+
 ### Fonts ###
 
 - YaHei Consolas Hybrid
@@ -21,6 +25,10 @@ My desktop configurations
 - Weather Icons
 
     yaourt -S ttf-weather-icons
+
+### i3lock-color ###
+
+    [Raymo111/i3lock-color: The world's most popular non-default computer lockscreen.](https://github.com/Raymo111/i3lock-color)
 
 ## Features ##
 

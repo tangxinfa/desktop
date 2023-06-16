@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+
+# A wrap script of https://github.com/yssource/i3_movecorner.git, which move floating window following sudoku layout.
+
+file=/tmp/i3-movecorner.position
+
+step() {
+    ~/Opensource/i3_movecorner/i3_movecorner.sh $1
+    echo -n $1 > /tmp/i3-movecorner.position
+}
+
+next() {
+    local n=$(( 1 + $(cat $file 2>/dev/null || echo 0) ))
+    if [ "$n" -gt 9 ]; then
+        n=1
+    fi
+    step $n
+}
+
+prev() {
+    local n=$(( $(cat $file 2>/dev/null || echo 0) - 1 ))
+    if [ "$n" -lt 1 ]; then
+        n=9
+    fi
+    step $n
+}
+
+case "${1}" in
+  [1-9])
+  step $1
+  ;;
+  next)
+  next
+  ;;
+  prev)
+  prev
+  ;;
+esac

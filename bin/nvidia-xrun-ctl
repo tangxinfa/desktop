@@ -59,24 +59,21 @@ uninstall() {
   if yaourt -Q nvidia-xrun-git >/dev/null 2>&1; then
     yaourt --remove nvidia-xrun-git
   fi
-  if yaourt -Q nvidia >/dev/null 2>&1; then
-    yaourt --remove nvidia
-  fi
   sudo rm -f /etc/modules-load.d/bbswitch.conf
   unblock
   sudo rm -f /etc/modprobe.d/bbswitch.conf
 }
 
 install() {
-  if ! yaourt -Q nvidia >/dev/null 2>&1; then
-    yaourt -S nvidia
-  fi
   if ! yaourt -Q nvidia-xrun-git >/dev/null 2>&1; then
     yaourt -S nvidia-xrun-git
   fi
   echo 'bbswitch ' | sudo tee /etc/modules-load.d/bbswitch.conf >/dev/null
   echo 'options bbswitch load_state=0 unload_state=1' | sudo tee /etc/modprobe.d/bbswitch.conf >/dev/null
   block
+  if ! modinfo nvidia >/dev/null 2>&1; then
+    echo "Please install nvidia drivers which suited for your hardware"
+  fi
 }
 
 path() {

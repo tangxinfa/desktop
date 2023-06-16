@@ -3,19 +3,37 @@
 if [[ "$*" != "" ]]; then
   TEXT="$*"
 else
-  TEXT=$(timeout 1 xclip -o 2>/dev/null)
+  TEXT=$(timeout 1 xclip -o -selection primary 2>/dev/null)
+  if [[ "${TEXT}" == "" ]]; then
+    TEXT=$(timeout 1 xclip -o -selection clipboard 2>/dev/null)
+  fi
 fi
 
 TEXT="${TEXT//[\'\"]/}"
+TIMEOUT=3
 
 if [[ "${TEXT}" != "" ]]; then
   (echo "${TEXT}" | festival --tts >/dev/null 2>&1 &)
+  declare -a TRANSLATIONS
   if [ -x "$(which trans)" ]; then
-    trans -show-languages n -show-prompt-message n -no-ansi -no-pager -no-view en:zh "${TEXT}"
-  else
-    # Avoid use ydcv's "-r" option for voice reading, which is a blocking call
-    ydcv -f "${TEXT}"
+    TRANSLATIONS[${#TRANSLATIONS[@]}]="/tmp/rofi-translate.trans"
+    timeout ${TIMEOUT} proxychains -q trans -b en:zh "${TEXT}" | grep -Eo '.{30}' >${TRANSLATIONS[-1]} &
   fi
+  if [ -x "$(which ydcv)" ]; then
+    TRANSLATIONS[${#TRANSLATIONS[@]}]="/tmp/rofi-translate.ydcv"
+    # Avoid use ydcv's "-r" option for voice reading, which is a blocking call
+    timeout ${TIMEOUT} ydcv --color never -s "${TEXT}" >${TRANSLATIONS[-1]} &
+  fi
+  while [ "$(jobs -rp | wc -l)" -gt 0 ]; do
+    wait -n -f
+    for i in "${!TRANSLATIONS[@]}"; do
+      if [ -s "${TRANSLATIONS[${i}]}" ]; then
+        cat "${TRANSLATIONS[${i}]}"
+        kill $(jobs -p)
+        exit 0
+      fi
+    done
+  done
   exit 0
 fi
 

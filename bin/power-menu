@@ -4,10 +4,14 @@
 
 option="$1"
 if [ -z "$option" ]; then
-    OPTIONS="  Lock\n  Suspend\n  Hibernate\n  Exit\n  Reboot\n  PowerOff"
+  OPTIONS="  Lock\n  Suspend\n  Hibernate\n  Exit\n  Reboot\n  PowerOff"
+  if [ -x "$(which dmenu-launcher)" ]; then
+    LAUNCHER="dmenu-launcher -p "
+  else
     LAUNCHER="rofi -dmenu -i -p "
     killall rofi
-    option=$(echo -e "$OPTIONS" | $LAUNCHER | awk '{print $NF}' | tr -d '\r\n')
+  fi
+  option=$(echo -e "$OPTIONS" | $LAUNCHER | awk '{print $NF}' | tr -d '\r\n')
 fi
 if [ ${#option} -gt 0 ]; then
   case $option in
@@ -18,6 +22,7 @@ if [ ${#option} -gt 0 ]; then
       systemctl suspend
       ;;
     Hibernate)
+      ~/bin/desktop-on-close hibernate
       systemctl hibernate
       ;;
     Exit)

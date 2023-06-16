@@ -44,7 +44,7 @@ FILE* logger() {
 }
 
 int logging_system_status() {
-  char output[1*1024*1024] = {'\0'};
+  char output[1 * 1024 * 1024] = {'\0'};
   FILE* fp = popen("ps aux", "r");
   if (NULL == fp) {
     perror("popen");
@@ -56,7 +56,7 @@ int logging_system_status() {
                                                  : WEXITSTATUS(status));
   logging(logger(), "processes:\n%s", output);
   memset(output, '\0', sizeof(output));
-  fp = popen("dmesg -T | tail -100", "r");
+  fp = popen("dmesg -T | tail -500", "r");
   if (NULL == fp) {
     perror("popen");
     return errno;

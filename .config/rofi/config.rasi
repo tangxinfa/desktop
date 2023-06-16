@@ -1,0 +1,31 @@
+configuration {
+    modi: "drun,run,window";
+    font: "Source Code Pro 12";
+    yoffset: -200;
+    xoffset: 0;
+    fixed-num-lines: true;
+    show-icons: true;
+    terminal: "gnome-terminal";
+    run-shell-command: "{terminal} --role=gnome-terminal-popup -- {cmd}";
+    window-match-fields: "class";
+    sort: true;
+    sorting-method: "fzf";
+    matching-negate-char: '\0';
+    kb-delete-entry: "Shift+Delete,Alt+k";
+    kb-row-tab: "";
+    kb-secondary-paste: "Insert";
+    kb-page-prev: "Page_Up,Alt+v";
+    kb-page-next: "Page_Down,Control+v";
+    kb-element-next: "";
+    kb-row-select: "Tab";
+    timeout {
+        action: "kb-cancel";
+        delay:  0;
+    }
+    filebrowser {
+        directories-first: true;
+        sorting-method:    "name";
+    }
+}
+
+@theme "~/.config/rofi/theme.rasi"

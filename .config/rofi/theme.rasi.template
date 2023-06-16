@@ -4,9 +4,10 @@
     highlight-background-color:  #{{EmacsHlLineBackground}};
     highlight-foreground-color:  #{{EmacsHlLineForeground}};
     highlight-border-color:      #{{EmacsCursorBackground}};
+    active-foreground-color:     #{{EmacsKeywordForeground}};
 }
 
-#window {
+window {
     children: [ inputbar, listview ];
     padding: 0;
     spacing: 0;
@@ -17,47 +18,53 @@
     padding: 1em 2em;
 }
 
-#inputbar {
-    children: [ entry, prompt ];
-    padding: 0;
-    border: 1;
+inputbar {
+    children: [ prompt, entry ];
+    padding: 0.5em 0em 0em 0.5em;
+    border: 0 0 1 0;
     spacing: 0;
     border-color: @highlight-background-color;
     border-radius: 1em;
     margin: 0 0 0 14em;
 }
 
-#prompt {
-    padding: 0.2em 0.35em 0.1em 0.35em;
-    font: "Awasome 14";
+prompt {
+    padding: 0;
+    font: "Awasome 18";
     margin: 0;
     spacing: 0;
-    border: 0.1em;
-    border-color: @background-color;
-    border-radius: 1em;
-    background-color: @highlight-background-color;
-    text-color: @background-color;
+    text-color: @highlight-background-color;
 }
 
-#entry {
-    padding: 0.25em 0.5em;
+entry {
+    padding: 0 0.5em;
     margin: 0;
     spacing: 0;
 }
 
-#listview {
+listview {
     margin: 0.75em 0;
     spacing: 0;
     padding: 0;
     scrollbar: false;
+    lines: 7;
 }
 
-#element {
+element {
     padding: 0.5em;
     border-radius: 1em;
 }
 
-#element.selected {
+element.selected {
     background-color: @highlight-background-color;
     text-color: @highlight-foreground-color;
+}
+
+element-icon, element-text {
+    background-color: inherit;
+    text-color:       inherit;
+}
+
+element-text selected.active, element-text normal.active {
+    text-color:       @active-foreground-color;
 }

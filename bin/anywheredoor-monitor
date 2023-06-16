@@ -24,7 +24,9 @@ if [ ! -L ~/Opensource/anywheredoor/logs ]; then
 fi
 
 while [ 1 ]; do
-  echo -E "$(date)\tLaunch anywheredoor ..."
+  IP=$(ifconfig docker0 | awk '{if($1=="inet") printf("%s",$2)}')
+  sed -i -e "s/^BROKER = .*/BROKER = ${IP}/g" anywheredoor/anywheredoor.conf
+  echo -E "$(date)\tLaunch anywheredoor at ${IP} ..."
   python3 anywheredoor/anywheredoor_pub.py --config anywheredoor/anywheredoor.conf &
   python3 anywheredoor/anywheredoor_sub.py --config anywheredoor/anywheredoor.conf &
   echo -E "$(date)\tWaiting anywheredoor quit ..."

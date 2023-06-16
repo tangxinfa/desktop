@@ -7,3 +7,4 @@ synclient HorizHysteresis=30 VertHysteresis=30
 syndaemon -d -i 2 -t
 
 export QT_PLUGIN_PATH=/usr/lib/qt/plugins
+export QT_QPA_PLATFORMTHEME=qt5ct

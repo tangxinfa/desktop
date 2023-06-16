@@ -12,8 +12,9 @@ install: build
 	sudo ln -sf ${CURDIR}/service/*.service /etc/systemd/system/
 	sudo systemctl daemon-reload
 	ls ${CURDIR}/service | sed -e "s/@/@${USER}/g" | xargs sudo systemctl enable
-	@echo "Install by create symbol links ..."
+	@echo "Install files ..."
 	-cp -rs ${CURDIR}/{bin,.config,.local,.xinitrc,.xprofile,.fbtermrc,.launcher,.mlterm} ~/
+	-sudo cp -r ${CURDIR}/opt/* /opt/
 	git config --global core.hooksPath ~/.config/git/hooks
 
 $(CURDIR)/bin/keymap-ctl: $(CURDIR)/src/keymap-ctl.c

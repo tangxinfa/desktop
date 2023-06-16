@@ -63,14 +63,14 @@ bindsym $mod+minus scratchpad show
 
 # power management
 bindsym Control+$mod+l exec $manual-lock
-bindsym Control+$mod+p exec --no-startup-id ~/bin/rofi-power-menu
+bindsym Control+$mod+p exec --no-startup-id ~/bin/power-menu
 
 # program launcher: rofi
 ##  depends: yaourt -S rofi
-bindsym $mod+r exec --no-startup-id "killall rofi && true || rofi -p '' -show run -no-sidebar-mode -yoffset 10 -location 2 -theme-str '#window { padding: 0em 2em; }'"
-bindsym $mod+d exec --no-startup-id "killall rofi && true || rofi -p '' -show drun -no-sidebar-mode -yoffset 10 -location 2 -theme-str '#window { padding: 0em 2em; }'"
-bindsym $mod+t exec --no-startup-id "killall rofi && true || rofi -p '' -show '' -modi ':~/bin/rofi-translate' -no-sidebar-mode -lines 10 -yoffset 10 -location 2 -theme-str '#element { padding: 0.1em; margin: 0;}' -theme-str '#window { padding: 0em 2em; }'"
-bindsym $mod+w exec --no-startup-id "killall rofi && true || rofi -p '' -show window -no-sidebar-mode -yoffset 10 -location 2 -theme-str '#window { padding: 0em 2em; }'"
+bindsym $mod+r exec --no-startup-id "killall rofi && true || rofi -p '' -show run -display-run '' -no-sidebar-mode -yoffset 10 -location 2 -theme-str '#window { padding: 0em 2em; }'"
+bindsym $mod+d exec --no-startup-id "killall rofi && true || rofi -p '' -show drun -display-drun '' -no-sidebar-mode -yoffset 10 -location 2 -theme-str '#window { padding: 0em 2em; }'"
+bindsym $mod+t exec --no-startup-id "killall rofi && true || rofi -p '' -show '' -modi ':~/bin/rofi-translate' -width 800 -no-sidebar-mode -lines 10 -yoffset 10 -location 2 -theme-str '#element { padding: 0.1em; margin: 0;}' -theme-str '#window { padding: 0em 2em; }'"
+bindsym $mod+w exec --no-startup-id "killall rofi && true || rofi -p '' -show window -display-window '' -no-sidebar-mode -yoffset 10 -location 2 -theme-str '#window { padding: 0em 2em; }'"
 
 # mouse left click
 bindsym Control+$mod+Return exec --no-startup-id ~/bin/mouse-left-click
@@ -160,16 +160,12 @@ bindsym $mod+Shift+r restart
 bindsym $mod+m exec gnome-system-monitor
 
 # resize window (you can also use the mouse for that)
-set $resize 　 [f]  [b]  [n]  [p]
+set $resize 　 [w]  [W]  [h]  [H]
 mode "$resize" {
-        bindsym f resize grow width 10 px or 10 ppt
-        bindsym b resize shrink width 10 px or 10 ppt
-        bindsym n resize grow height 10 px or 10 ppt
-        bindsym p resize shrink height 10 px or 10 ppt
-        bindsym Left resize shrink width 10 px or 10 ppt
-        bindsym Right resize grow width 10 px or 10 ppt
-        bindsym Down resize grow height 10 px or 10 ppt
-        bindsym Up resize shrink height 10 px or 10 ppt
+        bindsym w resize grow left 10 px or 10 ppt; resize grow right 10 px or 10 ppt
+        bindsym Shift+w resize shrink left 10 px or 10 ppt; resize shrink right 10 px or 10 ppt;
+        bindsym h resize grow up 10 px or 10 ppt; resize grow down 10 px or 10 ppt
+        bindsym Shift+h resize shrink up 10 px or 10 ppt; resize shrink down 10 px or 10 ppt
 
         # back to normal: Enter or Escape or q
         bindsym Return mode "default"
@@ -232,6 +228,27 @@ bindsym XF86AudioPause exec playerctl pause
 bindsym XF86AudioNext exec playerctl next
 bindsym XF86AudioPrev exec playerctl previous
 
+set $movecorner 　 [tab]  [shift+tab]  [1-9]
+mode "$movecorner" {
+        bindsym Shift+Tab exec ~/bin/i3-movecorner prev
+        bindsym Tab exec ~/bin/i3-movecorner next
+        bindsym 1 exec ~/bin/i3-movecorner 1
+        bindsym 2 exec ~/bin/i3-movecorner 2
+        bindsym 3 exec ~/bin/i3-movecorner 3
+        bindsym 4 exec ~/bin/i3-movecorner 4
+        bindsym 5 exec ~/bin/i3-movecorner 5
+        bindsym 6 exec ~/bin/i3-movecorner 6
+        bindsym 7 exec ~/bin/i3-movecorner 7
+        bindsym 8 exec ~/bin/i3-movecorner 8
+        bindsym 9 exec ~/bin/i3-movecorner 9
+        # back to normal
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+        bindsym q mode "default"
+        bindsym Control+g mode "default"
+}
+bindsym $mod+Shift+m exec ~/bin/i3-movecorner 3; mode "$movecorner"
+
 # Execute keyboard macro
 bindsym Control+$mod+e exec ~/bin/macro
 
@@ -245,6 +262,9 @@ for_window [class="Xdialog"] floating enable
 for_window [title=".*DingTalk.*" window_type="dialog"] floating disable, move container to workspace $workspace4
 for_window [title=".*WeChat.*" window_type="dialog"] floating disable, move container to workspace $workspace4
 for_window [urgent="latest" class="firefox"] focus
+for_window [title="Log In to WeChat.*" class="firefox"] floating enable, focus
+for_window [class="eudic"] floating enable, focus, resize set width 600px
+for_window [class="GoldenDict"] floating enable, focus, resize set width 600px
 assign [class="firefox" title="https://im.dingtalk.com"] $workspace4
 assign [class="firefox" window_type="normal"] $workspace1
 assign [class="Chromium"] $workspace1
@@ -262,6 +282,7 @@ assign [class="jetbrains-studio"] $workspace3
 for_window [class="Dia" window_role="toolbox_window"] floating enable
 assign [title="Electronic WeChat"] $workspace4
 assign [class="dingtalk"] $workspace4
+for_window [class="com.alibabainc.dingtalk" title="分享的图片"] floating enable, move absolute position center, focus
 assign [class="TelegramDesktop"] $workspace4
 for_window [class="Blueman-manager"] floating enable, move absolute position center, resize set 720 480
 assign [class="Wine"] $workspace4
@@ -283,6 +304,7 @@ assign [class="Seafile*"] $workspace3
 for_window [class="Solaar"] floating enable
 for_window [class="chinese-calendar"] floating enable
 for_window [class="Gnome-system-monitor"] floating enable, resize set 800 600, move absolute position center
+for_window [class="Gnome-pomodoro" title="Pomodoro" ] floating enable, move absolute position 1410 px 60 px
 
 #i3-gaps
 gaps inner 10
@@ -305,6 +327,7 @@ client.focused_inactive $inactive-border-color  $background-color      $inactive
 client.urgent           $urgent-border-color    $background-color      $text-color              $indicator-color
 
 # autostart
+exec --no-startup-id rm -rf ~/tmp && mkdir ~/tmp
 #exec --no-startup-id /usr/lib/gsd-xsettings
 #exec --no-startup-id /usr/lib/notify-osd/notify-osd
 exec --no-startup-id fcitx -d
@@ -327,12 +350,12 @@ exec --no-startup-id gtk-launch variety
 exec --no-startup-id ~/bin/variety-clean
 exec --no-startup-id gtk-launch org.keepassxc.KeePassXC
 exec_always --no-startup-id ~/bin/polybar-launcher
-exec_always --no-startup-id picom -cCGb\
-     -l -7\
-     -t 5\
+exec_always --no-startup-id picom --config /dev/null -cCGb\
      --inactive-dim=0.15\
      --detect-transient\
      --focus-exclude 'class_g = "Rofi"'\
+     --shadow-exclude 'class_g = "Polybar"'\
+     --shadow-exclude "WM_CLASS@:s *?= 'Nautilus'"\
      --detect-client-opacity\
      --detect-rounded-corners\
      --shadow-ignore-shaped\
@@ -347,3 +370,4 @@ exec --no-startup-id ~/bin/xkeysnail-ctl monitor
 exec --no-startup-id ~/bin/netease-cloud-music-ctl auto-pause
 exec --no-startup-id ~/bin/virtualbox-ctl restore
 exec --no-startup-id ~/bin/anywheredoor-monitor
+exec --no-startup-id dingtalk

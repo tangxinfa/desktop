@@ -181,8 +181,8 @@ int main(int argc, char* argv[]) {
 
   if (strcmp(argv[1], "graphic") == 0) {
     status = system(
-        "(strings /proc/`pidof Xorg Xwayland -s`/environ | grep -E "
-        "'^XDG_VTNR=' | awk -F= '{print $2}') 2>/dev/null");
+        "(ls -la /proc/`pidof Xorg Xwayland -s`/fd/0 | awk -Ftty '{print "
+        "$NF}') 2>/dev/null");
     status = ((status == -1 || !WIFEXITED(status)) ? EXIT_FAILURE
                                                    : WEXITSTATUS(status));
     return status;

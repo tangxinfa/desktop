@@ -8,7 +8,7 @@ if [ -z "${BLUETOOTH_HEADSET_DEVICE}" ]; then
 fi
 
 headset_connected() {
-  bluetoothctl info "${BLUETOOTH_HEADSET_DEVICE}" | grep -F 'Connected: yes' >/dev/null
+  bluetoothctl info | grep -F 'Connected: yes' >/dev/null
 }
 
 headset_set_profile() {
@@ -51,7 +51,7 @@ headset_connect() {
 
 headset_disconnect() {
   dunstify -r ${notification_id} -u low -t 60000 -i audio-headset '○ Headset' 'Disconnecting'
-  bluetoothctl disconnect "${BLUETOOTH_HEADSET_DEVICE}"
+  bluetoothctl disconnect
   if headset_connected; then
     dunstify -r ${notification_id} -u normal -t 3000 -i audio-headset '✔ Headset' 'Disconnect failed'
   else

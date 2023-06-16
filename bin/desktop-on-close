@@ -11,7 +11,9 @@ if [ -n "$EMACS_PID" ]; then
             REASON=kill
         fi
     fi
-    if [ "${REASON}" != "exit" ]; then
+    if [ "${REASON}" = "hibernate" ]; then
+        emacsclient  --eval '(my/emacs-purge)'
+    elif [ "${REASON}" != "exit" ]; then
         emacsclient --eval '(save-buffers-kill-terminal)'
     fi
 fi

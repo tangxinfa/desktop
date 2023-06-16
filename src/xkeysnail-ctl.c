@@ -304,5 +304,6 @@ int main(int argc, char* argv[]) {
     return status;
   }
 
+  signal(SIGTERM, exit);
   return xkeysnail_monitor();
 }

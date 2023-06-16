@@ -27,7 +27,6 @@ get_icon() {
 }
 
 get_duration() {
-
     osname=$(uname -s)
 
     case $osname in
@@ -84,8 +83,10 @@ do
             rm $WEATHER_BRIGHT_INDICATOR_FILE 2>/dev/null
         fi
 
-        echo "%{T4}$(get_icon "$current_icon")%{T-}%{T1}${current_temp}%{T-}%{T4}${SYMBOL} ${trend} $(get_icon "$forecast_icon")%{T-}%{T1}${forecast_temp}%{T-}%{T4}${SYMBOL}%{T-}"
+        echo "%{T4}$(get_icon "$current_icon")%{T-}%{T1}${current_temp}%{T-}%{T4}${SYMBOL} ${trend} $(get_icon "$forecast_icon")%{T-}%{T1}${forecast_temp}%{T-}%{T4}${SYMBOL}%{T-}" > /tmp/polybar-weather
     fi
 
     exit 0
 done
+
+cat /tmp/polybar-weather 2>/dev/null

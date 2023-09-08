@@ -282,7 +282,7 @@ assign [class="jetbrains-studio"] $workspace3
 for_window [class="Dia" window_role="toolbox_window"] floating enable
 assign [title="Electronic WeChat"] $workspace4
 assign [class="dingtalk"] $workspace4
-for_window [class="com.alibabainc.dingtalk" title="分享的图片"] floating enable, move absolute position center, focus
+for_window [class="com.alibabainc.dingtalk" title="分享的图片"] fullscreen enable, focus
 assign [class="TelegramDesktop"] $workspace4
 for_window [class="Blueman-manager"] floating enable, move absolute position center, resize set 720 480
 assign [class="Wine"] $workspace4

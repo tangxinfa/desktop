@@ -17,12 +17,12 @@
 ;==========================================================
 
 [colors]
-background = #{{EmacsModeLineInactiveBackground}}
-background-alt = #{{EmacsModeLineBackground}}
-foreground = #{{EmacsModeLineInactiveForeground}}
-foreground-alt = #{{EmacsModeLineForeground}}
+background = #{{EmacsTabBarBackground}}
+background-alt = #{{EmacsTabBarTabBackground}}
+foreground = #{{EmacsTabBarForeground}}
+foreground-alt = #{{EmacsTabBarTabForeground}}
 border = #{{EmacsVerticalBorderForeground}}
-underline = #{{EmacsCursorForeground}}
+underline = #{{EmacsCursorBackground}}
 overline = #{{EmacsModeLineBackground}}
 warning = #{{EmacsWarningForeground}}
 error = #{{EmacsErrorForeground}}
@@ -206,8 +206,9 @@ label-urgent-font = 5
 
 label-mode = "%mode%  "
 label-mode-padding = 0
-label-mode-background = ${colors.background-alt}
-label-mode-overline = ${colors.underline}
+label-mode-background = ${colors.foreground}
+label-mode-foreground = ${colors.background}
+label-mode-overline = ${colors.warning}
 
 [module/xbacklight]
 type = internal/xbacklight
